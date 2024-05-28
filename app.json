@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "train-master",
+    "name": "TrainMaster",
     "slug": "train-master",
+    "scheme": "train-master",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -22,6 +23,29 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+      /*
+    only build local fonts
+    [
+      "expo-font",
+      {
+        "fonts": [
+          "./assets/fonts/Poppins-Black.ttf",
+          "./assets/fonts/Poppins-Bold.ttf",
+          "./assets/fonts/Poppins-ExtraBold.ttf",
+          "./assets/fonts/Poppins-ExtraLight.ttf",
+          "./assets/fonts/Poppins-Light.ttf",
+          "./assets/fonts/Poppins-Medium.ttf",
+          "./assets/fonts/Poppins-Regular.ttf",
+          "./assets/fonts/Poppins-SemiBold.ttf",
+          "./assets/fonts/Poppins-Thin.ttf"
+
+        ]
+      }
+    ],
+    */
+    ]
   }
 }
