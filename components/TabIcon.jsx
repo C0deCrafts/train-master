@@ -8,8 +8,8 @@ const TabIcon = ({icon, color, name, focused}) => {
                 resizeMode="contain"
                 tintColor={color}
                 style={{
-                    width: 20,
-                    height: 20,
+                    width: 25,
+                    height: 25,
                 }}
             />
             <Text style={[styles.text, focused && styles.focusedText, { color: color }]}>
@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
         gap: 2
     },
     text: {
-        fontSize: 14,
-        fontFamily: "Poppins-Regular"
+        fontSize: 12,
+        fontFamily: "Poppins-Light"
     },
     focusedText: {
-        fontFamily: "Poppins-SemiBold"
+        fontFamily: "Poppins-Light"
     }
 })

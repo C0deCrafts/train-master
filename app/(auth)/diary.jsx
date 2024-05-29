@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 
-const Groups = () => {
+const Diary = () => {
     return (
         <View>
-            <Text>Groups</Text>
+            <Text>Diary</Text>
         </View>
     );
 };
 
-export default Groups;
+export default Diary;
 
 const styles = StyleSheet.create({})

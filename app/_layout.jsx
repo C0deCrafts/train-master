@@ -1,9 +1,39 @@
-import {SplashScreen, Stack} from "expo-router";
-import { useFonts } from "expo-font";
-import { useEffect } from "react";
-import {StatusBar} from "expo-status-bar";
+import {AuthProvider, useAuth} from "../context/AuthProvider";
+import {Slot, SplashScreen, useRouter, useSegments} from "expo-router";
+import {useEffect} from "react";
+import {ActivityIndicator, View} from "react-native";
+import { StatusBar } from "expo-status-bar";
+import {useFonts} from "expo-font";
 
-SplashScreen.preventAutoHideAsync();
+const InitialLayout = () => {
+    const { user, initialized } = useAuth();
+    const router = useRouter();
+    const segments = useSegments();
+
+    useEffect(() => {
+        if(!initialized) return;
+        console.log("Segments: ", segments)
+        const inAuthGroup = segments[0] === "(auth)";
+
+        if (user && !inAuthGroup) {
+            router.replace("/profile");
+        } else if (!user) {
+            router.navigate("/login");
+        }
+    }, [initialized, user]);
+
+    return (
+        <>
+            {initialized ? (
+                <Slot/>
+            ) : (
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" color="#185360" />
+                </View>
+            )}
+        </>
+    )
+};
 
 const RootLayout = () => {
     const [fontsLoaded, error] = useFonts({
@@ -27,13 +57,11 @@ const RootLayout = () => {
     if(!fontsLoaded && !error) return null;
 
     return (
-        <>
-            <Stack>
-                <Stack.Screen name="(public)" options={{headerShown: false}}/>
-            </Stack>
+        <AuthProvider>
+            <InitialLayout/>
             <StatusBar style="light"/>
-        </>
-    );
-};
+        </AuthProvider>
+    )
+}
 
 export default RootLayout;
