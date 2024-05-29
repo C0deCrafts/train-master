@@ -1,15 +1,15 @@
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {colors, icons} from "../constants";
-import {useState} from "react";
+import {useState, forwardRef} from "react";
 
-const FormField = ({label, value, placeholder, handleChangeText, otherStyles, isPassword=false, isLabel=false,...props}) => {
-    const [showPassword, setShowPassword] = useState(false)
+const FormField = forwardRef(({label, value, placeholder, handleChangeText, otherStyles, labelStyle, isPassword=false, isLabel=false, onSubmitEditing, returnKeyType}, ref) => {
+    const [showPassword, setShowPassword] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
 
     return (
         <View style={otherStyles}>
             {isLabel && (
-                <Text style={styles.text}>{label}</Text>
+                <Text style={[styles.text, labelStyle]}>{label}</Text>
             )}
             <View style={[styles.formContainer, isFocused && styles.focused]}>
                 <TextInput
@@ -21,6 +21,9 @@ const FormField = ({label, value, placeholder, handleChangeText, otherStyles, is
                     secureTextEntry={isPassword && !showPassword}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
+                    onSubmitEditing={onSubmitEditing}
+                    returnKeyType={returnKeyType}
+                    ref={ref}
                 />
 
                 {isPassword && (
@@ -34,7 +37,7 @@ const FormField = ({label, value, placeholder, handleChangeText, otherStyles, is
             </View>
         </View>
     );
-};
+});
 
 export default FormField;
 

@@ -1,19 +1,19 @@
-import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native'
+import {Alert, Image, ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {colors, icons, images} from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import {Link} from "expo-router";
 import { Dimensions } from 'react-native';
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import Spinner from "react-native-loading-spinner-overlay";
-import {signInWithEmailAndPassword} from "firebase/auth";
+import {sendPasswordResetEmail, signInWithEmailAndPassword} from "firebase/auth";
 import {FIREBASE_AUTH} from "../../config/firebaseConfig";
-
 
 const Login = () => {
     const [isSmallDevice, setIsSmallDevice] = useState(false)
     const screenHeight = Dimensions.get('window').height;
+    const passwordInputRef = useRef(null);
 
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -25,11 +25,69 @@ const Login = () => {
             const user = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
             //console.log("Login: ", user)
         } catch (err) {
-            console.log("Register Error: ", err)
+            if(err.code === "auth/invalid-credential") {
+                Alert.alert("Hoppla!", "Dein Passwort scheint falsch zu sein. Versuch's nochmal!");
+            } else {
+                Alert.alert("Uups!", `Irgendwas lief schief: ${err.message}. Keine Panik, wir kriegen das hin!`);
+                //melde den Fehler
+            }
         } finally {
             setLoading(false)
         }
     }
+
+    const handleForgotPassword = () => {
+        if (!email) {
+            Alert.prompt('Passwort vergessen?', 'Gib bitte deine E-Mail-Adresse ein, damit wir dir helfen können.', [
+                {
+                    text: 'Abbrechen',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Passwort zurücksetzen',
+                    onPress: async (inputEmail) => {
+                        try {
+                            setLoading(true);
+                            await sendPasswordResetEmail(FIREBASE_AUTH, inputEmail);
+                            Alert.alert("Geschafft!", "Eine E-Mail zum Zurücksetzen deines Passworts ist unterwegs! Schau in deinem Posteingang nach.");
+                        } catch (error) {
+                            Alert.alert("Uups!", `Irgendwas lief schief: ${error.message}. Keine Panik, wir kriegen das hin!`);
+                        } finally {
+                            setLoading(false);
+                        }
+                    },
+                },
+            ]);
+        } else {
+            Alert.alert(
+                'Passwort zurücksetzen?',
+                `Möchtest du das Passwort für ${email} zurücksetzen?`,
+                [
+                    {
+                        text: 'Abbrechen',
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'Ja, bitte!',
+                        onPress: async () => {
+                            try {
+                                setLoading(true);
+                                await sendPasswordResetEmail(FIREBASE_AUTH, email);
+                                Alert.alert("Geschafft!", "Eine E-Mail zum Zurücksetzen deines Passworts ist unterwegs! Schau in deinem Posteingang nach.");
+                            } catch (error) {
+                                alert(error.message);
+                                Alert.alert("Uups!", `Irgendwas lief schief: ${error.message}. Keine Panik, wir kriegen das hin!`);
+                                //informiere uns über fehler!
+                            } finally {
+                                setLoading(false);
+                            }
+                        },
+                    },
+                ]
+            );
+        }
+    };
+
 
     useEffect(() => {
         console.log(screenHeight);
@@ -64,11 +122,22 @@ const Login = () => {
 
                     </View>
                     <View style={styles.formContainer}>
-                        <FormField placeholder="E-Mail" otherStyles={{marginBottom: 16}} value={email}
-                                   handleChangeText={setEmail}/>
+                        <FormField placeholder="E-Mail"
+                                   otherStyles={{marginBottom: 16}}
+                                   value={email}
+                                   handleChangeText={setEmail}
+                                   onSubmitEditing={()=> passwordInputRef.current.focus()}
+                                   returnKeyType="next"
+                        />
                         <FormField placeholder="Passwort" isPassword={true} value={password}
-                                   handleChangeText={setPassword}/>
-                        <Text style={styles.forgotPasswordText}>Passwort vergessen?</Text>
+                                   handleChangeText={setPassword}
+                                   ref={passwordInputRef}
+                                   onSubmitEditing={()=> handleLogin()}
+                                   returnKeyType="done"
+                        />
+                        <Pressable onPress={handleForgotPassword}>
+                            <Text style={styles.forgotPasswordText}>Passwort vergessen?</Text>
+                        </Pressable>
                         <CustomButton title="Login" containerStyles={{marginTop: 40}} handlePress={handleLogin}/>
                         <Text style={styles.text}>oder</Text>
                         <View style={styles.loginIconContainer}>

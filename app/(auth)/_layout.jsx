@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import {Tabs} from "expo-router";
 import TabIcon from "../../components/TabIcon";
 import {colors, icons} from "../../constants";
@@ -29,14 +29,14 @@ const TabsLayout = () => {
                 fontSize: 25,
             }
         }}>
-            <Tabs.Screen name="diary" options={{
+            <Tabs.Screen name="groups" options={{
                 //headerShown: false,
-                title: "Tagebuch",
+                title: "Freunde",
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon
-                        icon={icons.diary}
+                        icon={icons.friends}
                         color={color}
-                        name="Tagebuch"
+                        name="Freunde"
                         focused={focused}
                     />
                 )
@@ -90,5 +90,3 @@ const TabsLayout = () => {
 };
 
 export default TabsLayout;
-
-const styles = StyleSheet.create({})

@@ -12,7 +12,7 @@ const InitialLayout = () => {
 
     useEffect(() => {
         if(!initialized) return;
-        console.log("Segments: ", segments)
+        //console.log("Segments: ", segments)
         const inAuthGroup = segments[0] === "(auth)";
 
         if (user && !inAuthGroup) {
