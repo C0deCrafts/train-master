@@ -30,8 +30,8 @@ const TabsLayout = () => {
             }
         }}>
             <Tabs.Screen name="groups" options={{
-                //headerShown: false,
-                title: "Freunde",
+                headerShown: false,
+                title: "Gruppen",
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon
                         icon={icons.friends}
@@ -39,7 +39,8 @@ const TabsLayout = () => {
                         name="Freunde"
                         focused={focused}
                     />
-                )
+                ),
+                headerShadowVisible: false
             }}
             redirect={!user}
             />

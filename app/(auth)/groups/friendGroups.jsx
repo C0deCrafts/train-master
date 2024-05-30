@@ -6,6 +6,7 @@ import {colors, icons} from "../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
 import {useAuth} from "../../../context/AuthProvider";
 import {Link} from "expo-router";
+import CustomHeader from "../../../components/CustomHeader";
 
 const FriendGroups = () => {
     const { user } = useAuth();
@@ -67,11 +68,14 @@ const FriendGroups = () => {
 
     return (
         <View style={styles.container}>
+            <CustomHeader title={"Gruppen"}/>
             <Spinner visible={loading}/>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                 {groups.map((group)=> {
                     return (
-                        <Link href={`/groups/${group.id}`} key={group.id} asChild>
+                        <Link href={{pathname: `/groups/${group.id}`, params: {name: group.name}}}
+                              key={group.id }
+                              asChild>
                             <TouchableOpacity style={styles.groupCard}>
                                 <Text style={styles.groupName}>{group.name}</Text>
                                 <Text style={styles.groupDescription}>{group.description}</Text>
@@ -93,7 +97,10 @@ export default FriendGroups;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20
+    },
+    header: {
+        backgroundColor: colors.backgroundColorBlueGreen,
+        height: 120
     },
     scrollContainer: {
         marginTop: 20
