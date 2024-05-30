@@ -2,7 +2,7 @@ import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-
 import {colors, icons} from "../constants";
 import {useState, forwardRef} from "react";
 
-const FormField = forwardRef(({label, value, placeholder, handleChangeText, otherStyles, labelStyle, isPassword=false, isLabel=false, onSubmitEditing, returnKeyType}, ref) => {
+const FormField = forwardRef(({label, value, placeholder, handleChangeText, otherStyles, labelStyle, isPassword=false, isLabel=false, onSubmitEditing, returnKeyType, multiline=false}, ref) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
 
@@ -24,6 +24,7 @@ const FormField = forwardRef(({label, value, placeholder, handleChangeText, othe
                     onSubmitEditing={onSubmitEditing}
                     returnKeyType={returnKeyType}
                     ref={ref}
+                    multiline={multiline}
                 />
 
                 {isPassword && (
