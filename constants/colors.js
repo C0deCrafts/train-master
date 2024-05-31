@@ -11,5 +11,5 @@ export default {
     backgroundColor: "#F2F2F2",
     backgroundColorBlueGreen: "#185360",
     white: "#FFFFFF",
-    chatColor: "rgb(137,206,225)"
+    chatColor: "#B3C4C8"
 }

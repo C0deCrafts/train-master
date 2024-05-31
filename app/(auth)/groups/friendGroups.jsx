@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
         height: 120
     },
     scrollContainer: {
-        marginTop: 20
+        marginTop: 20,
+        paddingHorizontal: 20
     },
     fab: {
         position: "absolute",

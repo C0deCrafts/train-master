@@ -1,4 +1,14 @@
-import {Button, FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View} from 'react-native'
+import {
+    Button,
+    FlatList,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    View
+} from 'react-native'
 import { useLocalSearchParams } from "expo-router"
 import {useEffect, useState, useLayoutEffect, useRef} from "react";
 import CustomHeader from "../../../components/CustomHeader";
@@ -69,7 +79,9 @@ const GroupPage = () => {
                                scrollEnabled={true}
                                maxHeight={120}
                     />
-                    <Button title={"Senden"} onPress={sendMessages} color={colors.backgroundColorBlueGreen}/>
+                    <Pressable onPress={sendMessages} style={styles.button}>
+                        <Text style={styles.buttonLabel}>Senden</Text>
+                    </Pressable>
                 </View>
             </KeyboardAvoidingView>
         </>
@@ -81,12 +93,12 @@ export default GroupPage;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //paddingHorizontal: 20
     },
     textInputContainer: {
         flexDirection: "row",
         gap: 10,
-        paddingBottom: 10
+        paddingBottom: 10,
+        paddingHorizontal: 20,
     },
     textInput: {
         flex: 1,
@@ -96,9 +108,6 @@ const styles = StyleSheet.create({
         fontFamily: "Poppins-Regular",
         fontSize: 14,
         padding: 10,
-    },
-    sendButton: {
-        backgroundColor: "red"
     },
     messageContainer: {
         padding: 10,
@@ -116,14 +125,25 @@ const styles = StyleSheet.create({
         backgroundColor: colors.boxColor
     },
     messageText: {
-        fontFamily: "PoppinsRegular",
+        fontFamily: "Poppins-Regular",
         fontSize: 16
     },
     time: {
         alignSelf: "flex-end",
-        fontFamily: "PoppinsLight",
+        fontFamily: "Poppins-Light",
         fontSize: 10,
         color: colors.backgroundColorBlueGreen,
         marginTop: 5
+    },
+    button: {
+        backgroundColor: colors.backgroundColorBlueGreen,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        justifyContent: "center"
+    },
+    buttonLabel: {
+        fontFamily: "Poppins-SemiBold",
+        fontSize: 14,
+        color: colors.white,
     }
 })
