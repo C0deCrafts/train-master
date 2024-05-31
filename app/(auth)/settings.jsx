@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 const Settings = () => {
     return (
         <View>
-            <Text>Settings</Text>
+            <Text>Menü</Text>
         </View>
     );
 };

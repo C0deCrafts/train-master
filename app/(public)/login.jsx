@@ -1,4 +1,12 @@
-import {Alert, Image, ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native'
+import {
+    Alert,
+    Image,
+    ImageBackground, Keyboard,
+    Pressable,
+    StyleSheet,
+    Text, TouchableWithoutFeedback,
+    View
+} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {colors, icons, images} from "../../constants";
 import FormField from "../../components/FormField";
@@ -105,52 +113,52 @@ const Login = () => {
                     source={images.backgroundSymbol}
                     style={styles.symbol}
                 />
-                <SafeAreaView style={styles.content}>
-                    <Spinner visible={loading}/>
-                    <View style={styles.logoContainer}>
-                        {isSmallDevice ? (
-                            <Image
-                                source={images.logo}
-                                style={styles.logoSmallDevices}
-                            />
-                        ) : (
-                            <Image
-                                source={images.logo}
-                                style={styles.logo}
-                            />
-                        )}
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <SafeAreaView style={styles.content}>
+                        <Spinner visible={loading}/>
+                        <View style={styles.logoContainer}>
+                            {isSmallDevice ? (
+                                <Image
+                                    source={images.logo}
+                                    style={styles.logoSmallDevices}
+                                />
+                            ) : (
+                                <Image
+                                    source={images.logo}
+                                    style={styles.logo}
+                                />
+                            )}
 
-                    </View>
-                    <View style={styles.formContainer}>
-                        <FormField placeholder="E-Mail"
-                                   otherStyles={{marginBottom: 16}}
-                                   value={email}
-                                   handleChangeText={setEmail}
-                                   onSubmitEditing={()=> passwordInputRef.current.focus()}
-                                   returnKeyType="next"
-                        />
-                        <FormField placeholder="Passwort" isPassword={true} value={password}
-                                   handleChangeText={setPassword}
-                                   ref={passwordInputRef}
-                                   onSubmitEditing={()=> handleLogin()}
-                                   returnKeyType="done"
-                        />
-                        <Pressable onPress={handleForgotPassword}>
-                            <Text style={styles.forgotPasswordText}>Passwort vergessen?</Text>
-                        </Pressable>
-                        <CustomButton title="Login" containerStyles={{marginTop: 40}} handlePress={handleLogin}/>
-                        <Text style={styles.text}>oder</Text>
-                        <View style={styles.loginIconContainer}>
-                            <Image source={icons.apple} style={styles.loginIcons}/>
-                            <Image source={icons.facebook} style={styles.loginIcons}/>
-                            <Image source={icons.google} style={styles.loginIcons}/>
                         </View>
-                    </View>
-                    <View style={styles.footer}>
-                        <Text style={styles.footerText}>Kein Account?</Text>
-                        <Link replace href={"/register"} style={styles.footerLink}>{" "}Registriere dich jetzt!</Link>
-                    </View>
-                </SafeAreaView>
+                            <FormField placeholder="E-Mail"
+                                       otherStyles={{marginBottom: 16}}
+                                       value={email}
+                                       handleChangeText={setEmail}
+                                       onSubmitEditing={()=> passwordInputRef.current.focus()}
+                                       returnKeyType="next"
+                            />
+                            <FormField placeholder="Passwort" isPassword={true} value={password}
+                                       handleChangeText={setPassword}
+                                       ref={passwordInputRef}
+                                       onSubmitEditing={()=> handleLogin()}
+                                       returnKeyType="done"
+                            />
+                            <Pressable onPress={handleForgotPassword}>
+                                <Text style={styles.forgotPasswordText}>Passwort vergessen?</Text>
+                            </Pressable>
+                            <CustomButton title="Login" containerStyles={{marginTop: 40}} handlePress={handleLogin}/>
+                            <Text style={styles.text}>oder</Text>
+                            <View style={styles.loginIconContainer}>
+                                <Image source={icons.apple} style={styles.loginIcons}/>
+                                <Image source={icons.facebook} style={styles.loginIcons}/>
+                                <Image source={icons.google} style={styles.loginIcons}/>
+                            </View>
+                        <View style={styles.footer}>
+                            <Text style={styles.footerText}>Kein Account?</Text>
+                            <Link replace href={"/register"} style={styles.footerLink}>{" "}Registriere dich jetzt!</Link>
+                        </View>
+                    </SafeAreaView>
+                </TouchableWithoutFeedback>
             </ImageBackground>
     );
 };

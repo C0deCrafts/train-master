@@ -5,7 +5,6 @@ import {getDoc, doc, updateDoc} from "firebase/firestore";
 import {useEffect, useState} from "react";
 import FormField from "../../components/FormField";
 import {colors} from "../../constants";
-import * as ImagePicker from 'expo-image-picker';
 
 const Profile = () => {
     const { user } = useAuth();
@@ -30,14 +29,6 @@ const Profile = () => {
             });
         } catch (err) {
             console.error(err);
-        }
-    }
-
-    const openImagePicker = async () => {
-        const pickerResult = await ImagePicker.launchImageLibraryAsync();
-
-        if(pickerResult.canceled) {
-            return;
         }
     }
 
