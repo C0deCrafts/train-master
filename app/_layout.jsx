@@ -16,7 +16,7 @@ const InitialLayout = () => {
         const inAuthGroup = segments[0] === "(auth)";
 
         if (user && !inAuthGroup) {
-            router.replace("/profile");
+            router.replace("/home");
         } else if (!user) {
             router.navigate("/login");
         }

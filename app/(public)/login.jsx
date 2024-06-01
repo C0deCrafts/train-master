@@ -35,6 +35,8 @@ const Login = () => {
         } catch (err) {
             if(err.code === "auth/invalid-credential") {
                 Alert.alert("Hoppla!", "Dein Passwort scheint falsch zu sein. Versuch's nochmal!");
+            } else if(err.code === "auth/invalid-email" || "auth/missing-email") {
+                Alert.alert("Hoppla!", "Deine Email ist ungültig. Versuch's nochmal!");
             } else {
                 Alert.alert("Uups!", `Irgendwas lief schief: ${err.message}. Keine Panik, wir kriegen das hin!`);
                 //melde den Fehler
@@ -95,7 +97,6 @@ const Login = () => {
             );
         }
     };
-
 
     useEffect(() => {
         console.log(screenHeight);
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
         height: 40,
     },
     footer: {
-        //flex: 1,
+        flex: 1,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "flex-end",

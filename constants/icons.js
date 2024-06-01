@@ -2,6 +2,7 @@ import add from "../assets/icons/add_line.png"
 import apple from "../assets/icons/apple_fill.png";
 import back from "../assets/icons/left_line.png";
 import barbell from "../assets/icons/barbell_fill.png";
+import camera from "../assets/icons/camera_2_fill.png"
 import diary from "../assets/icons/notebook_2_fill.png";
 import facebook from "../assets/icons/facebook_fill.png";
 import fitness from "../assets/icons/fitness_fill.png";
@@ -19,6 +20,7 @@ export default {
     apple,
     back,
     barbell,
+    camera,
     diary,
     facebook,
     fitness,

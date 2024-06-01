@@ -44,19 +44,19 @@ const TabsLayout = () => {
             }}
             redirect={!user}
             />
-            <Tabs.Screen name="profile" options={{
-                title: "Profil",
-                headerRight: () => <LogoutButton/>,
+            <Tabs.Screen name="home" options={{
+                headerShown: false,
+                title: "Home",
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon
                         icon={icons.profile}
                         color={color}
-                        name="Profile"
+                        name="Home"
                         focused={focused}
                     />
                 )
             }}
-                         redirect={!user}
+            redirect={!user}
             />
             <Tabs.Screen name="training" options={{
                 //headerShown: false,
@@ -75,6 +75,7 @@ const TabsLayout = () => {
             <Tabs.Screen name="settings" options={{
                 //headerShown: false,
                 title: "Menü",
+                headerRight: () => <LogoutButton/>,
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon
                         icon={icons.menu}
