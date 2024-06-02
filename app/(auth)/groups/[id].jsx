@@ -1,6 +1,6 @@
 import {
     Button,
-    FlatList,
+    FlatList, Image,
     KeyboardAvoidingView,
     Platform,
     Pressable,
@@ -15,7 +15,7 @@ import CustomHeader from "../../../components/CustomHeader";
 import {useAuth} from "../../../context/AuthProvider";
 import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
 import {FIRESTORE_DB} from "../../../config/firebaseConfig";
-import {colors} from "../../../constants";
+import {colors, images} from "../../../constants";
 
 const GroupPage = () => {
     const { id, name } = useLocalSearchParams();
@@ -61,9 +61,14 @@ const GroupPage = () => {
     return (
         <>
             <CustomHeader title={name} backButtonVisible={true}/>
+            <Image
+                source={images.backgroundSymbol}
+                style={styles.image}
+            />
             <KeyboardAvoidingView behavior={
                 Platform.OS === "ios" ? "padding" : "height"
             } style={styles.container}>
+
                 <FlatList
                     ref={flatListRef}
                     data={messages}
@@ -93,6 +98,14 @@ export default GroupPage;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    image: {
+        position: "absolute",
+        top: 50,
+        width: "100%",
+        height: "100%",
+        resizeMode: "contain",
+        tintColor: colors.inactiveColor
     },
     textInputContainer: {
         flexDirection: "row",
