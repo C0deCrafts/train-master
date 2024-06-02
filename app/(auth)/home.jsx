@@ -1,9 +1,8 @@
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useAuth} from "../../context/AuthProvider";
 import {FIRESTORE_DB} from "../../config/firebaseConfig";
-import {getDoc, doc, updateDoc} from "firebase/firestore";
+import {getDoc, doc} from "firebase/firestore";
 import {useEffect, useRef, useState} from "react";
-import FormField from "../../components/FormField";
 import {colors, icons, images} from "../../constants";
 import DonutChart from "../../components/DonutChart";
 import BigDonutChart from "../../components/BigDonutChart";
@@ -16,31 +15,11 @@ const Home = () => {
     const { user } = useAuth();
     const [username, setUsername] = useState("");
     const flatListRef = useRef(null);
-    const [loading, setLoading] = useState(false);
-    const [dataSource, setDataSource] = useState(workouts)
-    const [isListEnd, setIsListEnd] = useState(false)
-    const [offset, setOffset] = useState(1)
-    const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
+    const [selectedWorkoutId, setSelectedWorkoutId] = useState(1);
 
     useEffect(() => {
         loadUserInfo();
     }, []);
-
-    const getData = () => {
-        console.log("Offset: ", offset);
-        if(!loading && !isListEnd){
-            console.log("GET DATA")
-            setLoading(true);
-            if(workouts.length > 0){
-                setOffset(offset+1);
-                setDataSource([...dataSource, ...workouts]);
-                setLoading(false);
-            } else {
-                setIsListEnd(true)
-                setLoading(false);
-            }
-        }
-    }
 
     const loadUserInfo = async () => {
         const userDocument = await getDoc(doc(FIRESTORE_DB, "users", user.uid));
@@ -69,22 +48,43 @@ const Home = () => {
 
     const renderWorkout = ({item}) => {
         return (
-            <TouchableOpacity style={styles.workoutContainer} onPress={()=> console.log("Item")}>
-                <Spinner visible={loading}/>
-                <Image source={item.image} style={styles.workoutImage} />
-                <Text style={styles.workoutName}>{item.name}</Text>
+            <TouchableOpacity style={item.id === selectedWorkoutId ? styles.workoutContainerSelected : styles.workoutContainer} onPress={()=> setSelectedWorkoutId(item.id)}>
+                {/*<Image source={item.image} style={styles.workoutImage} />*/}
+                <Text style={item.id === selectedWorkoutId ? styles.workoutNameSelected : styles.workoutName}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
 
-    const renderExercises = ({item}) => {
+    const renderExercise = ({item}) => {
         return (
             <View style={styles.exerciseContainer}>
-                <Image source={item.image} style={styles.exerciseImage} />
-                <Text style={styles.exerciseName}>{item.name}</Text>
+                <View style={styles.exercises}>
+                    <View>
+                        <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
+                    </View>
+                    <View>
+                        <View style={{flexDirection: "row"}}>
+                            <View style={styles.smallIconContainer}>
+                                <Image source={icons.rest} style={styles.smallIcon}/>
+                            </View>
+                            <Text style={styles.exerciseDetails}>Sets: {item.sets}</Text>
+                        </View>
+                        <View style={{flexDirection: "row"}}>
+                            <View style={styles.smallIconContainer}>
+                                <Image source={icons.repeat} style={styles.smallIcon}/>
+                            </View>
+                            <Text style={styles.exerciseDetails}>Pause: {item.rest} min</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.exerciseImageContainer}>
+                    <Image source={item.image} style={styles.exerciseImage} />
+                </View>
             </View>
         )
     }
+
+    const selectedWorkout = workouts.find(workout => workout.id === selectedWorkoutId);
 
     return (
         <SafeAreaView style={styles.backgroundImage}>
@@ -95,46 +95,47 @@ const Home = () => {
             />
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
+                    <View>
+                        <Text style={styles.greetingText}>Hallo</Text>
+                        <Text style={styles.usernameText}>{username}!</Text>
+                    </View>
                     {/* ImageViewer with TouchableOpacity for the camera button */}
                     <TouchableOpacity onPress={handlePressImage} style={{zIndex: 2}}>
                         <View style={styles.imageContainer}>
                             <Image
                                 source={images.avatar}
                                 style={{
-                                    width: 140,
-                                    height: 140,
-                                    borderRadius: 70,
+                                    width: 100,
+                                    height: 100,
+                                    borderRadius: 50,
                                     resizeMode: "contain",
                                 }}
                             />
                             <View style={styles.cameraStyle}>
                                 <Image source={icons.camera} style={{
-                                    width: 35,
-                                    height: 35,
+                                    width: 25,
+                                    height: 25,
                                     tintColor: colors.buttonBackgroundDefault
                                 }}/>
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <View>
-                        <Text style={styles.greetingText}>Hallo</Text>
-                        <Text style={styles.usernameText}>{username}!</Text>
-                    </View>
                 </View>
 
                 <View style={styles.workoutInfoContainer}>
-                    <Text style={styles.titleText}>Aktivität</Text>
+                    <Text style={styles.firstTitleText}>Aktivität</Text>
                 </View>
                 <View style={styles.workoutInfoBox}>
-                    <View style={styles.boxStyle}>
+                    <View style={styles.boxStyleLarge}>
                         <BigDonutChart
                             key="minutes"
                             //percentage={lastElapsedTime}
                             color={colors.donutColorDefault}
                             delay={1000}
                             max={240}
-                            radius={80}
+                            radius={60}
                         />
+                        <Text style={styles.headerCounterLabel}>Absolvierte Trainings</Text>
                     </View>
                     <View style={styles.donutChartContainer}>
                         <View style={styles.boxStyle}>
@@ -167,16 +168,23 @@ const Home = () => {
                 <View>
                     <FlatList
                         ref={flatListRef}
-                        data={dataSource}
+                        data={workouts}
                         renderItem={renderWorkout}
                         keyExtractor={(item, index) => index.toString()}
                         horizontal={true} // Set horizontal to true for horizontal scrolling
-                        onEndReached={getData} // Load more data when the end is reached
-                        onEndReachedThreshold={0.5} // Trigger onEndReached when halfway through the content
                         showsHorizontalScrollIndicator={false}
                     />
                 </View>
-
+                {selectedWorkoutId !== null && (
+                    <View style={styles.exerciseListContainer}>
+                        <FlatList
+                            data={selectedWorkout.exercises}
+                            renderItem={renderExercise}
+                            //keyExtractor={(item, index) => index.toString()}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    </View>
+                )}
             </View>
         </SafeAreaView>
     );
@@ -201,15 +209,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 20,
         //flexDirection: "column",
-        justifyContent: "space-evenly"
+        //justifyContent: "space-evenly"
     },
     headerContainer: {
         flexDirection: "row",
-        alignItems: "flex-end"
+        justifyContent: "space-between"
     },
     workoutInfoBox: {
         flexDirection: "row",
-        justifyContent: "space-evenly",
+        justifyContent: "space-between",
         backgroundColor: colors.boxBackgroundTransparent,
         padding: 10,
         borderRadius: 10
@@ -227,6 +235,13 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
         //backgroundColor: colors.white
     },
+    boxStyleLarge: {
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "flex-end",
+        gap: 10
+        //backgroundColor: colors.white
+    },
     headerCounterLabel: {
         color: colors.textColorGrey,
         fontFamily: "Poppins-Regular",
@@ -234,14 +249,21 @@ const styles = StyleSheet.create({
     },
     workoutInfoContainer: {
         alignItems:"flex-start",
-        paddingBottom: 5
+        paddingBottom: 5,
+        //marginTop: 10
+        marginBottom: 5
+    },
+    firstTitleText: {
+        fontFamily: "Poppins-SemiBold",
+        fontSize: 20,
     },
     titleText: {
         fontFamily: "Poppins-SemiBold",
-        fontSize: 25
+        fontSize: 20,
+        marginTop: 10
     },
     imageContainer: {
-        alignItems: "flex-start",
+        alignItems: "flex-end",
     },
     cameraStyle: {
         flex: 1,
@@ -260,9 +282,18 @@ const styles = StyleSheet.create({
     workoutContainer: {
         padding: 10,
         backgroundColor: colors.boxBackgroundTransparent,
-        borderRadius: 10,
+        borderRadius: 30,
         alignItems: "center",
-        marginRight: 10
+        marginRight: 10,
+        marginBottom: 10
+    },
+    workoutContainerSelected: {
+        padding: 10,
+        backgroundColor: colors.buttonBackgroundDefault,
+        borderRadius: 30,
+        alignItems: "center",
+        marginRight: 10,
+        marginBottom: 10
     },
     workoutImage: {
         width: 70,
@@ -271,9 +302,74 @@ const styles = StyleSheet.create({
         tintColor: colors.buttonBackgroundDefault
     },
     workoutName: {
-        fontFamily: "Poppins-SemiBold",
-        fontSize: 16,
-        marginVertical: 10
+        fontFamily: "Poppins-Regular",
+        fontSize: 14,
+        marginVertical: 5
     },
-
+    workoutNameSelected: {
+        fontFamily: "Poppins-Regular",
+        fontSize: 14,
+        marginVertical: 5,
+        color: colors.white
+    },
+    exerciseListContainer: {
+        flex: 1,
+        marginTop: 5,
+        //marginBottom: 5
+    },
+    exerciseContainer: {
+        flexDirection: "row",
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        backgroundColor: colors.boxBackgroundTransparent,
+        marginBottom: 10,
+        //alignItems: "flex-end"
+        justifyContent: "space-between"
+    },
+    exercises: {
+        //backgroundColor: "blue",
+        flexDirection: "column",
+        flex: 1,
+        //width: "50%",
+        //gap: 10,
+        //alignItems: "flex-end",
+        justifyContent: "space-between",
+    },
+    exerciseImageContainer: {
+        //backgroundColor: "red"
+    },
+    exerciseImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+    },
+    exerciseName: {
+        fontFamily: "Poppins-SemiBold",
+        color: colors.textColorDefault,
+        fontSize: 16,
+        paddingLeft: 5,
+        width: "100%",
+    },
+    exerciseDetails: {
+        fontFamily: "Poppins-Regular",
+        color: colors.textColorGrey,
+        fontSize: 14,
+        paddingLeft: 5,
+        paddingTop: 2,
+        width: "100%",
+        height: "100%",
+        alignSelf: "center",
+    },
+    smallIconContainer: {
+        backgroundColor: colors.donutColorDefaultTransparent,
+        borderRadius: 5,
+        marginBottom: 5,
+        padding: 5,
+    },
+    smallIcon: {
+        width: 15,
+        height: 15,
+        tintColor: colors.donutColorDefault,
+    }
 })

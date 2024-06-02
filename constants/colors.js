@@ -19,4 +19,5 @@ export default {
     donutColorLavendel: "#9090ff",
     donutColorGreen: "#32CD32",
     donutColorDefault: "#185360",
+    donutColorDefaultTransparent: "rgba(24,83,96,0.3)",
 }

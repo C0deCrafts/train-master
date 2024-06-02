@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native'
 import {Tabs} from "expo-router";
 import TabIcon from "../../components/TabIcon";
 import {colors, icons} from "../../constants";
@@ -60,12 +59,12 @@ const TabsLayout = () => {
             />
             <Tabs.Screen name="training" options={{
                 //headerShown: false,
-                title: "Training",
+                title: "Start",
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon
                         icon={icons.fitness}
                         color={color}
-                        name="Training"
+                        name="Start"
                         focused={focused}
                     />
                 )
