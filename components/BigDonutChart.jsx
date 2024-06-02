@@ -1,7 +1,7 @@
-import {View, StyleSheet, Animated, TextInput, Text, Image} from "react-native";
+import {View, StyleSheet, Animated, TextInput, Image} from "react-native";
 import Svg, {G, Circle } from "react-native-svg";
 import {useEffect, useRef} from "react";
-import {colors, icons, images} from "../constants";
+import {colors, icons} from "../constants";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
@@ -99,11 +99,11 @@ function BigDonutChart({
             </Svg>
             <Image source={icons.fitness} style={{
                 position: "absolute",
-                width: 60,
-                height: 60,
+                width: 40,
+                height: 40,
                 resizeMode: "contain",
-                top: 20,
-                left: radius - 30,
+                top: 25,
+                left: radius - 20,
                 tintColor: colors.donutColorDefault
             }}/>
             <AnimatedInput

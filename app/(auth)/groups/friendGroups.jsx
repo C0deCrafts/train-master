@@ -2,7 +2,7 @@ import {Alert, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity,
 import {useEffect, useState} from "react";
 import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import {FIRESTORE_DB} from "../../../config/firebaseConfig";
-import {colors, icons} from "../../../constants";
+import {colors, icons, images} from "../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
 import {useAuth} from "../../../context/AuthProvider";
 import {Link} from "expo-router";
@@ -69,6 +69,10 @@ const FriendGroups = () => {
     return (
         <View style={styles.container}>
             <CustomHeader title={"Gruppen"}/>
+            <Image
+                source={images.backgroundSymbol}
+                style={styles.image}
+            />
             <Spinner visible={loading}/>
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                 {groups.map((group)=> {
@@ -98,6 +102,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    image: {
+        position: "absolute",
+        top: 50,
+        width: "100%",
+        height: "100%",
+        resizeMode: "contain",
+        tintColor: colors.inactiveColor
+    },
     header: {
         backgroundColor: colors.backgroundColorBlueGreen,
         height: 120
@@ -126,7 +138,7 @@ const styles = StyleSheet.create({
     groupCard: {
         padding: 10,
         marginBottom: 5,
-        backgroundColor: colors.boxColor,
+        backgroundColor: colors.boxBackgroundTransparent,
         borderRadius: 5,
         elevation: 2
     },
