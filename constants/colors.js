@@ -21,3 +21,24 @@ export default {
     donutColorDefault: "#185360",
     donutColorDefaultTransparent: "rgba(24,83,96,0.3)",
 }
+
+export const color = {
+    red: "rgb(255,59,48)",
+    orange: "rgb(255,149,0)",
+    yellow: "rgb(255,204,0)",
+    green: "rgb(52,199,89)",
+    mint: "rgb(0,199,190)",
+    teal: "rgb(48,176,199)",
+    cyan: "rgb(50,179,230)",
+    blue: "rgb(0,122,255)",
+    indigo: "rgb(88,86,214)",
+    purple: "rgb(175,82,222)",
+    pink: "rgb(255,45,85)",
+    brown: "rgb(162,132,94)",
+    gray: "rgb(142,142,147)",
+    gray_2: "rgb(174,174,178)",
+    gray_3: "rgb(199,199,204)",
+    gray_4: "rgb(209,209,214)",
+    gray_5: "rgb(229,229,234)",
+    gray_6: "rgb(242,242,247)"
+}

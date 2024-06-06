@@ -153,7 +153,7 @@ const Home = () => {
                                 key="minutes"
                                 //percentage={lastElapsedTime}
                                 percentage={870}
-                                color={colors.donutColorDefault}
+                                color={colors.donutColorCoral}
                                 delay={1000}
                                 max={1000}
                             />
@@ -164,7 +164,7 @@ const Home = () => {
                                 key="minutes"
                                 //percentage={lastElapsedTime}
                                 percentage={14}
-                                color={colors.donutColorDefault}
+                                color={colors.donutColorGreen}
                                 delay={1000}
                                 max={20}
                             />
@@ -175,7 +175,7 @@ const Home = () => {
                                 key="minutes"
                                 //percentage={lastElapsedTime}
                                 percentage={120}
-                                color={colors.donutColorDefault}
+                                color={colors.donutColorLavendel}
                                 delay={1000}
                                 max={240}
                             />
@@ -238,15 +238,16 @@ const styles = StyleSheet.create({
         alignItems: "flex-start"
     },
     workoutInfoBox: {
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        backgroundColor: colors.boxBackgroundTransparent,
-        padding: 10,
-        borderRadius: 10
+        //flexDirection: "row",
+        //justifyContent: "space-between",
+        //backgroundColor: colors.boxBackgroundTransparent,
+        //padding: 10,
+        //borderRadius: 10
     },
     donutChartContainer: {
         flexDirection: "row",
-        gap: 15,
+        justifyContent: "space-evenly"
+        //gap: 15,
         //alignItems: "flex-end"
     },
     content: {
