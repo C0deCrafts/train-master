@@ -1,4 +1,4 @@
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useAuth} from "../../context/AuthProvider";
 import {FIRESTORE_DB} from "../../config/firebaseConfig";
 import {getDoc, doc} from "firebase/firestore";
@@ -11,8 +11,15 @@ import {StatusBar} from "expo-status-bar";
 import {workouts} from "../../data/fitness";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
+import {useAppStyle} from "../../context/AppStyleContext";
+import {dark, light} from "../../constants/colors";
 
 const Home = () => {
+    const { getTextStyles, getColors, fontFamily } = useAppStyle();
+    const textStyles = getTextStyles();
+    const colors = getColors();
+    const styles = createStyles(textStyles, colors, fontFamily);
+
     const { user } = useAuth();
     const [username, setUsername] = useState("");
     const flatListRef = useRef(null);
@@ -126,7 +133,7 @@ const Home = () => {
                                 <Image source={icons.camera} style={{
                                     width: 25,
                                     height: 25,
-                                    tintColor: colors.buttonBackgroundDefault
+                                    tintColor: colors.label
                                 }}/>
                             </View>
                         </View>
@@ -153,7 +160,7 @@ const Home = () => {
                                 key="minutes"
                                 //percentage={lastElapsedTime}
                                 percentage={870}
-                                color={colors.donutColorCoral}
+                                color={colors.baseColor}
                                 delay={1000}
                                 max={1000}
                             />
@@ -164,7 +171,7 @@ const Home = () => {
                                 key="minutes"
                                 //percentage={lastElapsedTime}
                                 percentage={14}
-                                color={colors.donutColorGreen}
+                                color={colors.baseColor}
                                 delay={1000}
                                 max={20}
                             />
@@ -175,7 +182,7 @@ const Home = () => {
                                 key="minutes"
                                 //percentage={lastElapsedTime}
                                 percentage={120}
-                                color={colors.donutColorLavendel}
+                                color={colors.baseColor}
                                 delay={1000}
                                 max={240}
                             />
@@ -213,9 +220,11 @@ const Home = () => {
 
 export default Home;
 
-const styles = StyleSheet.create({
+const createStyles = (textStyles, colors, fontFamily) => {
+    return StyleSheet.create({
     backgroundImage: {
-        flex: 1
+        flex: 1,
+        backgroundColor: colors.primary,
     },
     image: {
         position: "absolute",
@@ -223,7 +232,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         resizeMode: "contain",
-        tintColor: colors.inactiveColor
+        tintColor: colors.quaternaryLabel
     },
     container: {
         flex: 1,
@@ -267,8 +276,8 @@ const styles = StyleSheet.create({
         //backgroundColor: colors.white
     },
     headerCounterLabel: {
-        color: colors.textColorGrey,
-        fontFamily: "Poppins-Regular",
+        color: colors.label,
+        fontFamily: fontFamily.Poppins_Regular,
         fontSize: 16,
         alignSelf: "center"
     },
@@ -279,13 +288,15 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     firstTitleText: {
-        fontFamily: "Poppins-SemiBold",
+        fontFamily: fontFamily.Poppins_SemiBold,
         fontSize: 20,
+        color: colors.label
     },
     titleText: {
-        fontFamily: "Poppins-SemiBold",
+        fontFamily: fontFamily.Poppins_SemiBold,
         fontSize: 20,
-        marginTop: 15
+        marginTop: 15,
+        color: colors.label
     },
     imageContainer: {
         top: 20,
@@ -297,22 +308,23 @@ const styles = StyleSheet.create({
         top: 5,
     },
     dateText: {
-        fontFamily: "Poppins-Regular",
+        fontFamily: fontFamily.Poppins_Regular,
         fontSize: 14,
-        color: colors.textColorGrey
+        color: colors.label
     },
     greetingText: {
-        fontFamily: "Poppins-SemiBold",
-        fontSize: 20
+        fontFamily: fontFamily.Poppins_SemiBold,
+        fontSize: 20,
+        color: colors.label
     },
     usernameText: {
-        fontFamily: "Poppins-SemiBold",
+        fontFamily: fontFamily.Poppins_SemiBold,
         fontSize: 25,
-        color: colors.textColorDefault
+        color: colors.label
     },
     workoutContainer: {
         padding: 10,
-        backgroundColor: colors.boxBackgroundTransparent,
+        backgroundColor: colors.secondary,
         borderRadius: 30,
         alignItems: "center",
         marginRight: 10,
@@ -320,7 +332,7 @@ const styles = StyleSheet.create({
     },
     workoutContainerSelected: {
         padding: 10,
-        backgroundColor: colors.buttonBackgroundDefault,
+        backgroundColor: colors.baseColor,
         borderRadius: 30,
         alignItems: "center",
         marginRight: 10,
@@ -330,18 +342,19 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 10,
-        tintColor: colors.buttonBackgroundDefault
+        tintColor: colors.baseColor
     },
     workoutName: {
-        fontFamily: "Poppins-Regular",
-        fontSize: 14,
-        marginVertical: 5
-    },
-    workoutNameSelected: {
-        fontFamily: "Poppins-Regular",
+        fontFamily: fontFamily.Poppins_Regular,
         fontSize: 14,
         marginVertical: 5,
-        color: colors.white
+        color: colors.label
+    },
+    workoutNameSelected: {
+        fontFamily: fontFamily.Poppins_Regular,
+        fontSize: 14,
+        marginVertical: 5,
+        color: colors.colorButtonLabel
     },
     exerciseListContainer: {
         flex: 1,
@@ -353,7 +366,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: colors.boxBackgroundTransparent,
+        backgroundColor: colors.secondary,
         marginBottom: 10,
         //alignItems: "flex-end"
         justifyContent: "space-between"
@@ -376,15 +389,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     exerciseName: {
-        fontFamily: "Poppins-SemiBold",
-        color: colors.textColorDefault,
+        fontFamily: fontFamily.Poppins_SemiBold,
+        color: colors.label,
         fontSize: 16,
         paddingLeft: 5,
         width: "100%",
     },
     exerciseDetails: {
-        fontFamily: "Poppins-Regular",
-        color: colors.textColorGrey,
+        fontFamily: fontFamily.Poppins_Regular,
+        color: colors.secondaryLabel,
         fontSize: 14,
         paddingLeft: 5,
         paddingTop: 2,
@@ -393,7 +406,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
     },
     smallIconContainer: {
-        backgroundColor: colors.donutColorDefaultTransparent,
+        backgroundColor: colors.baseColor,
         borderRadius: 5,
         marginBottom: 5,
         padding: 5,
@@ -401,6 +414,6 @@ const styles = StyleSheet.create({
     smallIcon: {
         width: 15,
         height: 15,
-        tintColor: colors.donutColorDefault,
+        tintColor: colors.colorButtonLabel,
     }
-})
+})}

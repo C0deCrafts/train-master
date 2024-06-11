@@ -7,11 +7,18 @@ import Spinner from "react-native-loading-spinner-overlay";
 import {useAuth} from "../../../context/AuthProvider";
 import {Link} from "expo-router";
 import CustomHeader from "../../../components/CustomHeader";
+import {useAppStyle} from "../../../context/AppStyleContext";
 
 const FriendGroups = () => {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [groups, setGroups] = useState([]);
+    const { getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const colors = getColors();
+    const textStyles = getTextStyles();
+
+    const styles = createStyles(textStyles, colors, fontFamily);
+
 
     useEffect(() => {
         const groupsCollection = collection(FIRESTORE_DB, "friendGroups");
@@ -98,56 +105,57 @@ const FriendGroups = () => {
 
 export default FriendGroups;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    image: {
-        position: "absolute",
-        top: 50,
-        width: "100%",
-        height: "100%",
-        resizeMode: "contain",
-        tintColor: colors.inactiveColor
-    },
-    header: {
-        backgroundColor: colors.backgroundColorBlueGreen,
-        height: 120
-    },
-    scrollContainer: {
-        marginTop: 20,
-        paddingHorizontal: 20
-    },
-    fab: {
-        position: "absolute",
-        width: 56,
-        height: 56,
-        alignItems: "center",
-        justifyContent: "center",
-        right: 20,
-        bottom: 20,
-        backgroundColor: colors.buttonBackgroundDefault,
-        borderRadius: 30,
-        elevation: 8
-    },
-    icon: {
-        width: 25,
-        height: 24,
-        tintColor: colors.white
-    },
-    groupCard: {
-        padding: 10,
-        marginBottom: 5,
-        backgroundColor: colors.boxBackgroundTransparent,
-        borderRadius: 5,
-        elevation: 2
-    },
-    groupName: {
-        fontSize: 18,
-        fontFamily: "Poppins-SemiBold"
-    },
-    groupDescription: {
-        fontSize: 14,
-        fontFamily: "Poppins-Light"
-    }
-})
+const createStyles = (textStyles, colors, fontFamily) => {
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: colors.primary
+        },
+        image: {
+            position: "absolute",
+            top: 50,
+            width: "100%",
+            height: "100%",
+            resizeMode: "contain",
+            tintColor: colors.quaternaryLabel
+        },
+        scrollContainer: {
+            marginTop: 20,
+            paddingHorizontal: 20
+        },
+        fab: {
+            position: "absolute",
+            width: 56,
+            height: 56,
+            alignItems: "center",
+            justifyContent: "center",
+            right: 20,
+            bottom: 20,
+            backgroundColor: colors.baseColor,
+            borderRadius: 30,
+            elevation: 8
+        },
+        icon: {
+            width: 25,
+            height: 24,
+            tintColor: colors.colorButtonLabel
+        },
+        groupCard: {
+            padding: 10,
+            marginBottom: 5,
+            backgroundColor: colors.secondary,
+            borderRadius: 5,
+            elevation: 2
+        },
+        groupName: {
+            fontSize: 18,
+            fontFamily: fontFamily.Poppins_SemiBold,
+            color: colors.label
+        },
+        groupDescription: {
+            fontSize: 14,
+            fontFamily: fontFamily.Poppins_Regular,
+            color: colors.label
+        }
+    })
+}

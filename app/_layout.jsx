@@ -4,6 +4,7 @@ import {useEffect} from "react";
 import {ActivityIndicator, View} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {useFonts} from "expo-font";
+import {AppStyleProvider} from "../context/AppStyleContext";
 
 const InitialLayout = () => {
     const { user, initialized } = useAuth();
@@ -57,10 +58,12 @@ const RootLayout = () => {
     if(!fontsLoaded && !error) return null;
 
     return (
-        <AuthProvider>
-            <InitialLayout/>
-            <StatusBar style="light"/>
-        </AuthProvider>
+        <AppStyleProvider>
+            <AuthProvider>
+                <InitialLayout/>
+                <StatusBar style="light"/>
+            </AuthProvider>
+        </AppStyleProvider>
     )
 }
 

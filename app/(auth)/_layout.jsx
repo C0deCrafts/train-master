@@ -1,29 +1,34 @@
 import {Tabs} from "expo-router";
 import TabIcon from "../../components/TabIcon";
-import {colors, icons} from "../../constants";
+import {icons} from "../../constants";
 import {useAuth} from "../../context/AuthProvider";
 import LogoutButton from "../../components/LogoutButton";
+import {useAppStyle} from "../../context/AppStyleContext";
 
 const TabsLayout = () => {
     const { user } = useAuth();
+    const { getColors } = useAppStyle();
+    const colors = getColors();
+
     return (
+        //miniborder irgendwo unterm header??
         <Tabs screenOptions={{
             tabBarShowLabel: false,
-            tabBarActiveTintColor: colors.buttonBackgroundDefault,
-            tabBarInactiveTintColor: colors.inactiveColor,
+            tabBarActiveTintColor: colors.baseColor,
+            tabBarInactiveTintColor: colors.secondaryLabel,
             tabBarStyle: {
-                backgroundColor: colors.backgroundColor,
+                backgroundColor: colors.primary,
                 borderTopWidth: 0,
                 height: 84,
             },
             headerStyle: {
-                backgroundColor: colors.backgroundColorBlueGreen,
+                backgroundColor: colors.baseColor,
                 borderBottomWidth: 0,
                 height: 120,
             },
             headerTitleStyle: {
                 paddingTop: 20,
-                color: colors.textColorWhite,
+                color: colors.colorButtonLabel,
                 fontFamily: "Poppins-SemiBold",
                 fontSize: 25,
             }

@@ -16,6 +16,7 @@ import {useAuth} from "../../../context/AuthProvider";
 import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
 import {FIRESTORE_DB} from "../../../config/firebaseConfig";
 import {colors, images} from "../../../constants";
+import {useAppStyle} from "../../../context/AppStyleContext";
 
 const GroupPage = () => {
     const { id, name } = useLocalSearchParams();
@@ -23,6 +24,12 @@ const GroupPage = () => {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const flatListRef = useRef(null);
+    const { getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const colors = getColors();
+    const textStyles = getTextStyles();
+
+    const styles = createStyles(textStyles, colors, fontFamily);
+
 
     const sendMessages = async () => {
         if(message.trim().length > 0){
@@ -52,8 +59,8 @@ const GroupPage = () => {
         const isMe = item.from === user.uid;
         return (
             <View style={[styles.messageContainer, isMe ? styles.userMessageContainer : styles.otherMessageContainer]}>
-                <Text style={styles.messageText}>{item.text}</Text>
-                <Text style={styles.time}>{item.createdAt?.toDate().toLocaleDateString()}</Text>
+                <Text style={isMe ? styles.userMessageText : styles.messageText}>{item.text}</Text>
+                <Text style={isMe ? styles.userTime : styles.time}>{item.createdAt?.toDate().toLocaleDateString()}</Text>
             </View>
         )
     }
@@ -95,68 +102,85 @@ const GroupPage = () => {
 
 export default GroupPage;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    image: {
-        position: "absolute",
-        top: 50,
-        width: "100%",
-        height: "100%",
-        resizeMode: "contain",
-        tintColor: colors.inactiveColor
-    },
-    textInputContainer: {
-        flexDirection: "row",
-        gap: 10,
-        paddingBottom: 10,
-        paddingHorizontal: 20,
-    },
-    textInput: {
-        flex: 1,
-        color: colors.textColorDark,
-        backgroundColor: colors.boxColor,
-        borderRadius: 10,
-        fontFamily: "Poppins-Regular",
-        fontSize: 14,
-        padding: 10,
-    },
-    messageContainer: {
-        padding: 10,
-        borderRadius: 10,
-        marginHorizontal: 10,
-        marginTop: 10,
-        maxWidth: "80%"
-    },
-    userMessageContainer: {
-        alignSelf: "flex-end",
-        backgroundColor: colors.chatColor
-    },
-    otherMessageContainer: {
-        alignSelf: "flex-start",
-        backgroundColor: colors.boxColor
-    },
-    messageText: {
-        fontFamily: "Poppins-Regular",
-        fontSize: 16
-    },
-    time: {
-        alignSelf: "flex-end",
-        fontFamily: "Poppins-Light",
-        fontSize: 10,
-        color: colors.backgroundColorBlueGreen,
-        marginTop: 5
-    },
-    button: {
-        backgroundColor: colors.backgroundColorBlueGreen,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        justifyContent: "center"
-    },
-    buttonLabel: {
-        fontFamily: "Poppins-SemiBold",
-        fontSize: 14,
-        color: colors.white,
-    }
-})
+const createStyles = (textStyles, colors, fontFamily) => {
+    return StyleSheet.create({
+        //kein logo wenn hintergrund
+        container: {
+            flex: 1,
+        },
+        image: {
+            position: "absolute",
+            top: 50,
+            width: "100%",
+            height: "100%",
+            resizeMode: "contain",
+            tintColor: colors.quaternaryLabel,
+        },
+        textInputContainer: {
+            flexDirection: "row",
+            gap: 10,
+            paddingBottom: 10,
+            paddingHorizontal: 20,
+        },
+        textInput: {
+            flex: 1,
+            color: colors.label,
+            backgroundColor: colors.secondary,
+            borderRadius: 10,
+            fontFamily: fontFamily.Poppins_Regular,
+            fontSize: 14,
+            padding: 10,
+            zIndex: 2
+        },
+        messageContainer: {
+            padding: 10,
+            borderRadius: 10,
+            marginHorizontal: 10,
+            marginTop: 10,
+            maxWidth: "80%"
+        },
+        userMessageContainer: {
+            alignSelf: "flex-end",
+            backgroundColor: colors.baseColor
+        },
+        otherMessageContainer: {
+            alignSelf: "flex-start",
+            backgroundColor: colors.secondary
+        },
+        userMessageText: {
+            fontFamily: fontFamily.Poppins_Regular,
+            fontSize: 16,
+            color: colors.colorButtonLabel
+        },
+        messageText: {
+            fontFamily: fontFamily.Poppins_Regular,
+            fontSize: 16,
+            color: colors.label
+        },
+        userTime: {
+            alignSelf: "flex-end",
+            fontFamily: fontFamily.Poppins_Regular,
+            fontSize: 10,
+            color: colors.colorButtonLabel,
+            marginTop: 5
+        },
+        time: {
+            alignSelf: "flex-end",
+            fontFamily: fontFamily.Poppins_Regular,
+            fontSize: 10,
+            color: colors.label,
+            marginTop: 5
+        },
+        button: {
+            backgroundColor: colors.baseColor,
+            borderRadius: 10,
+            paddingHorizontal: 10,
+            justifyContent: "center"
+        },
+        buttonLabel: {
+            fontFamily: "Poppins-SemiBold",
+            fontSize: 14,
+            color: colors.colorButtonLabel,
+        }
+    })
+}
