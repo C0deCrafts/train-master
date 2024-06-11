@@ -78,7 +78,7 @@ export const light = {
     separator: "rgba(0,0,0,0.29)",
     opaqueSeparator: "rgb(198,198,200)",
     link: "rgb(0,122,255)",
-    baseColor: "rgb(48,176,199)",
+    baseColor: "rgb(0,130,153)",
     colorButtonLabel: "rgb(0,0,0)",
 }
 
@@ -117,6 +117,6 @@ export const dark = {
     separator: "rgba(84,84,88,0.6)",
     opaqueSeparator: "rgba(56,56,58)",
     link: "rgb(9,132,255)",
-    baseColor: "rgb(64,200,224)",
+    baseColor: "rgb(0,130,153)",
     colorButtonLabel: "rgb(255,255,255)",
 }

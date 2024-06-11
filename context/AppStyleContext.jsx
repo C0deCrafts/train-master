@@ -2,6 +2,7 @@ import {createContext, useContext, useEffect, useState} from "react";
 import {large_default, medium, small, xLarge, xSmall, xxLarge, fontFamily} from "../constants/textStyles";
 import {color, dark, light} from "../constants/colors";
 import {useColorScheme} from "react-native";
+import {StatusBar} from "expo-status-bar";
 
 const AppStyleContext = createContext({});
 
@@ -17,7 +18,10 @@ const textStyles = {
 export const AppStyleProvider = ({ children }) => {
     const systemColorScheme = useColorScheme();
     const [colorScheme, setColorScheme] = useState(systemColorScheme);
-    const [customColors, setCustomColors] = useState({});
+    const [customColors, setCustomColors] = useState({
+        baseColor: colorScheme === "light" ? light.baseColor : dark.baseColor,
+        colorButtonLabel: "rgb(255,255,255)"
+    });
     const [textSize, setTextSize] = useState("large_default");
 
     useEffect(() => {
@@ -26,8 +30,8 @@ export const AppStyleProvider = ({ children }) => {
 
     const isColorDark = (color) => { // neu
         const darkColors = [
-            light.red, light.green, light.mint_2, light.teal, light.teal_2, light.cyan_2, light.blue, light.indigo, light.indigo_2, light.purple, light.purple_2, light.pink, light.pink_2,
-            dark.red, dark.green, dark.mint_2, dark.teal, dark.teal_2, dark.cyan_2, dark.blue, dark.indigo, dark.indigo_2, dark.purple, dark.purple_2, dark.pink, dark.pink_2
+            light.baseColor, light.red, light.green, light.mint_2, light.teal, light.teal_2, light.cyan_2, light.blue, light.indigo, light.indigo_2, light.purple, light.purple_2, light.pink, light.pink_2,
+            dark.baseColor, dark.red, dark.green, dark.mint_2, dark.teal, dark.teal_2, dark.cyan_2, dark.blue, dark.indigo, dark.indigo_2, dark.purple, dark.purple_2, dark.pink, dark.pink_2
             ];
         return darkColors.includes(color);
 
@@ -41,13 +45,14 @@ export const AppStyleProvider = ({ children }) => {
     const getTextStyles = () => textStyles[textSize] || textStyles.large_default;
 
     const updateBaseColor = (newBaseColor) => {
-        const newButtonLabelColor = isColorDark(newBaseColor) ? "rgb(255,255,255)" : "rgb(0,0,0)"; // neu
+        const newButtonLabelColor = isColorDark(newBaseColor) ? "rgb(255,255,255)" : "rgb(0,0,0)";
         setCustomColors(prevColors => ({
             ...prevColors,
             baseColor: newBaseColor,
             colorButtonLabel: newButtonLabelColor
         }));
     };
+
 
     /*const determineButtonLabelColor = (backgroundColor) => {
         const darkBackgroundColors = [
