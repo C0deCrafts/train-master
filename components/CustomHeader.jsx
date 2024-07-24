@@ -1,30 +1,32 @@
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import { useNavigation } from 'expo-router';
-import {colors, icons} from "../constants";
+import {useNavigation} from 'expo-router';
+import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 
-//back button funktioniert nicht!!
-
-const CustomHeader = ({ title, backButtonVisible=false }) => {
+const CustomHeader = ({title, backButtonVisible = false}) => {
     const navigation = useNavigation();
-    const { getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
+    const handleGoBack = () => {
+        navigation.goBack();
+    }
 
     return (
-        <View>
+        <>
             <View style={styles.headerContainer}>
+                {backButtonVisible && (
+                    <TouchableOpacity onPress={handleGoBack} style={styles.backButtonContainer}>
+                        <Image source={icons.back} style={styles.backButton}/>
+                    </TouchableOpacity>
+                )}
                 <Text style={styles.headerTitle} numberOfLines={1} ellipsizeMode="tail">{title}</Text>
             </View>
-            {backButtonVisible &&(
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
-                    <Image source={icons.back} style={styles.backButton}/>
-                </TouchableOpacity>
-            )}
-        </View>
+        </>
+
     );
 };
 
@@ -37,23 +39,26 @@ const createStyles = (textStyles, colors, fontFamily) => {
             alignItems: 'center',
             justifyContent: 'flex-end',
             paddingHorizontal: 20,
-            paddingBottom: 5
+            paddingBottom: 5,
+            position: "relative",
         },
         backButtonContainer: {
             position: "absolute",
-        },
-        backButton: {
             top: 83,
             left: 10,
+            zIndex: 1,
+        },
+        backButton: {
             tintColor: colors.colorButtonLabel,
             width: 30,
-            height: 30
+            height: 30,
         },
         headerTitle: {
             color: colors.colorButtonLabel,
             fontFamily: fontFamily.Poppins_SemiBold,
             fontSize: 25,
-            maxWidth: "80%"
+            maxWidth: "80%",
+            textAlign: "center",
         },
     });
 }

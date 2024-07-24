@@ -1,5 +1,4 @@
 import {
-    Button,
     FlatList, Image,
     KeyboardAvoidingView,
     Platform,
@@ -9,13 +8,13 @@ import {
     TextInput,
     View
 } from 'react-native'
-import { useLocalSearchParams } from "expo-router"
-import {useEffect, useState, useLayoutEffect, useRef} from "react";
+import {useLocalSearchParams} from "expo-router"
+import {useState, useLayoutEffect, useRef} from "react";
 import CustomHeader from "../../../components/CustomHeader";
 import {useAuth} from "../../../context/AuthProvider";
 import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
 import {FIRESTORE_DB} from "../../../config/firebaseConfig";
-import {colors, images} from "../../../constants";
+import {images} from "../../../constants";
 import {useAppStyle} from "../../../context/AppStyleContext";
 
 const GroupPage = () => {
@@ -71,6 +70,7 @@ const GroupPage = () => {
             <Image
                 source={images.backgroundSymbol}
                 style={styles.image}
+                //das ist schuld dass der button nicht klickbar ist!!
             />
             <KeyboardAvoidingView behavior={
                 Platform.OS === "ios" ? "padding" : "height"
@@ -115,6 +115,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
             height: "100%",
             resizeMode: "contain",
             tintColor: colors.quaternaryLabel,
+            //damit der back button klickbar ist - mit pointerEvents empfängt das Bild keine Touch-Events und
+            //alles darunter ist wieder klickbar
+            pointerEvents: "none"
         },
         textInputContainer: {
             flexDirection: "row",

@@ -1,4 +1,4 @@
-import {Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useAuth} from "../../context/AuthProvider";
 import {FIRESTORE_DB} from "../../config/firebaseConfig";
 import {getDoc, doc} from "firebase/firestore";
