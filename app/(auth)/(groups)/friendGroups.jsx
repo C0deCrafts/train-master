@@ -1,19 +1,22 @@
-import {Alert, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {useEffect, useState} from "react";
 import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import {FIRESTORE_DB} from "../../../config/firebaseConfig";
-import {colors, icons, images} from "../../../constants";
+import {icons, images} from "../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
 import {useAuth} from "../../../context/AuthProvider";
 import {Link} from "expo-router";
 import CustomHeader from "../../../components/CustomHeader";
 import {useAppStyle} from "../../../context/AppStyleContext";
+import Card from "../../../components/Card";
+import elementStyles from "../../../constants/elementStyles";
 
 const FriendGroups = () => {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [groups, setGroups] = useState([]);
     const { getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+
     const colors = getColors();
     const textStyles = getTextStyles();
 
@@ -81,21 +84,19 @@ const FriendGroups = () => {
                 style={styles.image}
             />
             <Spinner visible={loading}/>
-            <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-                {groups.map((group)=> {
-                    return (
-                        <Link href={{pathname: `/groups/${group.id}`, params: {name: group.name}}}
-                              key={group.id }
-                              asChild>
-                            <TouchableOpacity style={styles.groupCard}>
-                                <Text style={styles.groupName}>{group.name}</Text>
-                                <Text style={styles.groupDescription}>{group.description}</Text>
-                            </TouchableOpacity>
-                        </Link>
-
-                    );
-                })}
-            </ScrollView>
+            <FlatList data={groups}
+                      keyExtractor={(item)=> item.id}
+                      numColumns={1}
+                      contentContainerStyle={styles.scrollContainer}
+                      renderItem={({item})=> (
+                          <Card key={item.id}
+                                clickable
+                                href={{pathname: `/(groups)/${item.id}`, params: {name: item.name}}}>
+                              <Text style={styles.groupName}>{item.name}</Text>
+                              <Text style={styles.groupDescription}>{item.description}</Text>
+                          </Card>
+                      )}
+            />
             <Pressable style={styles.fab} onPress={handleAddGroup}>
                 <Image source={icons.add} style={styles.icon}/>
             </Pressable>
@@ -109,7 +110,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: colors.primary
+            backgroundColor: colors.primary,
         },
         image: {
             position: "absolute",
@@ -121,7 +122,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         scrollContainer: {
             marginTop: 20,
-            paddingHorizontal: 20
+            paddingHorizontal: elementStyles.spacingHorizontalDefault,
+            gap: elementStyles.spacingVerticalSmall
         },
         fab: {
             position: "absolute",
@@ -139,13 +141,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             width: 25,
             height: 24,
             tintColor: colors.colorButtonLabel
-        },
-        groupCard: {
-            padding: 10,
-            marginBottom: 5,
-            backgroundColor: colors.secondary,
-            borderRadius: 5,
-            elevation: 2
         },
         groupName: {
             fontSize: 18,

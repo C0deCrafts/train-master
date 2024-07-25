@@ -33,7 +33,7 @@ const TabsLayout = () => {
                 fontSize: 25,
             }
         }}>
-            <Tabs.Screen name="groups" options={{
+            <Tabs.Screen name="(groups)" options={{
                 headerShown: false,
                 title: "Gruppen",
                 tabBarIcon: ({color, focused}) => (
@@ -48,7 +48,7 @@ const TabsLayout = () => {
             }}
             redirect={!user}
             />
-            <Tabs.Screen name="home" options={{
+            <Tabs.Screen name="(homes)" options={{
                 headerShown: false,
                 title: "Home",
                 tabBarIcon: ({color, focused}) => (
@@ -78,13 +78,13 @@ const TabsLayout = () => {
             />
             <Tabs.Screen name="settings" options={{
                 //headerShown: false,
-                title: "Menü",
+                title: "Einstellungen",
                 headerRight: () => <LogoutButton/>,
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon
-                        icon={icons.menu}
+                        icon={icons.setting}
                         color={color}
-                        name="Menü"
+                        name="Einstellungen"
                         focused={focused}
                     />
                 )

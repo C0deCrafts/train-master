@@ -1,18 +1,19 @@
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {useAuth} from "../../context/AuthProvider";
-import {FIRESTORE_DB} from "../../config/firebaseConfig";
+import {useAuth} from "../../../context/AuthProvider";
+import {FIRESTORE_DB} from "../../../config/firebaseConfig";
 import {getDoc, doc} from "firebase/firestore";
 import {useEffect, useRef, useState} from "react";
-import {colors, elements, icons, images} from "../../constants";
-import DonutChart from "../../components/DonutChart";
-import BigDonutChart from "../../components/BigDonutChart";
+import {colors, elements, icons, images} from "../../../constants";
+import DonutChart from "../../../components/DonutChart";
+import BigDonutChart from "../../../components/BigDonutChart";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
-import {workouts} from "../../data/fitness";
+import {workouts} from "../../../data/fitness";
 import {format} from 'date-fns';
 import {de} from 'date-fns/locale';
-import {useAppStyle} from "../../context/AppStyleContext";
-import {dark, light} from "../../constants/colors";
+import {useAppStyle} from "../../../context/AppStyleContext";
+import {dark, light} from "../../../constants/colors";
+import Card from "../../../components/Card";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -61,20 +62,22 @@ const Home = () => {
 
     const renderWorkout = ({item}) => {
         return (
-            <TouchableOpacity
+            <Card
                 style={item.id === selectedWorkoutId ? styles.workoutContainerSelected : styles.workoutContainer}
-                onPress={() => setSelectedWorkoutId(item.id)}>
+                onPress={() => setSelectedWorkoutId(item.id)}
+                clickable
+            >
                 {/*<Image source={item.image} style={styles.workoutImage} />*/}
                 <Text
                     style={item.id === selectedWorkoutId ? styles.workoutNameSelected : styles.workoutName}>{item.name}</Text>
-            </TouchableOpacity>
+            </Card>
         )
     }
 
     const renderExercise = ({item}) => {
 
         return (
-            <View style={styles.exerciseContainer}>
+            <Card style={styles.exerciseContainer} onPress={()=> console.log(item)} clickable>
                 <View style={styles.exercises}>
                     <View>
                         <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
@@ -97,7 +100,7 @@ const Home = () => {
                 <View style={styles.exerciseImageContainer}>
                     <Image source={item.image} style={styles.exerciseImage}/>
                 </View>
-            </View>
+            </Card>
         )
     }
 
@@ -372,13 +375,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         exerciseContainer: {
             flexDirection: "row",
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-            borderRadius: elements.cardRadius,
-            backgroundColor: colors.secondary,
             marginBottom: 10,
-            //alignItems: "flex-end"
-            justifyContent: "space-between"
         },
         exercises: {
             //backgroundColor: "blue",

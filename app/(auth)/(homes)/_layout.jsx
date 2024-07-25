@@ -1,16 +1,13 @@
 import {Stack} from "expo-router";
-import CustomHeader from "../../../components/CustomHeader";
-
-const StackLayout = () => {
-
+const StackHomeLayout = () => {
     return (
         <Stack screenOptions={{
             headerShown: false
         }}>
-            <Stack.Screen name="friendGroups"/>
+            <Stack.Screen name="home"/>
             <Stack.Screen name="[id]"/>
         </Stack>
-    );
-};
+    )
+}
 
-export default StackLayout;
+export default StackHomeLayout;
