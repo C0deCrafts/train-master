@@ -13,7 +13,7 @@ const Card = ({ clickable, href, onPress, style, children, ...props }) => {
     if (clickable && href) {
         return (
             <View style={[styles.card, style]}>
-                <Link href={href} key={props.id} asChild>
+                <Link href={href} key={props.id} asChild >
                     <TouchableOpacity>
                         {children}
                     </TouchableOpacity>
@@ -39,6 +39,9 @@ const createStyles = (colors) => {
             borderRadius: elements.cardRadius,
             elevation: 2,
         },
+        touchableOpacity: {
+            flexDirection: "row"
+        }
     });
 }
 

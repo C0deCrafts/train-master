@@ -77,7 +77,12 @@ const Home = () => {
     const renderExercise = ({item}) => {
 
         return (
-            <Card style={styles.exerciseContainer} onPress={()=> console.log(item)} clickable>
+            <Card
+                  style={{marginBottom: 10}}
+                  //onPress={()=> console.log(item)}
+                  href={{pathname: `/(homes)/${item.id}`, params: {item: JSON.stringify(item)}}}
+                  clickable
+            ><View style={styles.exerciseContainer}>
                 <View style={styles.exercises}>
                     <View>
                         <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
@@ -100,6 +105,7 @@ const Home = () => {
                 <View style={styles.exerciseImageContainer}>
                     <Image source={item.image} style={styles.exerciseImage}/>
                 </View>
+            </View>
             </Card>
         )
     }
@@ -375,7 +381,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         exerciseContainer: {
             flexDirection: "row",
-            marginBottom: 10,
         },
         exercises: {
             //backgroundColor: "blue",

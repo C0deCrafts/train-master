@@ -4,22 +4,25 @@ import {
 } from 'react-native'
 import {useAppStyle} from "../../../context/AppStyleContext";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {Link} from "expo-router";
+import {Link, useLocalSearchParams} from "expo-router";
 import CustomHeader from "../../../components/CustomHeader";
 
 const TrainGroup = () => {
+    const { id, item } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
     const styles = createStyles(textStyles, colors, fontFamily);
+    const workoutItem = item ? JSON.parse(item) : {};
 
     return (
-        <SafeAreaView>
+        <View style={styles.container}>
             <CustomHeader title={"Back"} backButtonVisible={true}/>
             <Text>Test</Text>
-
-        </SafeAreaView>
+            <Text>{id}</Text>
+            <Text>Name: {workoutItem.name}</Text>
+        </View>
     );
 };
 
