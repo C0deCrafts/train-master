@@ -1,4 +1,4 @@
-import {Button, Image, ScrollView, StyleSheet, Switch, Text, View} from 'react-native'
+import {Button, Image, Modal, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View} from 'react-native'
 import FormField from "../../components/FormField";
 import {useState} from "react";
 import {doc, updateDoc} from "firebase/firestore";
@@ -9,6 +9,7 @@ import {images} from "../../constants";
 import {Picker} from "@react-native-picker/picker";
 import ColorPicker from "../../components/ColorPicker";
 import {dark, light} from "../../constants/colors";
+import {appStyles} from "../../constants/elementStyles";
 
 /*
 const createStyles = (textStyles, colors, fontFamily) => {
@@ -23,6 +24,8 @@ const Settings = () => {
     const { textSize, setTextSize, getTextStyles, getColors, getAllBaseColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
+    const [isModalVisible, setModalVisible] = useState(false);
+
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
@@ -52,6 +55,15 @@ const Settings = () => {
 
     const currentColors = colorScheme === "Darkmode" ? Object.entries(dark) : Object.entries(light);
     const limitedColors = currentColors.slice(0, 19);
+
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+
+    const handlePickerChange = (itemValue) => {
+        setTextSize(itemValue);
+        toggleModal();
+    };
 
     return (
         <View style={styles.container}>
@@ -105,7 +117,34 @@ const Settings = () => {
                 </ScrollView>
             </View>
             <View>
-                <Text>Ändere Textgröße</Text>
+                <TouchableOpacity onPress={toggleModal}>
+                    <Text>Ändere Textgröße</Text>
+                </TouchableOpacity>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={isModalVisible}
+                    onRequestClose={toggleModal}
+                >
+                    <TouchableOpacity style={styles.modalContainer} onPress={toggleModal} activeOpacity={1}>
+                        <TouchableOpacity style={styles.modalContent} activeOpacity={1}>
+                            <Text style={styles.modalText}>Wähle deine gewünschte Textgröße aus:</Text>
+                            <Picker
+                                selectedValue={textSize}
+                                onValueChange={(itemValue) => handlePickerChange(itemValue)}
+                            >
+                                <Picker.Item label="xSmall" value="xSmall" />
+                                <Picker.Item label="Small" value="small" />
+                                <Picker.Item label="Medium" value="medium" />
+                                <Picker.Item label="Large" value="large_default" />
+                                <Picker.Item label="xLarge" value="xLarge" />
+                                <Picker.Item label="xxLarge" value="xxLarge" />
+                            </Picker>
+                            <Button title="Schließen" onPress={toggleModal} />
+                        </TouchableOpacity>
+                    </TouchableOpacity>
+                </Modal>
+                {/*<Text>Ändere Textgröße</Text>
                 <Picker
                     selectedValue={textSize}
                     onValueChange={(item) => setTextSize(item)}
@@ -116,7 +155,7 @@ const Settings = () => {
                     <Picker.Item label="Large" value="large_default" />
                     <Picker.Item label="xLarge" value="xLarge" />
                     <Picker.Item label="xxLarge" value="xxLarge" />
-                </Picker>
+                </Picker>*/}
             </View>
         </View>
     );
@@ -136,6 +175,23 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         imageContainer: {
             flexDirection: "row"
+        },
+        modalContainer: {
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            //backgroundColor: 'rgba(0, 0, 0, 0.5)'
+        },
+        modalContent: {
+            width: "100%",
+            padding: 20,
+            backgroundColor: 'white',
+            borderTopLeftRadius: appStyles.modalRadius,
+            borderTopRightRadius: appStyles.modalRadius,
+        },
+        modalText: {
+            fontSize: textStyles.body,
+            textAlign: "center"
         }
     })
 }
