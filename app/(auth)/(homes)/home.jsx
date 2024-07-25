@@ -14,6 +14,7 @@ import {de} from 'date-fns/locale';
 import {useAppStyle} from "../../../context/AppStyleContext";
 import {dark, light} from "../../../constants/colors";
 import Card from "../../../components/Card";
+import {Video} from "expo-av";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
