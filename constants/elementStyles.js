@@ -12,4 +12,5 @@ export default {
     spacingVerticalDefault: 20,
     spacingHorizontalSmall: 5,
     spacingVerticalSmall: 5,
+    smallIcon: 15,
 }

@@ -18,7 +18,7 @@ const TrainGroup = () => {
 
     return (
         <View style={styles.container}>
-            <CustomHeader title={"Back"} backButtonVisible={true}/>
+            <CustomHeader title={workoutItem.name} backButtonVisible={true}/>
             <Text>Test</Text>
             <Text>{id}</Text>
             <Text>Name: {workoutItem.name}</Text>

@@ -6,6 +6,7 @@ import {FIRESTORE_DB} from "../../config/firebaseConfig";
 import {useAuth} from "../../context/AuthProvider";
 import {useAppStyle} from "../../context/AppStyleContext";
 import {images} from "../../constants";
+import {Picker} from "@react-native-picker/picker";
 
 /*
 const createStyles = (textStyles, colors, fontFamily) => {
@@ -17,7 +18,7 @@ const Settings = () => {
     const { user } = useAuth();
     const [username, setUsername] = useState("");
     const [darkmodeLabel, setDarkmodeLabel] = useState("Darkmode");
-    const { getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const { textSize, setTextSize, getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
@@ -84,6 +85,20 @@ const Settings = () => {
                            returnKeyType="done"
                 />
                 <Button title="Farbe ändern" onPress={handleColorChange} />
+            </View>
+            <View>
+                <Text>Ändere Textgröße</Text>
+                <Picker
+                    selectedValue={textSize}
+                    onValueChange={(item) => setTextSize(item)}
+                >
+                    <Picker.Item label="xSmall" value="xSmall" />
+                    <Picker.Item label="Small" value="small" />
+                    <Picker.Item label="Medium" value="medium" />
+                    <Picker.Item label="Large" value="large_default" />
+                    <Picker.Item label="xLarge" value="xLarge" />
+                    <Picker.Item label="xxLarge" value="xxLarge" />
+                </Picker>
             </View>
         </View>
     );

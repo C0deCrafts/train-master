@@ -2,10 +2,11 @@ import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {useNavigation} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
+import {large_default} from "../constants/textStyles";
 
 const CustomHeader = ({title, backButtonVisible = false}) => {
     const navigation = useNavigation();
-    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme, textSize} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
@@ -56,7 +57,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         headerTitle: {
             color: colors.colorButtonLabel,
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 25,
+            fontSize: textStyles.title_2,
             maxWidth: "80%",
             textAlign: "center",
         },

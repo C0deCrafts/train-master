@@ -7,8 +7,9 @@ import {useAppStyle} from "../../context/AppStyleContext";
 
 const TabsLayout = () => {
     const { user } = useAuth();
-    const { getColors } = useAppStyle();
+    const { getColors, getTextStyles } = useAppStyle();
     const colors = getColors();
+    const textStyles = getTextStyles();
 
     return (
         //miniborder irgendwo unterm header??
@@ -30,7 +31,7 @@ const TabsLayout = () => {
                 paddingTop: 20,
                 color: colors.colorButtonLabel,
                 fontFamily: "Poppins-SemiBold",
-                fontSize: 25,
+                fontSize: textStyles.title_2,
             }
         }}>
             <Tabs.Screen name="(groups)" options={{

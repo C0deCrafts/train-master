@@ -53,6 +53,11 @@ export const AppStyleProvider = ({ children }) => {
         }));
     };
 
+    useEffect(() => {
+        console.log("TextSize: ", textSize)
+        console.log("Get: ", getTextStyles())
+    }, [textSize]);
+
 
     /*const determineButtonLabelColor = (backgroundColor) => {
         const darkBackgroundColors = [

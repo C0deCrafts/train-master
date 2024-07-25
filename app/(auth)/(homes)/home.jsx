@@ -290,7 +290,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         headerCounterLabel: {
             color: colors.label,
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 16,
+            fontSize: textStyles.subhead,
             alignSelf: "center"
         },
         workoutInfoContainer: {
@@ -301,12 +301,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         firstTitleText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 20,
+            fontSize: textStyles.title_3,
             color: colors.label
         },
         titleText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 20,
+            fontSize: textStyles.title_3,
             marginTop: 15,
             color: colors.label
         },
@@ -321,17 +321,17 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         dateText: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             color: colors.label
         },
         greetingText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 20,
+            fontSize: textStyles.title_3,
             color: colors.label
         },
         usernameText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 25,
+            fontSize: textStyles.title_1,
             color: colors.label
         },
         workoutContainer: {
@@ -364,13 +364,13 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         workoutName: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             marginVertical: 5,
             color: colors.label
         },
         workoutNameSelected: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             marginVertical: 5,
             color: colors.colorButtonLabel
         },
@@ -402,14 +402,14 @@ const createStyles = (textStyles, colors, fontFamily) => {
         exerciseName: {
             fontFamily: fontFamily.Poppins_SemiBold,
             color: colors.label,
-            fontSize: 16,
+            fontSize: textStyles.callout,
             paddingLeft: 5,
             width: "100%",
         },
         exerciseDetails: {
             fontFamily: fontFamily.Poppins_Regular,
             color: colors.secondaryLabel,
-            fontSize: 14,
+            fontSize: textStyles.footnote,
             paddingLeft: 5,
             paddingTop: 2,
             width: "100%",

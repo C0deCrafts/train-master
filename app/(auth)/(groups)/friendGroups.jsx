@@ -143,12 +143,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
             tintColor: colors.colorButtonLabel
         },
         groupName: {
-            fontSize: 18,
+            fontSize: textStyles.headline,
             fontFamily: fontFamily.Poppins_SemiBold,
             color: colors.label
         },
         groupDescription: {
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             fontFamily: fontFamily.Poppins_Regular,
             color: colors.label
         }
