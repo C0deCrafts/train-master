@@ -8,6 +8,7 @@ import facebook from "../assets/icons/facebook_fill.png";
 import fitness from "../assets/icons/fitness_fill.png";
 import friends from "../assets/icons/comment_2_fill.png"
 import google from "../assets/icons/google_fill.png";
+import heartbeat from "../assets/icons/heartbeat_line.png"
 import lock from "../assets/icons/lock_line.png";
 import logout from "../assets/icons/arrow_to_right_line.png";
 import menu from "../assets/icons/menu_fill.png"
@@ -29,6 +30,7 @@ export default {
     fitness,
     friends,
     google,
+    heartbeat,
     lock,
     logout,
     menu,

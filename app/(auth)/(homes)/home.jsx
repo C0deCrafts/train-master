@@ -113,11 +113,21 @@ const Home = () => {
                                 <Text style={styles.exerciseDetails}>Dauer: {item.duration}</Text>
                             </View>
                         )}
+                        {item.heartRateZone && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.heartbeat} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Herzrate: {item.heartRateZone}</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
-                <View style={styles.exerciseImageContainer}>
-                    <Image source={item.image} style={styles.exerciseImage}/>
-                </View>
+                {item.image && (
+                    <View style={styles.exerciseImageContainer}>
+                        <Image source={item.image} style={styles.exerciseImage}/>
+                    </View>
+                )}
             </View>
             </Card>
         )
@@ -417,6 +427,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             color: colors.label,
             fontSize: textStyles.callout,
             paddingLeft: 5,
+            paddingBottom: 15,
             width: "100%",
         },
         exerciseDetails: {

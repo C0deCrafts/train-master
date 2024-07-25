@@ -22,14 +22,16 @@ const TrainGroup = () => {
     return (
         <View style={styles.container}>
             <CustomHeader title={workoutItem.name} backButtonVisible={true}/>
-            <Video
-                source={workoutItem.video}
-                style={styles.video}
-                resizeMode="contain"
-                useNativeControls={false}
-                isLooping
-                shouldPlay
-            />
+            {workoutItem.video && (
+                <Video
+                    source={workoutItem.video}
+                    style={styles.video}
+                    resizeMode="contain"
+                    useNativeControls={false}
+                    isLooping
+                    shouldPlay
+                />
+            )}
             <View style={styles.content}>
                 {/*<Image source={workoutItem.image} style={styles.exerciseImage}/>*/}
                 <View style={styles.cardContainer}>
@@ -56,6 +58,9 @@ const TrainGroup = () => {
                     <Text style={styles.information}><Text style={styles.bold}>Infos:</Text> {workoutItem.description}</Text>
                     {workoutItem.additionalInfo && (
                         <Text style={styles.additionalInfo}><Text style={styles.bold}>Zusatzinfos:</Text> {workoutItem.additionalInfo}</Text>
+                    )}
+                    {workoutItem.heartRateZone && (
+                        <Text style={styles.additionalInfo}><Text style={styles.bold}>🖤 Rate:</Text> {workoutItem.heartRateZone}</Text>
                     )}
                 </ScrollView>
             </View>

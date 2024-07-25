@@ -370,8 +370,8 @@ export const workouts = [
         exercises: [
             {
                 id: 1,
-                image: require("../assets/images/2.png"),
-                video: require("../assets/videos/bankdruecken_weit_LH.mp4"),
+                image: "",
+                video: "",
                 name: "Rowing",
                 intervals: 15,
                 duration: "Variabel",
@@ -385,8 +385,8 @@ export const workouts = [
             },
             {
                 id: 2,
-                image: require("../assets/images/2.png"),
-                video: require("../assets/videos/bankdruecken_weit_LH.mp4"),
+                image: "",
+                video: "",
                 name: "Skiing",
                 intervals: 15,
                 duration: "Variabel",
@@ -400,8 +400,8 @@ export const workouts = [
             },
             {
                 id: 3,
-                image: require("../assets/images/2.png"),
-                video: require("../assets/videos/bankdruecken_weit_LH.mp4"),
+                image: "",
+                video: "",
                 name: "Crosstrainer",
                 duration: "45 Minuten",
                 heartRateZone: "140 - 152",
@@ -414,8 +414,8 @@ export const workouts = [
             },
             {
                 id: 4,
-                image: require("../assets/images/2.png"),
-                video: require("../assets/videos/bankdruecken_weit_LH.mp4"),
+                image: "",
+                video: "",
                 name: "Laufband",
                 duration: "30 Minuten",
                 heartRateZone: "152 - 169",
@@ -428,8 +428,8 @@ export const workouts = [
             },
             {
                 id: 5,
-                image: require("../assets/images/2.png"),
-                video: require("../assets/videos/bankdruecken_weit_LH.mp4"),
+                image: "",
+                video: "",
                 name: "Ergometer (sitzend)",
                 duration: "Variabel",
                 heartRateZone: "140 - 152",
@@ -450,7 +450,7 @@ export const workouts = [
         exercises: [
             {
                 id: 1,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Standwaage_mit_einer_Kettlebell.mp4"),
                 name: "Standwaage mit einer Kettlebell",
                 repetitions: 20,
@@ -463,7 +463,7 @@ export const workouts = [
             },
             {
                 id: 2,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Ausfallschritt_auf_Balance_Pad.mp4"),
                 name: "Ausfallschritt auf Balance-Pad",
                 repetitions: 20,
@@ -475,7 +475,7 @@ export const workouts = [
             },
             {
                 id: 3,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Kreuzheben_Corrective.mp4"),
                 name: "Kreuzheben mit Kettlebell",
                 repetitions: 20,
@@ -488,7 +488,7 @@ export const workouts = [
             },
             {
                 id: 4,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Cross_Over.mp4"),
                 name: "Cross Over",
                 repetitions: 20,
@@ -500,7 +500,7 @@ export const workouts = [
             },
             {
                 id: 5,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Rolle_mit_Rotationsstabilitaet.mp4"),
                 name: "Rolle mit Rotationsstabilität",
                 repetitions: 20,
@@ -511,7 +511,7 @@ export const workouts = [
                 MET: 4,
             },{
                 id: 6,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Liegestuetz_erhoeht_mit_Rolle.mp4"),
                 name: "Liegestütz erhöht mit Rolle",
                 repetitions: 20,
@@ -523,7 +523,7 @@ export const workouts = [
             },
             {
                 id: 7,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Beinheben_im_umgekehrten_Stuetz.mp4"),
                 name: "Beinheben im umgekehrten Stütz",
                 repetitions: 20,
@@ -535,7 +535,7 @@ export const workouts = [
             },
             {
                 id: 8,
-                image: require("../assets/images/gym.png"),
+                image: "",
                 video: require("../assets/videos/Diagonales_Koerperbrett.mp4"),
                 name: "Diagonales Körperbrett",
                 repetitions: 20,
