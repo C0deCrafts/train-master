@@ -1,4 +1,4 @@
-import {Button, Image, StyleSheet, Switch, Text, View} from 'react-native'
+import {Button, Image, ScrollView, StyleSheet, Switch, Text, View} from 'react-native'
 import FormField from "../../components/FormField";
 import {useState} from "react";
 import {doc, updateDoc} from "firebase/firestore";
@@ -7,6 +7,8 @@ import {useAuth} from "../../context/AuthProvider";
 import {useAppStyle} from "../../context/AppStyleContext";
 import {images} from "../../constants";
 import {Picker} from "@react-native-picker/picker";
+import ColorPicker from "../../components/ColorPicker";
+import {dark, light} from "../../constants/colors";
 
 /*
 const createStyles = (textStyles, colors, fontFamily) => {
@@ -18,14 +20,15 @@ const Settings = () => {
     const { user } = useAuth();
     const [username, setUsername] = useState("");
     const [darkmodeLabel, setDarkmodeLabel] = useState("Darkmode");
-    const { textSize, setTextSize, getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const { textSize, setTextSize, getTextStyles, getColors, getAllBaseColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const handleColorChange = () => {
-        updateBaseColor(colors.orange)
+    const handleColorChange = (color) => {
+        updateBaseColor(color)
+        //updateBaseColor(colors.teal)
     };
 
     const handleDarkModeChange = () => {
@@ -46,6 +49,9 @@ const Settings = () => {
 
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+    const currentColors = colorScheme === "Darkmode" ? Object.entries(dark) : Object.entries(light);
+    const limitedColors = currentColors.slice(0, 19);
 
     return (
         <View style={styles.container}>
@@ -84,7 +90,19 @@ const Settings = () => {
                            onSubmitEditing={()=> handleUpdateUsername()}
                            returnKeyType="done"
                 />
-                <Button title="Farbe ändern" onPress={handleColorChange} />
+                <Text>Ändere die Basisfarbe</Text>
+                <ScrollView horizontal={true}
+                            showsHorizontalScrollIndicator={false} bounces={true}
+                >
+                    {limitedColors.map(([key, value], index) => (
+                        <View key={index}>
+                            <ColorPicker color={value}
+                                         //onPress={() => console.log("COLOR: "+ key + "index: " + index)}
+                                         onPress={() => handleColorChange(value)}
+                            />
+                        </View>
+                    ))}
+                </ScrollView>
             </View>
             <View>
                 <Text>Ändere Textgröße</Text>

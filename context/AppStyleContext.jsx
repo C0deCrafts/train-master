@@ -42,6 +42,10 @@ export const AppStyleProvider = ({ children }) => {
         return { ...baseColors, ...customColors };
     };
 
+    const getAllBaseColors = () => {
+        return { ...light, ...dark }; // Extrahiert alle Farbwerte aus light und dark
+    };
+
     const getTextStyles = () => textStyles[textSize] || textStyles.large_default;
 
     const updateBaseColor = (newBaseColor) => {
@@ -81,7 +85,7 @@ export const AppStyleProvider = ({ children }) => {
 
     return (
         <AppStyleContext.Provider value={{
-            textSize, setTextSize, getTextStyles, getColors,
+            textSize, setTextSize, getTextStyles, getColors, getAllBaseColors,
             colorScheme, setColorScheme, updateBaseColor, fontFamily
         }}>
             {children}
