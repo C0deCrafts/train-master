@@ -3,6 +3,7 @@ import {useNavigation} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {large_default} from "../constants/textStyles";
+import {StatusBar} from "expo-status-bar";
 
 const CustomHeader = ({title, backButtonVisible = false}) => {
     const navigation = useNavigation();

@@ -89,18 +89,30 @@ const Home = () => {
                         <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
                     </View>
                     <View>
-                        <View style={{flexDirection: "row"}}>
-                            <View style={styles.smallIconContainer}>
-                                <Image source={icons.rest} style={styles.smallIcon}/>
+                        {item.sets && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.repeat} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Sets: {item.sets}</Text>
                             </View>
-                            <Text style={styles.exerciseDetails}>Sets: {item.sets}</Text>
-                        </View>
-                        <View style={{flexDirection: "row"}}>
-                            <View style={styles.smallIconContainer}>
-                                <Image source={icons.repeat} style={styles.smallIcon}/>
+                        )}
+                        {item.rest && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.rest} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Pause: {item.rest} min</Text>
                             </View>
-                            <Text style={styles.exerciseDetails}>Pause: {item.rest} min</Text>
-                        </View>
+                        )}
+                        {item.duration && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.time} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Dauer: {item.duration}</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
                 <View style={styles.exerciseImageContainer}>

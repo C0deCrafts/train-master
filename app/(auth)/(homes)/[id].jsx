@@ -95,13 +95,13 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         cardHeader: {
             fontSize: textStyles.footnote,
-            color: colors.primary,
+            color: colors.colorButtonLabel,
             textAlign: "center"
         },
         cardContent: {
             fontSize: textStyles.body,
             fontWeight: "bold",
-            color: colors.primary,
+            color: colors.colorButtonLabel,
             textAlign: "center"
         },
         descriptionContainer: {
