@@ -21,6 +21,7 @@ const TabsLayout = () => {
                 backgroundColor: colors.primary,
                 borderTopWidth: 0,
                 height: 84,
+                paddingHorizontal: 10
             },
             headerStyle: {
                 backgroundColor: colors.baseColor,

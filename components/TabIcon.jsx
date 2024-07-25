@@ -1,6 +1,13 @@
 import {Image, StyleSheet, Text, View} from "react-native";
+import {fontFamily} from "../constants/textStyles";
+import {useAppStyle} from "../context/AppStyleContext";
 
 const TabIcon = ({icon, color, name, focused}) => {
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+    const textStyles = getTextStyles();
+    const colors = getColors();
+    const styles = createStyles(textStyles, colors, fontFamily);
+
     return (
         <View style={styles.container}>
             <Image
@@ -12,7 +19,7 @@ const TabIcon = ({icon, color, name, focused}) => {
                     height: 25,
                 }}
             />
-            <Text style={[styles.text, focused && styles.focusedText, { color: color }]}>
+            <Text style={[styles.text, focused && styles.focusedText, { color: color }]} numberOfLines={1} ellipsizeMode="tail">
                 {name}
             </Text>
         </View>
@@ -21,17 +28,19 @@ const TabIcon = ({icon, color, name, focused}) => {
 
 export default TabIcon;
 
-const styles = StyleSheet.create({
-    container: {
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 2
-    },
-    text: {
-        fontSize: 12,
-        fontFamily: "Poppins-Light"
-    },
-    focusedText: {
-        fontFamily: "Poppins-Light"
-    }
-})
+const createStyles = (textStyles, colors, fontFamily) => {
+    return StyleSheet.create({
+        container: {
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 2,
+        },
+        text: {
+            fontSize: textStyles.caption_1,
+            fontFamily: fontFamily.Poppins_Light
+        },
+        focusedText: {
+            fontFamily: fontFamily.Poppins_Light
+        }
+    })
+}
