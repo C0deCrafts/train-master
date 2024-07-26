@@ -1,6 +1,7 @@
 import { onAuthStateChanged } from "firebase/auth"
 import { createContext, useContext, useEffect, useState } from "react";
-import { FIREBASE_AUTH } from "../config/firebaseConfig";
+import {FIREBASE_AUTH, FIRESTORE_DB} from "../config/firebaseConfig";
+import {doc, getDoc, updateDoc} from "firebase/firestore";
 
 const AuthContext = createContext({});
 
@@ -9,19 +10,53 @@ export function useAuth() {
 }
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState()
+    const [user, setUser] = useState("")
+    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [initialized, setInitialized] = useState(false)
 
     useEffect(() => {
-        onAuthStateChanged(FIREBASE_AUTH, (user)=> {
+        const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user)=> {
             console.log("onAuthStateChanged", user);
-
             setUser(user);
             setInitialized(true)
+
+            if (user) {
+                await loadUserInfo(user.uid);
+            }
+            return () => unsubscribe();
         })
     }, []);
 
-    return <AuthContext.Provider value={{ user, initialized }}>
+    const loadUserInfo = async (userId) => {
+        try {
+            const userDocument = await getDoc(doc(FIRESTORE_DB, "users", userId));
+            if (userDocument.exists()) {
+                setUsername(userDocument.data().username);
+                setEmail(userDocument.data().email);
+            }
+        } catch (error) {
+            console.error("Error loading user information: ", error);
+        }
+    };
+
+    const handleUpdateUsername = async (newUsername) => {
+        try {
+            await updateDoc(doc(FIRESTORE_DB, 'users', user.uid), {
+                username: newUsername
+            });
+            setUsername(newUsername); // Aktualisiere den Zustand mit dem neuen Benutzernamen
+            console.log("Username geändert: ", newUsername);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        console.log("Username: ", username)
+    }, [username]);
+
+    return <AuthContext.Provider value={{ user, initialized, username, setUsername, email, handleUpdateUsername }}>
         {children}
     </AuthContext.Provider>;
 }

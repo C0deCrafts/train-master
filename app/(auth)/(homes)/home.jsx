@@ -14,7 +14,6 @@ import {de} from 'date-fns/locale';
 import {useAppStyle} from "../../../context/AppStyleContext";
 import {dark, light} from "../../../constants/colors";
 import Card from "../../../components/Card";
-import {Video} from "expo-av";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -22,27 +21,16 @@ const Home = () => {
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const {user} = useAuth();
-    const [username, setUsername] = useState("");
+    const {user, username} = useAuth();
+    //const [username, setUsername] = useState("");
     const flatListRef = useRef(null);
     const [selectedWorkoutId, setSelectedWorkoutId] = useState(1);
-
-    useEffect(() => {
-        loadUserInfo();
-    }, []);
 
     const getCurrentDate = () => {
         const today = new Date();
         return format(today, 'EEEE dd. MMMM', {locale: de});
     };
 
-    const loadUserInfo = async () => {
-        const userDocument = await getDoc(doc(FIRESTORE_DB, "users", user.uid));
-        console.log("DATA: ", userDocument.data())
-        if (userDocument.exists()) {
-            setUsername(userDocument.data().username);
-        }
-    }
 
     //Function to handle selecting a profile image and safe it to asyncStorage
     const handlePressImage = async () => {
