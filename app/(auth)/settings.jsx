@@ -179,7 +179,7 @@ const Settings = () => {
                             <Picker.Item label="xxLarge" value="xxLarge"/>
                         </Picker>
                     </CustomModal>
-                    <CustomModal isVisible={isUsernameModalVisible} onClose={toggleUsernameModal} styles={styles}>
+                    <CustomModal isVisible={isUsernameModalVisible} onClose={toggleUsernameModal} onCloseLabel={"Abbrechen"} styles={styles}>
                         <Text style={styles.modalText}>Geben Sie Ihren neuen Benutzernamen ein:</Text>
                         <TextInput
                             style={styles.input}
@@ -188,7 +188,6 @@ const Settings = () => {
                             placeholder="Neuer Benutzername"
                         />
                         <Button title="OK" onPress={handleUsernameChange}/>
-                        <Button title="Abbrechen" onPress={toggleUsernameModal}/>
                     </CustomModal>
                 </ScrollView>
             </View>
@@ -259,6 +258,15 @@ const createStyles = (textStyles, colors, fontFamily) => {
             justifyContent: "flex-start",
             alignItems: "center",
             gap: 10,
+        },
+        input: {
+            //backgroundColor: "red",
+            padding: 10,
+            textAlign: "center",
+            borderRadius: 16,
+            marginVertical: 20,
+            borderWidth: 2,
+            fontSize: textStyles.body
         },
         text: {
             fontFamily: fontFamily.Poppins_Regular,

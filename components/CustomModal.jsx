@@ -1,6 +1,6 @@
 import { Modal, TouchableOpacity, View, Text, Picker, Button, TextInput, StyleSheet } from 'react-native';
 
-const CustomModal = ({ isVisible, onClose, children, styles }) => {
+const CustomModal = ({ isVisible, onClose, children, styles, onCloseLabel="Schließen" }) => {
     return (
         <Modal
             animationType="fade"
@@ -11,7 +11,7 @@ const CustomModal = ({ isVisible, onClose, children, styles }) => {
             <TouchableOpacity style={styles.modalContainer} onPress={onClose} activeOpacity={1}>
                 <TouchableOpacity style={styles.modalContent} activeOpacity={1}>
                     {children}
-                    <Button title="Schließen" onPress={onClose} />
+                    <Button title={onCloseLabel} onPress={onClose} />
                 </TouchableOpacity>
             </TouchableOpacity>
         </Modal>
