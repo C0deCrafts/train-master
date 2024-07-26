@@ -19,6 +19,7 @@ const CustomHeader = ({title, backButtonVisible = false}) => {
 
     return (
         <>
+            <StatusBar style={colors.colorButtonLabel === "rgb(0,0,0)" ? "dark" : "light"}/>
             <View style={styles.headerContainer}>
                 {backButtonVisible && (
                     <TouchableOpacity onPress={handleGoBack} style={styles.backButtonContainer}>

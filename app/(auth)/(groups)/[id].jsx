@@ -104,7 +104,7 @@ export default GroupPage;
 
 const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
-        //kein logo wenn hintergrund
+        //kein logo wenn hintergrund - fix darkmode
         container: {
             flex: 1,
         },
@@ -140,7 +140,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             borderRadius: 10,
             marginHorizontal: 10,
             marginTop: 10,
-            maxWidth: "80%"
+            maxWidth: "80%",
         },
         userMessageContainer: {
             alignSelf: "flex-end",

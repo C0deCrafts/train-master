@@ -16,7 +16,7 @@ import {dark, light} from "../../../constants/colors";
 import Card from "../../../components/Card";
 
 const Home = () => {
-    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
@@ -124,10 +124,11 @@ const Home = () => {
     const selectedWorkout = workouts.find(workout => workout.id === selectedWorkoutId);
     const currentDate = getCurrentDate();
 
+    //fix status bar
     return (
-
         <SafeAreaView style={styles.backgroundImage}>
             <StatusBar style={"dark"}/>
+            {/*colors.label*/}
             <Image
                 source={images.backgroundSymbol}
                 style={styles.image}
