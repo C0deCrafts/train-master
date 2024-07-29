@@ -2,17 +2,17 @@ import {AuthProvider, useAuth} from "../context/AuthProvider";
 import {Slot, SplashScreen, useRouter, useSegments} from "expo-router";
 import {useEffect} from "react";
 import {ActivityIndicator, View} from "react-native";
-import { StatusBar } from "expo-status-bar";
+import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
 import {AppStyleProvider} from "../context/AppStyleContext";
 
 const InitialLayout = () => {
-    const { user, initialized } = useAuth();
+    const {user, initialized} = useAuth();
     const router = useRouter();
     const segments = useSegments();
 
     useEffect(() => {
-        if(!initialized) return;
+        if (!initialized) return;
         //console.log("Segments: ", segments)
         const inAuthGroup = segments[0] === "(auth)";
 
@@ -28,8 +28,8 @@ const InitialLayout = () => {
             {initialized ? (
                 <Slot/>
             ) : (
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <ActivityIndicator size="large" color="#185360" />
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                    <ActivityIndicator size="large" color="#185360"/>
                 </View>
             )}
         </>
@@ -51,11 +51,11 @@ const RootLayout = () => {
     });
 
     useEffect(() => {
-        if(error) throw error;
-        if(fontsLoaded) SplashScreen.hideAsync();
+        if (error) throw error;
+        if (fontsLoaded) SplashScreen.hideAsync();
     }, [fontsLoaded, error]);
 
-    if(!fontsLoaded && !error) return null;
+    if (!fontsLoaded && !error) return null;
 
     return (
         <AppStyleProvider>

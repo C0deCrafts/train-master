@@ -15,6 +15,7 @@ const TabsLayout = () => {
         //miniborder irgendwo unterm header??
         <Tabs screenOptions={{
             tabBarShowLabel: false,
+            //fix label color - if the labelcolor is too light
             tabBarActiveTintColor: colors.baseColor,
             tabBarInactiveTintColor: colors.secondaryLabel,
             tabBarStyle: {

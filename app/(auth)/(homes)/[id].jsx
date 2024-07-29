@@ -60,7 +60,7 @@ const TrainGroup = () => {
                         <Text style={styles.additionalInfo}><Text style={styles.bold}>Zusatzinfos:</Text> {workoutItem.additionalInfo}</Text>
                     )}
                     {workoutItem.heartRateZone && (
-                        <Text style={styles.additionalInfo}><Text style={styles.bold}>🖤 Rate:</Text> {workoutItem.heartRateZone}</Text>
+                        <Text style={styles.additionalInfo}><Text style={styles.bold}>Heart Rate:</Text> {workoutItem.heartRateZone}</Text>
                     )}
                 </ScrollView>
             </View>
@@ -128,11 +128,13 @@ const createStyles = (textStyles, colors, fontFamily) => {
         information: {
             textAlign: "justify",
             fontSize: textStyles.body,
+            color: colors.label
         },
         additionalInfo: {
             marginTop: 10,
             textAlign: "justify",
             fontSize: textStyles.body,
+            color: colors.label
         },
         scrollBox: {
             flex: 1
