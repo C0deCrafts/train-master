@@ -5,6 +5,7 @@ import {ActivityIndicator, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
 import {AppStyleProvider} from "../context/AppStyleContext";
+import {WorkoutProvider} from "../context/WorkoutContext";
 
 const InitialLayout = () => {
     const {user, initialized} = useAuth();
@@ -60,8 +61,10 @@ const RootLayout = () => {
     return (
         <AppStyleProvider>
             <AuthProvider>
-                <InitialLayout/>
-                <StatusBar style="light"/>
+                <WorkoutProvider>
+                    <InitialLayout/>
+                    <StatusBar style="light"/>
+                </WorkoutProvider>
             </AuthProvider>
         </AppStyleProvider>
     )

@@ -6,6 +6,7 @@ import darkmode from "../assets/images/appimages/darkmode.png"
 import logo from "../assets/images/logo.png"
 import logoBig from "../assets/images/logo_big.png"
 import rectangle from "../assets/images/Rectangle.png"
+import test from "../assets/images/1.png"
 
 export default {
     avatar,
@@ -16,4 +17,5 @@ export default {
     logo,
     logoBig,
     rectangle,
+    test
 }

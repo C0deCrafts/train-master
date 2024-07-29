@@ -65,8 +65,8 @@ const TabsLayout = () => {
             }}
             redirect={!user}
             />
-            <Tabs.Screen name="training" options={{
-                //headerShown: false,
+            <Tabs.Screen name="(training)" options={{
+                headerShown: false,
                 title: "Start",
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon

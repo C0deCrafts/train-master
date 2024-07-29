@@ -1,0 +1,72 @@
+[
+  {
+    "id": "f4JrHg7Bg8K4Q77Fozbj",
+    "name": "Krafttraining #1",
+    "description": "",
+    "image": "",
+    "exercises": [
+      "bankdr-cken-weit-lh",
+      "butterfly-reverse-h-nde-au-en",
+      "latziehen-fixiert",
+      "dumbell-kneeling-to-standing",
+      "dips-sitzend",
+      "dip-klimmzug-unterst-tzt",
+      "einbeiniger-ausfallschritt-ber-kreuz",
+      "twist-beine-angewinkelt",
+      "r-ckenstreckermaschine",
+      "hyperextensions-r-ckenstrecker",
+      "beinheben-im-liegen"
+    ]
+  },
+  {
+    "id": "ELxwr3DkXF4z9Q2yq0aO",
+    "name": "Krafttraining #2",
+    "description": "",
+    "image": "",
+    "exercises": [
+      "ausfallschritt-oberk-rperrotation-gleiche-seite",
+      "beinkreisen-im-vierf-lerstand",
+      "einarmiges-kabel-rudern-mit-drehung-steigerung-2",
+      "kreuzheben-lh",
+      "kniebeuge-lh",
+      "ausfallschritt-hinten-gekreuzt-mit-rotation",
+      "beinbeuger-liegend-beidbeinig",
+      "adduktoren",
+      "abduktoren",
+      "liegest-tz-arme-weit-h-nde-erh-ht",
+      "bizepsmaschine",
+      "trizepsdr-cken-am-seilzug",
+      "dips-sitzend",
+      "bauchmaschine"
+    ]
+  },
+  {
+    "id": "lUvuLmTJMh7U5FfWkRhe",
+    "name": "Korrekturübungen",
+    "description": "Übungen zur Korrektur und Stabilisierung.",
+    "image": "",
+    "exercises": [
+      "standwaage-mit-einer-kettlebell",
+      "ausfallschritt-auf-balance-pad",
+      "kreuzheben-mit-kettlebell",
+      "cross-over",
+      "rolle-mit-rotationsstabilit-t",
+      "liegest-tz-erh-ht-mit-rolle",
+      "beinheben-im-umgekehrten-st-tz",
+      "diagonales-k-rperbrett"
+    ]
+  },
+  {
+    "id": "rMzS42rvz1eHzo8qlIJm",
+    "name": "Ausdauerplan",
+    "description": "",
+    "image": "",
+    "exercises": [
+      "rowing",
+      "skiing",
+      "crosstrainer",
+      "laufband",
+      "ergometer-sitzend"
+    ]
+  }
+]

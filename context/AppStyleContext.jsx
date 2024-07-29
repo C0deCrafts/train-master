@@ -57,14 +57,14 @@ export const AppStyleProvider = ({ children }) => {
         }));
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("TextSize: ", textSize)
         console.log("Get: ", getTextStyles())
     }, [textSize]);
 
     useEffect(() => {
         console.log("Mode: ", colorScheme)
-    }, [colorScheme]);
+    }, [colorScheme]);*/
 
     return (
         <AppStyleContext.Provider value={{

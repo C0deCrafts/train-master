@@ -34,7 +34,6 @@ export const workouts = [
                 MET: 4,
             },
             {
-                id: 3,
                 image: require("../assets/images/workoutexercises/breites_latziehen_zum_nacken.gif"),
                 video: require("../assets/videos/gifAsVideo/breites_latziehen_zum_nacken.mp4"),
                 name: "Latziehen fixiert",
