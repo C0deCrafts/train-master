@@ -29,6 +29,7 @@ const Training = () => {
 
     const renderWorkout = ({item}) => {
         const totalDuration = calculateTotalDuration(item);
+        const imageUrl = item.image || '';
 
         return (
             <Card
@@ -36,15 +37,17 @@ const Training = () => {
                 href={{pathname: `/(training)/${item.id}`, params: {item: JSON.stringify(item)}}}
                 clickable
             >
-                <Image
-                    source={images.test}
-                    style={{
-                        width: "100%",
-                        height: 100,
-                        borderTopLeftRadius: elements.cardRadius,
-                        borderTopRightRadius: elements.cardRadius,
-                    }}
-                />
+                {imageUrl && (
+                    <Image
+                        source={{uri: item.image}}
+                        style={{
+                            width: "100%",
+                            height: 100,
+                            borderTopLeftRadius: elements.cardRadius,
+                            borderTopRightRadius: elements.cardRadius,
+                        }}
+                    />
+                )}
                 {/*<Image source={item.image} style={styles.workoutImage} />*/}
                 <View style={styles.cardContent}>
                     <View style={styles.cardContainerTitleDescription}>
