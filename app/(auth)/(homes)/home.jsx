@@ -16,32 +16,21 @@ import {dark, light} from "../../../constants/colors";
 import Card from "../../../components/Card";
 
 const Home = () => {
-    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const {user} = useAuth();
-    const [username, setUsername] = useState("");
+    const {user, username} = useAuth();
+    //const [username, setUsername] = useState("");
     const flatListRef = useRef(null);
     const [selectedWorkoutId, setSelectedWorkoutId] = useState(1);
-
-    useEffect(() => {
-        loadUserInfo();
-    }, []);
 
     const getCurrentDate = () => {
         const today = new Date();
         return format(today, 'EEEE dd. MMMM', {locale: de});
     };
 
-    const loadUserInfo = async () => {
-        const userDocument = await getDoc(doc(FIRESTORE_DB, "users", user.uid));
-        console.log("DATA: ", userDocument.data())
-        if (userDocument.exists()) {
-            setUsername(userDocument.data().username);
-        }
-    }
 
     //Function to handle selecting a profile image and safe it to asyncStorage
     const handlePressImage = async () => {
@@ -77,29 +66,57 @@ const Home = () => {
     const renderExercise = ({item}) => {
 
         return (
-            <Card style={styles.exerciseContainer} onPress={()=> console.log(item)} clickable>
+            <Card
+                  style={{marginBottom: 10}}
+                  //onPress={()=> console.log(item)}
+                  href={{pathname: `/(homes)/${item.id}`, params: {item: JSON.stringify(item)}}}
+                  clickable
+            ><View style={styles.exerciseContainer}>
                 <View style={styles.exercises}>
                     <View>
                         <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
                     </View>
                     <View>
-                        <View style={{flexDirection: "row"}}>
-                            <View style={styles.smallIconContainer}>
-                                <Image source={icons.rest} style={styles.smallIcon}/>
+                        {item.sets && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.repeat} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Sets: {item.sets}</Text>
                             </View>
-                            <Text style={styles.exerciseDetails}>Sets: {item.sets}</Text>
-                        </View>
-                        <View style={{flexDirection: "row"}}>
-                            <View style={styles.smallIconContainer}>
-                                <Image source={icons.repeat} style={styles.smallIcon}/>
+                        )}
+                        {item.rest && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.rest} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Pause: {item.rest} min</Text>
                             </View>
-                            <Text style={styles.exerciseDetails}>Pause: {item.rest} min</Text>
-                        </View>
+                        )}
+                        {item.duration && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.time} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Dauer: {item.duration}</Text>
+                            </View>
+                        )}
+                        {item.heartRateZone && (
+                            <View style={{flexDirection: "row"}}>
+                                <View style={styles.smallIconContainer}>
+                                    <Image source={icons.heartbeat} style={styles.smallIcon}/>
+                                </View>
+                                <Text style={styles.exerciseDetails}>Herzrate: {item.heartRateZone}</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
-                <View style={styles.exerciseImageContainer}>
-                    <Image source={item.image} style={styles.exerciseImage}/>
-                </View>
+                {item.image && (
+                    <View style={styles.exerciseImageContainer}>
+                        <Image source={item.image} style={styles.exerciseImage}/>
+                    </View>
+                )}
+            </View>
             </Card>
         )
     }
@@ -107,10 +124,11 @@ const Home = () => {
     const selectedWorkout = workouts.find(workout => workout.id === selectedWorkoutId);
     const currentDate = getCurrentDate();
 
+    //fix status bar
     return (
-
         <SafeAreaView style={styles.backgroundImage}>
             <StatusBar style={"dark"}/>
+            {/*colors.label*/}
             <Image
                 source={images.backgroundSymbol}
                 style={styles.image}
@@ -284,7 +302,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         headerCounterLabel: {
             color: colors.label,
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 16,
+            fontSize: textStyles.subhead,
             alignSelf: "center"
         },
         workoutInfoContainer: {
@@ -295,12 +313,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         firstTitleText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 20,
+            fontSize: textStyles.title_3,
             color: colors.label
         },
         titleText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 20,
+            fontSize: textStyles.title_3,
             marginTop: 15,
             color: colors.label
         },
@@ -315,17 +333,17 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         dateText: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             color: colors.label
         },
         greetingText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 20,
+            fontSize: textStyles.title_3,
             color: colors.label
         },
         usernameText: {
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 25,
+            fontSize: textStyles.title_1,
             color: colors.label
         },
         workoutContainer: {
@@ -358,13 +376,13 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         workoutName: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             marginVertical: 5,
             color: colors.label
         },
         workoutNameSelected: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             marginVertical: 5,
             color: colors.colorButtonLabel
         },
@@ -375,7 +393,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         exerciseContainer: {
             flexDirection: "row",
-            marginBottom: 10,
         },
         exercises: {
             //backgroundColor: "blue",
@@ -397,14 +414,15 @@ const createStyles = (textStyles, colors, fontFamily) => {
         exerciseName: {
             fontFamily: fontFamily.Poppins_SemiBold,
             color: colors.label,
-            fontSize: 16,
+            fontSize: textStyles.callout,
             paddingLeft: 5,
+            paddingBottom: 15,
             width: "100%",
         },
         exerciseDetails: {
             fontFamily: fontFamily.Poppins_Regular,
             color: colors.secondaryLabel,
-            fontSize: 14,
+            fontSize: textStyles.footnote,
             paddingLeft: 5,
             paddingTop: 2,
             width: "100%",

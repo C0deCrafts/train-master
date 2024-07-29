@@ -84,5 +84,6 @@ export const xxLarge= {
 
 export const fontFamily = {
     Poppins_Regular: "Poppins-Regular",
-    Poppins_SemiBold: "Poppins-SemiBold"
+    Poppins_SemiBold: "Poppins-SemiBold",
+    Poppins_Light: "Poppins-Light",
 }

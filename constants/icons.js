@@ -7,14 +7,19 @@ import diary from "../assets/icons/notebook_2_fill.png";
 import facebook from "../assets/icons/facebook_fill.png";
 import fitness from "../assets/icons/fitness_fill.png";
 import friends from "../assets/icons/comment_2_fill.png"
+import fontsize from "../assets/icons/font_size_line.png"
 import google from "../assets/icons/google_fill.png";
+import heartbeat from "../assets/icons/heartbeat_line.png"
 import lock from "../assets/icons/lock_line.png";
 import logout from "../assets/icons/arrow_to_right_line.png";
-import menu from "../assets/icons/menu_fill.png"
+import menu from "../assets/icons/menu_fill.png";
+import night from "../assets/icons/moon_line.png";
 import profile from "../assets/icons/user_2_fill.png";
 import rest from "../assets/icons/sleep_line.png"
 import repeat from "../assets/icons/refresh_2_line.png"
 import setting from "../assets/icons/settings_3_fill.png";
+import sun from "../assets/icons/sun_line.png"
+import time from "../assets/icons/time_line.png"
 import unlock from "../assets/icons/unlock_line.png";
 
 export default {
@@ -27,14 +32,18 @@ export default {
     facebook,
     fitness,
     friends,
+    fontsize,
     google,
+    heartbeat,
     lock,
     logout,
     menu,
+    night,
     profile,
     rest,
     repeat,
     setting,
+    sun,
+    time,
     unlock,
-
 }

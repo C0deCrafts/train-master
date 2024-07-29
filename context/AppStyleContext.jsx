@@ -42,6 +42,10 @@ export const AppStyleProvider = ({ children }) => {
         return { ...baseColors, ...customColors };
     };
 
+    const getAllBaseColors = () => {
+        return { ...light, ...dark }; // Extrahiert alle Farbwerte aus light und dark
+    };
+
     const getTextStyles = () => textStyles[textSize] || textStyles.large_default;
 
     const updateBaseColor = (newBaseColor) => {
@@ -53,30 +57,18 @@ export const AppStyleProvider = ({ children }) => {
         }));
     };
 
+    useEffect(() => {
+        console.log("TextSize: ", textSize)
+        console.log("Get: ", getTextStyles())
+    }, [textSize]);
 
-    /*const determineButtonLabelColor = (backgroundColor) => {
-        const darkBackgroundColors = [
-            dark.red,
-            dark.green,
-            dark.blue,
-            dark.indigo,
-            dark.indigo_2,
-            dark.purple,
-            dark.purple_2,
-            dark.pink,
-            dark.pink_2,
-            dark.brown,
-            dark.gray_4,
-            dark.gray_5,
-            dark.gray_6,
-            dark.primary
-        ];
-        return darkBackgroundColors.includes(backgroundColor) ? light.colorButtonLabel : dark.colorButtonLabel
-    }*/
+    useEffect(() => {
+        console.log("Mode: ", colorScheme)
+    }, [colorScheme]);
 
     return (
         <AppStyleContext.Provider value={{
-            textSize, setTextSize, getTextStyles, getColors,
+            textSize, setTextSize, getTextStyles, getColors, getAllBaseColors,
             colorScheme, setColorScheme, updateBaseColor, fontFamily
         }}>
             {children}

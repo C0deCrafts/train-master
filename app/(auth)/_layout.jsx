@@ -7,19 +7,22 @@ import {useAppStyle} from "../../context/AppStyleContext";
 
 const TabsLayout = () => {
     const { user } = useAuth();
-    const { getColors } = useAppStyle();
+    const { getColors, getTextStyles } = useAppStyle();
     const colors = getColors();
+    const textStyles = getTextStyles();
 
     return (
         //miniborder irgendwo unterm header??
         <Tabs screenOptions={{
             tabBarShowLabel: false,
+            //fix label color - if the labelcolor is too light
             tabBarActiveTintColor: colors.baseColor,
             tabBarInactiveTintColor: colors.secondaryLabel,
             tabBarStyle: {
                 backgroundColor: colors.primary,
                 borderTopWidth: 0,
                 height: 84,
+                paddingHorizontal: 10
             },
             headerStyle: {
                 backgroundColor: colors.baseColor,
@@ -30,7 +33,7 @@ const TabsLayout = () => {
                 paddingTop: 20,
                 color: colors.colorButtonLabel,
                 fontFamily: "Poppins-SemiBold",
-                fontSize: 25,
+                fontSize: textStyles.title_2,
             }
         }}>
             <Tabs.Screen name="(groups)" options={{

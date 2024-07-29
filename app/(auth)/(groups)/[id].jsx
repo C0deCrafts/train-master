@@ -104,7 +104,7 @@ export default GroupPage;
 
 const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
-        //kein logo wenn hintergrund
+        //kein logo wenn hintergrund - fix darkmode
         container: {
             flex: 1,
         },
@@ -122,8 +122,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
         textInputContainer: {
             flexDirection: "row",
             gap: 10,
-            paddingBottom: 10,
-            paddingHorizontal: 20,
+            paddingVertical: 10,
+            paddingHorizontal: 10,
         },
         textInput: {
             flex: 1,
@@ -131,7 +131,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             backgroundColor: colors.secondary,
             borderRadius: 10,
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             padding: 10,
             zIndex: 2
         },
@@ -140,7 +140,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             borderRadius: 10,
             marginHorizontal: 10,
             marginTop: 10,
-            maxWidth: "80%"
+            maxWidth: "80%",
         },
         userMessageContainer: {
             alignSelf: "flex-end",
@@ -152,25 +152,25 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         userMessageText: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 16,
+            fontSize: textStyles.callout,
             color: colors.colorButtonLabel
         },
         messageText: {
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 16,
+            fontSize: textStyles.callout,
             color: colors.label
         },
         userTime: {
             alignSelf: "flex-end",
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 10,
+            fontSize: textStyles.caption_2,
             color: colors.colorButtonLabel,
             marginTop: 5
         },
         time: {
             alignSelf: "flex-end",
             fontFamily: fontFamily.Poppins_Regular,
-            fontSize: 10,
+            fontSize: textStyles.caption_2,
             color: colors.label,
             marginTop: 5
         },
@@ -182,7 +182,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         buttonLabel: {
             fontFamily: "Poppins-SemiBold",
-            fontSize: 14,
+            fontSize: textStyles.subhead,
             color: colors.colorButtonLabel,
         }
     })

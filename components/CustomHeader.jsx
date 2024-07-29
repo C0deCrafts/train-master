@@ -2,10 +2,12 @@ import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {useNavigation} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
+import {large_default} from "../constants/textStyles";
+import {StatusBar} from "expo-status-bar";
 
 const CustomHeader = ({title, backButtonVisible = false}) => {
     const navigation = useNavigation();
-    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme, textSize} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
@@ -17,6 +19,7 @@ const CustomHeader = ({title, backButtonVisible = false}) => {
 
     return (
         <>
+            <StatusBar style={colors.colorButtonLabel === "rgb(0,0,0)" ? "dark" : "light"}/>
             <View style={styles.headerContainer}>
                 {backButtonVisible && (
                     <TouchableOpacity onPress={handleGoBack} style={styles.backButtonContainer}>
@@ -56,7 +59,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         headerTitle: {
             color: colors.colorButtonLabel,
             fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: 25,
+            fontSize: textStyles.title_2,
             maxWidth: "80%",
             textAlign: "center",
         },
