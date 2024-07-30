@@ -7,10 +7,12 @@ export const WorkoutContext = createContext();
 
 export const WorkoutProvider = ({ children }) => {
     const [workouts, setWorkouts] = useState([]);
+    const [exerciseImages, setExerciseImages] = useState({});
+    const [exerciseVideos, setExerciseVideos] = useState({});
 
     useEffect(() => {
         const loadWorkouts = async () => {
-            await fetchWorkoutsWithExercises(setWorkouts);
+            await fetchWorkoutsWithExercises(setWorkouts, setExerciseImages, setExerciseVideos);
         };
 
         loadWorkouts();
@@ -22,6 +24,8 @@ export const WorkoutProvider = ({ children }) => {
             const workoutsSnapshot = await getDocs(workoutsCollection);
 
             const workouts = [];
+            const images = {};
+            const videos = {}
 
             for (const workoutDoc of workoutsSnapshot.docs) {
                 const workoutData = workoutDoc.data();
@@ -37,11 +41,23 @@ export const WorkoutProvider = ({ children }) => {
                     ...workoutData,
                     exercises
                 });
+
+                // Bild-URLs für die Exercises abrufen und speichern
+                for (const exercise of exercises) {
+                    if (exercise.image) {
+                        images[exercise.id] = exercise.image;
+                    }
+                    if (exercise.video) {
+                        videos[exercise.id] = exercise.video;
+                    }
+                }
             }
 
-            // Ausgabe in der Konsole
             //console.log('Workouts with Id:', JSON.stringify(workouts, null, 2));
+            //console.log('Images:', JSON.stringify(images, null, 2));
             setWorkouts(workouts);
+            setExerciseImages(images);
+            setExerciseVideos(videos)
         } catch (error) {
             console.error("Error fetching workouts with exercises: ", error);
         }
@@ -50,7 +66,7 @@ export const WorkoutProvider = ({ children }) => {
 
 
     return (
-        <WorkoutContext.Provider value={{ workouts }}>
+        <WorkoutContext.Provider value={{ workouts, exerciseImages, exerciseVideos }}>
             {children}
         </WorkoutContext.Provider>
     );

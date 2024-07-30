@@ -34,7 +34,7 @@ const Training = () => {
         return (
             <Card
                 style={styles.workout}
-                href={{pathname: `/(training)/${item.id}`, params: {item: JSON.stringify(item)}}}
+                href={{pathname: `/(training)/${item.id}/exercises`, params: {item: JSON.stringify(item), workoutId: item.id}}}
                 clickable
             >
                 {imageUrl && (
