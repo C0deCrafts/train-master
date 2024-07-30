@@ -13,7 +13,6 @@ const InitialLayout = () => {
     const router = useRouter();
     const segments = useSegments();
     const [loadingWorkouts, setLoadingWorkouts] = useState(false);
-    const [userInfoLoaded, setUserInfoLoaded] = useState(false);
 
     useEffect(() => {
         const handleLoadingData = async () => {
@@ -31,13 +30,6 @@ const InitialLayout = () => {
         };
         handleLoadingData();
     }, [initialized, user]);
-
-    useEffect(() => {
-        // Warte, bis die Benutzerinformationen geladen sind
-        if (username) {
-            setUserInfoLoaded(true);
-        }
-    }, [username]);
 
     useEffect(() => {
         if (initialized && !loadingWorkouts && user && username) {
