@@ -8,11 +8,12 @@ import {AppStyleProvider} from "../context/AppStyleContext";
 import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
 
 const InitialLayout = () => {
-    const {user, initialized} = useAuth();
+    const {user, initialized, username} = useAuth();
     const { loadWorkouts } = useContext(WorkoutContext);
     const router = useRouter();
     const segments = useSegments();
     const [loadingWorkouts, setLoadingWorkouts] = useState(false);
+    const [userInfoLoaded, setUserInfoLoaded] = useState(false);
 
     useEffect(() => {
         const handleLoadingData = async () => {
@@ -32,12 +33,19 @@ const InitialLayout = () => {
     }, [initialized, user]);
 
     useEffect(() => {
-        if (initialized && !loadingWorkouts && user) {
+        // Warte, bis die Benutzerinformationen geladen sind
+        if (username) {
+            setUserInfoLoaded(true);
+        }
+    }, [username]);
+
+    useEffect(() => {
+        if (initialized && !loadingWorkouts && user && username) {
             router.replace("/home");
         }
-    }, [initialized, loadingWorkouts, user]);
+    }, [initialized, loadingWorkouts, user, username]);
 
-    if (!initialized || loadingWorkouts) {
+    if (!initialized || loadingWorkouts || (!username && user)) {
         return (
             <View style={{flex: 1, justifyContent: 'center'}}>
                 <ActivityIndicator size="large" color="#185360"/>
