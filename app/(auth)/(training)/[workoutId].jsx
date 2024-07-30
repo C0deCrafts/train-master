@@ -1,16 +1,16 @@
 import {View, StyleSheet, FlatList} from "react-native";
-import CustomHeader from "../../../../components/CustomHeader";
+import CustomHeader from "../../../components/CustomHeader";
 import {useLocalSearchParams} from "expo-router";
-import {useAppStyle} from "../../../../context/AppStyleContext";
-import {elements, icons, images} from "../../../../constants";
+import {useAppStyle} from "../../../context/AppStyleContext";
+import {elements, icons, images} from "../../../constants";
 import {useContext } from "react";
-import {WorkoutContext} from "../../../../context/WorkoutContext";
-import CustomButton from "../../../../components/CustomButton";
-import ExerciseList from "../../../../components/ExerciseList";
+import {WorkoutContext} from "../../../context/WorkoutContext";
+import CustomButton from "../../../components/CustomButton";
+import ExerciseList from "../../../components/ExerciseList";
 
 
-const Exercises = () => {
-    const { workoutId, item } = useLocalSearchParams();
+const WorkoutId = () => {
+    const { workout, item } = useLocalSearchParams();
     const { exerciseImages } = useContext(WorkoutContext);
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
@@ -23,9 +23,9 @@ const Exercises = () => {
         console.log("Start workout")
     }
 
-    const exercises = ({item, workoutId}) => {
+    const exercises = ({item}) => {
         return (
-            <ExerciseList item={item} workoutId={workoutId}/>
+            <ExerciseList item={item} workoutId={workout}/>
         )
     }
 
@@ -179,4 +179,4 @@ const createStyles = (textStyles, colors, fontFamily) => {
     })
 }
 
-export default Exercises;
+export default WorkoutId;

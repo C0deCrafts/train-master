@@ -34,7 +34,7 @@ export const WorkoutProvider = ({ children }) => {
                     exercises
                 });
 
-                // Bild-URLs für die Exercises abrufen und speichern
+                // Bild-URLs für die WorkoutId abrufen und speichern
                 for (const exercise of exercises) {
                     if (exercise.image) {
                         images[exercise.id] = exercise.image;

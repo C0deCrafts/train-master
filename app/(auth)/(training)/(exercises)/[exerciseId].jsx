@@ -28,7 +28,7 @@ const Exercises = () => {
     return (
 
         <View style={styles.container}>
-            <CustomHeader title={exerciseItem.name} backButtonVisible={true} backToAnotherScreen={isHomeScreen === "true" ? true : false}/>
+            <CustomHeader title={exerciseItem.name} backButtonVisible={true}/>
             {videoUrl && (
                 <Video
                     source={{uri: videoUrl}}
@@ -56,7 +56,7 @@ const Exercises = () => {
                     {exerciseItem.weight && (
                         <Card style={styles.cardStyle}>
                             <Text style={styles.cardHeader}>Gewicht</Text>
-                            <Text style={styles.cardContent}>x{exerciseItem.weight}</Text>
+                            <Text style={styles.cardContent}>kg{exerciseItem.weight}</Text>
                         </Card>
                     )}
                 </View>

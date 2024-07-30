@@ -5,7 +5,6 @@ const StackTrainingDetailLayout = () => {
         <Stack screenOptions={{
             headerShown: false
         }}>
-            <Stack.Screen name="exercises" />
             <Stack.Screen name="[exerciseId]" />
         </Stack>
     );
