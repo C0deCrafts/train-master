@@ -1,4 +1,5 @@
-import {Alert, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image } from 'expo-image';
 import {useEffect, useState} from "react";
 import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import {FIRESTORE_DB} from "../../../config/firebaseConfig";

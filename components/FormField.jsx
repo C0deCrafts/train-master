@@ -1,4 +1,5 @@
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import { Image } from 'expo-image';
 import {colors, icons} from "../constants";
 import {useState, forwardRef} from "react";
 

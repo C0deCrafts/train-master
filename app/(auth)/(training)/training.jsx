@@ -1,12 +1,11 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native'
+import {FlatList, StyleSheet, Text, View} from 'react-native'
+import { Image } from 'expo-image';
 import {useAppStyle} from "../../../context/AppStyleContext";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import Card from "../../../components/Card";
 import {WorkoutContext} from "../../../context/WorkoutContext";
-import {SafeAreaView} from "react-native-safe-area-context";
 import CustomHeader from "../../../components/CustomHeader";
-import {elements, icons, images} from "../../../constants";
-import CustomButton from "../../../components/CustomButton";
+import {elements, icons} from "../../../constants";
 
 const Training = () => {
     const [selectedWorkoutId, setSelectedWorkoutId] = useState("");

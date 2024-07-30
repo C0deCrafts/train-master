@@ -1,4 +1,5 @@
-import {View, StyleSheet, Animated, TextInput, Image} from "react-native";
+import {View, StyleSheet, Animated, TextInput} from "react-native";
+import { Image } from 'expo-image';
 import Svg, {G, Circle } from "react-native-svg";
 import {useEffect, useRef} from "react";
 import {colors, icons} from "../constants";

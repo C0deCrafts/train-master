@@ -1,4 +1,5 @@
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import { Image } from 'expo-image';
 import {router, useNavigation} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";

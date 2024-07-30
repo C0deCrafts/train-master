@@ -1,12 +1,12 @@
 import {
     Alert,
-    Image,
     ImageBackground, Keyboard,
     Pressable,
     StyleSheet,
     Text, TouchableWithoutFeedback,
     View
 } from 'react-native'
+import { Image } from 'expo-image';
 import {SafeAreaView} from "react-native-safe-area-context";
 import {colors, icons, images} from "../../constants";
 import FormField from "../../components/FormField";

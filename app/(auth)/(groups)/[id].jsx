@@ -1,5 +1,5 @@
 import {
-    FlatList, Image,
+    FlatList,
     KeyboardAvoidingView,
     Platform,
     Pressable,
@@ -7,7 +7,8 @@ import {
     Text,
     TextInput,
     View
-} from 'react-native'
+} from 'react-native';
+import { Image } from 'expo-image';
 import {useLocalSearchParams} from "expo-router"
 import {useState, useLayoutEffect, useRef} from "react";
 import CustomHeader from "../../../components/CustomHeader";

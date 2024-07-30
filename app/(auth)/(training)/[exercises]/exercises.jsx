@@ -1,8 +1,7 @@
-import {View, Text, StyleSheet, Image, FlatList} from "react-native";
+import {View, StyleSheet, FlatList} from "react-native";
 import CustomHeader from "../../../../components/CustomHeader";
 import {useLocalSearchParams} from "expo-router";
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import Card from "../../../../components/Card";
 import {elements, icons, images} from "../../../../constants";
 import {useContext } from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";

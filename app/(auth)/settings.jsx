@@ -1,12 +1,12 @@
 import {
     Button,
-    Image,
     ScrollView,
     StyleSheet,
     Text,
     TextInput,
     View
-} from 'react-native'
+} from 'react-native';
+import { Image } from 'expo-image';
 import {useState, useMemo} from "react";
 import {useAuth} from "../../context/AuthProvider";
 import {useAppStyle} from "../../context/AppStyleContext";

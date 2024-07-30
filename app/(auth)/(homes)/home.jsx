@@ -1,4 +1,5 @@
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Image } from 'expo-image';
 import {useAuth} from "../../../context/AuthProvider";
 import {useContext, useEffect, useRef, useState} from "react";
 import {elements, icons, images} from "../../../constants";

@@ -1,37 +1,14 @@
-/*import { View, Text, Button } from 'react-native';
-import { useLocalSearchParams } from "expo-router";
-import {SafeAreaView} from "react-native-safe-area-context";
-import CustomHeader from "../../../../components/CustomHeader";
-import {useEffect} from "react";
-
-const Exercise = () => {
-    const { id, exercise } = useLocalSearchParams();
-    const exerciseItem = exercise ? JSON.parse(exercise) : {};
-
-    useEffect(() => {
-        console.log("EX ITEM: ", exerciseItem.name)
-    }, [exerciseItem]);
-
-    return (
-        <View>
-            <CustomHeader title={exerciseItem.name} backButtonVisible/>
-            <Text>Exercise Detail Screen for Workout ID: {exerciseItem.name} and Exercise ID: {exercise.id}</Text>
-        </View>
-    );
-}
-
-export default Exercise;*/
 import {
-    Image, ScrollView,
+    ScrollView,
     StyleSheet,
     Text, View
 } from 'react-native'
-import {Link, useLocalSearchParams} from "expo-router";
+import {useLocalSearchParams} from "expo-router";
 import {Video} from "expo-av";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import Card from "../../../../components/Card";
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 
 const Exercises = () => {
