@@ -1,6 +1,6 @@
 import {AuthProvider, useAuth} from "../context/AuthProvider";
 import {Slot, SplashScreen, useRouter, useSegments} from "expo-router";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {ActivityIndicator, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
@@ -12,6 +12,7 @@ const InitialLayout = () => {
     const { loadWorkouts } = useContext(WorkoutContext);
     const router = useRouter();
     const segments = useSegments();
+    const [loadingWorkouts, setLoadingWorkouts] = useState(false);
 
     useEffect(() => {
         const handleLoadingData = async () => {
@@ -19,8 +20,10 @@ const InitialLayout = () => {
             const inAuthGroup = segments[0] === "(auth)";
 
             if (user && !inAuthGroup) {
+                setLoadingWorkouts(true)
                 await loadWorkouts(); // Warten bis loadWorkouts abgeschlossen ist
-                router.replace("/home");
+                setLoadingWorkouts(false);
+                //router.replace("/home");
             } else if (!user) {
                 router.navigate("/login");
             }
@@ -28,16 +31,23 @@ const InitialLayout = () => {
         handleLoadingData();
     }, [initialized, user]);
 
+    useEffect(() => {
+        if (initialized && !loadingWorkouts && user) {
+            router.replace("/home");
+        }
+    }, [initialized, loadingWorkouts, user]);
+
+    if (!initialized || loadingWorkouts) {
+        return (
+            <View style={{flex: 1, justifyContent: 'center'}}>
+                <ActivityIndicator size="large" color="#185360"/>
+            </View>
+        );
+    }
 
     return (
         <>
-            {initialized ? (
-                <Slot/>
-            ) : (
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                    <ActivityIndicator size="large" color="#185360"/>
-                </View>
-            )}
+            {initialized && <Slot/>}
         </>
     )
 };

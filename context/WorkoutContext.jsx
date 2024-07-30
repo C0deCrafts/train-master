@@ -45,25 +45,36 @@ export const WorkoutProvider = ({ children }) => {
                 }
             }
 
-            setExerciseImages(images);
-            setExerciseVideos(videos);
-            return workouts;
+            //setExerciseImages(images);
+            //setExerciseVideos(videos);
+            return {workouts, images, videos};
         } catch (error) {
             console.error("Error fetching workouts with exercises: ", error);
         }
     }
 
-    const cacheWorkouts = async (workouts) => {
+    const cacheWorkouts = async (workouts, images, videos) => {
         try {
-            await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
+            //await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
+            await AsyncStorage.multiSet([
+                ['workouts', JSON.stringify(workouts)],
+                ['exerciseImages', JSON.stringify(images)],
+                ['exerciseVideos', JSON.stringify(videos)]
+            ]);
         } catch (error) {
             console.error("Error caching workouts: ", error);
         }
     };
     const loadCachedWorkouts = async () => {
         try {
-            const cachedWorkouts = await AsyncStorage.getItem('workouts');
-            return cachedWorkouts ? JSON.parse(cachedWorkouts) : null;
+            //const cachedWorkouts = await AsyncStorage.getItem('workouts');
+            //return cachedWorkouts ? JSON.parse(cachedWorkouts) : null;
+            const [[, cachedWorkouts], [, cachedImages], [, cachedVideos]] = await AsyncStorage.multiGet(['workouts', 'exerciseImages', 'exerciseVideos']);
+            return {
+                workouts: cachedWorkouts ? JSON.parse(cachedWorkouts) : null,
+                images: cachedImages ? JSON.parse(cachedImages) : null,
+                videos: cachedVideos ? JSON.parse(cachedVideos) : null,
+            };
         } catch (error) {
             console.error("Error loading cached workouts: ", error);
             return null;
@@ -71,13 +82,25 @@ export const WorkoutProvider = ({ children }) => {
     };
 
     const loadWorkouts = async () => {
-        const cachedWorkouts = await loadCachedWorkouts();
+        /*const cachedWorkouts = await loadCachedWorkouts();
         if(cachedWorkouts){
             setWorkouts(cachedWorkouts);
         }else {
             const fetchedWorkouts = await fetchWorkoutsWithExercises();
             setWorkouts(fetchedWorkouts);
             await cacheWorkouts(fetchedWorkouts);
+        }*/
+        const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
+        if (cachedWorkouts && cachedImages && cachedVideos) {
+            setWorkouts(cachedWorkouts);
+            setExerciseImages(cachedImages);
+            setExerciseVideos(cachedVideos);
+        } else {
+            const { workouts, images, videos } = await fetchWorkoutsWithExercises();
+            setWorkouts(workouts);
+            setExerciseImages(images);
+            setExerciseVideos(videos);
+            await cacheWorkouts(workouts, images, videos);
         }
     };
 
