@@ -1,28 +1,33 @@
 import {AuthProvider, useAuth} from "../context/AuthProvider";
 import {Slot, SplashScreen, useRouter, useSegments} from "expo-router";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {ActivityIndicator, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
 import {AppStyleProvider} from "../context/AppStyleContext";
-import {WorkoutProvider} from "../context/WorkoutContext";
+import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
 
 const InitialLayout = () => {
     const {user, initialized} = useAuth();
+    const { loadWorkouts } = useContext(WorkoutContext);
     const router = useRouter();
     const segments = useSegments();
 
     useEffect(() => {
-        if (!initialized) return;
-        //console.log("Segments: ", segments)
-        const inAuthGroup = segments[0] === "(auth)";
+        const handleLoadingData = async () => {
+            if (!initialized) return;
+            const inAuthGroup = segments[0] === "(auth)";
 
-        if (user && !inAuthGroup) {
-            router.replace("/home");
-        } else if (!user) {
-            router.navigate("/login");
-        }
+            if (user && !inAuthGroup) {
+                await loadWorkouts(); // Warten bis loadWorkouts abgeschlossen ist
+                router.replace("/home");
+            } else if (!user) {
+                router.navigate("/login");
+            }
+        };
+        handleLoadingData();
     }, [initialized, user]);
+
 
     return (
         <>

@@ -1,7 +1,7 @@
-import { createContext, useState, useEffect } from 'react';
-import { fetchWorkoutsWithExercises } from '../uploadData/fetchExercises';
+import { createContext, useState } from 'react';
 import {collection, getDocs, query, where} from "firebase/firestore";
 import {FIRESTORE_DB} from "../config/firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const WorkoutContext = createContext();
 
@@ -9,14 +9,6 @@ export const WorkoutProvider = ({ children }) => {
     const [workouts, setWorkouts] = useState([]);
     const [exerciseImages, setExerciseImages] = useState({});
     const [exerciseVideos, setExerciseVideos] = useState({});
-
-    useEffect(() => {
-        const loadWorkouts = async () => {
-            await fetchWorkoutsWithExercises(setWorkouts, setExerciseImages, setExerciseVideos);
-        };
-
-        loadWorkouts();
-    }, []);
 
     const fetchWorkoutsWithExercises = async () => {
         try {
@@ -53,20 +45,45 @@ export const WorkoutProvider = ({ children }) => {
                 }
             }
 
-            //console.log('Workouts with Id:', JSON.stringify(workouts, null, 2));
-            //console.log('Images:', JSON.stringify(images, null, 2));
-            setWorkouts(workouts);
             setExerciseImages(images);
-            setExerciseVideos(videos)
+            setExerciseVideos(videos);
+            return workouts;
         } catch (error) {
             console.error("Error fetching workouts with exercises: ", error);
         }
     }
 
+    const cacheWorkouts = async (workouts) => {
+        try {
+            await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
+        } catch (error) {
+            console.error("Error caching workouts: ", error);
+        }
+    };
+    const loadCachedWorkouts = async () => {
+        try {
+            const cachedWorkouts = await AsyncStorage.getItem('workouts');
+            return cachedWorkouts ? JSON.parse(cachedWorkouts) : null;
+        } catch (error) {
+            console.error("Error loading cached workouts: ", error);
+            return null;
+        }
+    };
+
+    const loadWorkouts = async () => {
+        const cachedWorkouts = await loadCachedWorkouts();
+        if(cachedWorkouts){
+            setWorkouts(cachedWorkouts);
+        }else {
+            const fetchedWorkouts = await fetchWorkoutsWithExercises();
+            setWorkouts(fetchedWorkouts);
+            await cacheWorkouts(fetchedWorkouts);
+        }
+    };
 
 
     return (
-        <WorkoutContext.Provider value={{ workouts, exerciseImages, exerciseVideos }}>
+        <WorkoutContext.Provider value={{ workouts, exerciseImages, exerciseVideos, loadWorkouts }}>
             {children}
         </WorkoutContext.Provider>
     );
