@@ -92,7 +92,7 @@ const FriendGroups = () => {
                       renderItem={({item})=> (
                           <Card key={item.id}
                                 clickable
-                                href={{pathname: `/(groups)/${item.id}`, params: {name: item.name}}}>
+                                href={{pathname: "/chat/[id]", params: {id: item.id, name: item.name}}}>
                               <Text style={styles.groupName}>{item.name}</Text>
                               <Text style={styles.groupDescription}>{item.description}</Text>
                           </Card>

@@ -1,4 +1,5 @@
 import {Stack} from "expo-router";
+import friendGroups from "./friendGroups";
 
 const StackLayout = () => {
 
@@ -7,7 +8,7 @@ const StackLayout = () => {
             headerShown: false
         }}>
             <Stack.Screen name="friendGroups"/>
-            <Stack.Screen name="[id]"/>
+            <Stack.Screen name="chat/[id]"/>
         </Stack>
     );
 };

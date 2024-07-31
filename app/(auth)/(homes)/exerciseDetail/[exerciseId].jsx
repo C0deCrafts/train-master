@@ -12,7 +12,7 @@ import {useContext} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 
 const Exercises = () => {
-    const { id, exercise, isHomeScreen } = useLocalSearchParams();
+    const { exercise } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -21,9 +21,6 @@ const Exercises = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
     const exerciseItem = exercise ? JSON.parse(exercise) : {};
     const videoUrl = exerciseVideos[exerciseItem.id] || ""
-
-    //console.log("Homescreen? ", isHomeScreen);
-    //console.log("Type of isHomeScreen: ", typeof isHomeScreen);
 
     return (
 

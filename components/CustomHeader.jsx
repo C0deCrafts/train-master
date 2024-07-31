@@ -1,36 +1,27 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import { Image } from 'expo-image';
-import {router, useNavigation} from 'expo-router';
+import {router} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {StatusBar} from "expo-status-bar";
 
-const CustomHeader = ({title, backButtonVisible = false, backToAnotherScreen = false}) => {
-    const navigation = useNavigation();
-    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme, textSize} = useAppStyle();
+const CustomHeader = ({title, backButtonVisible = false}) => {
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
     const handleGoBack = () => {
-        navigation.goBack();
+        router.back();
     };
-
-    const handleGotToAnotherScreen = () => {
-        router.dismissAll();
-        router.replace({pathname: "/home"});
-    };
-
-    //console.log("Homescreen? ", backToAnotherScreen);
-    //console.log("Type of isHomeScreen: ", typeof backToAnotherScreen);
 
     return (
         <>
             <StatusBar style={colors.colorButtonLabel === "rgb(0,0,0)" ? "dark" : "light"}/>
             <View style={styles.headerContainer}>
                 {backButtonVisible && (
-                    <TouchableOpacity onPress={backToAnotherScreen ? handleGotToAnotherScreen : handleGoBack} style={styles.backButtonContainer}>
+                    <TouchableOpacity onPress={handleGoBack} style={styles.backButtonContainer}>
                         <Image source={icons.back} style={styles.backButton}/>
                     </TouchableOpacity>
                 )}

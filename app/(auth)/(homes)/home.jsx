@@ -13,6 +13,7 @@ import {dark} from "../../../constants/colors";
 import Card from "../../../components/Card";
 import {WorkoutContext} from "../../../context/WorkoutContext";
 import ExerciseList from "../../../components/ExerciseList";
+import {router} from "expo-router";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
@@ -66,11 +67,12 @@ const Home = () => {
         )
     }
 
-    const exercises = ({item, workoutId}) => {
-        //console.log("EXERCISES: ", item)
-        //console.log("workoutId: ", workoutId)
+    const exercises = ({item}) => {
+        const navigation = () => {
+            router.navigate({pathname: "/exerciseDetail/[exerciseId]", params: {exercise: JSON.stringify(item)}})
+        }
         return (
-            <ExerciseList item={item} workoutId={workoutId} isHomeScreen={true}/>
+            <ExerciseList item={item} handleNavigation={navigation}/>
         )
     }
 

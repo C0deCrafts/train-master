@@ -1,6 +1,6 @@
 import {View, StyleSheet, FlatList} from "react-native";
 import CustomHeader from "../../../components/CustomHeader";
-import {useLocalSearchParams} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
 import {useAppStyle} from "../../../context/AppStyleContext";
 import {elements, icons, images} from "../../../constants";
 import {useContext } from "react";
@@ -11,7 +11,6 @@ import ExerciseList from "../../../components/ExerciseList";
 
 const WorkoutId = () => {
     const { workout, item } = useLocalSearchParams();
-    const { exerciseImages } = useContext(WorkoutContext);
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -24,8 +23,11 @@ const WorkoutId = () => {
     }
 
     const exercises = ({item}) => {
+        const navigation = () => {
+            router.navigate({pathname: "/exercise/[exerciseId]", params: {exercise: JSON.stringify(item)}})
+        }
         return (
-            <ExerciseList item={item} workoutId={workout}/>
+            <ExerciseList item={item} handleNavigation={navigation}/>
         )
     }
 
