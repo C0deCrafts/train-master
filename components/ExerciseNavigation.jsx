@@ -5,24 +5,38 @@ import {elements, icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {router} from "expo-router";
 
-const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, currentSet }) => {
+const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, currentSet, updateCurrentSets }) => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    console.log("EXERCISENAV: ", currentSet)
+    const handlePrevious = () => {
+        if (index > 0) {
+            setIndex(index - 1);
+            updateCurrentSets(index - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (index + 1 < exercises.length) {
+            setIndex(index + 1);
+            updateCurrentSets(index + 1);
+        }
+    };
 
     return (
         <View style={styles.buttonContainer}>
             <TouchableOpacity
                 style={styles.buttonSmall}
                 disabled={index === 0} // Deaktiviert den Button, wenn am ersten Index
-                onPress={() => {
+                onPress={handlePrevious
+                    /*() => {
                     setTimeout(() => {
                         setIndex(index - 1);
                     }, 10);
-                }}
+                }*/
+                }
             >
                 <Image source={icons.fastRewind} style={styles.buttonIcon} />
             </TouchableOpacity>
@@ -30,10 +44,7 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
             {index + 1 >= exercises.length && currentSet === 1 ? (
                 <TouchableOpacity
                     style={styles.buttonStart}
-                    onPress={() => {
-                        router.dismissAll();
-                    }}
-                >
+                    onPress={() => {router.dismissAll();}}>
                     <Text style={styles.buttonStartLabel}>Erledigt</Text>
                 </TouchableOpacity>
             ) : (
@@ -47,21 +58,20 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
             {index + 1 >= exercises.length ? (
                 <TouchableOpacity
                     style={styles.buttonSmall}
-                    onPress={() => {
-                        router.dismissAll();
-                    }}
-                >
+                    onPress={() => {router.dismissAll();}}>
                     <Image source={icons.fastForward} style={styles.buttonIcon} />
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity
                     style={styles.buttonSmall}
-                    onPress={() => {
+                    onPress={handleNext
+                    /*() => {
                         //navigation.navigate("Rest");
                         setTimeout(() => {
                             setIndex(index + 1);
                         }, 10);
-                    }}
+                    }*/
+                    }
                 >
                     <Image source={icons.fastForward} style={styles.buttonIcon} />
                 </TouchableOpacity>

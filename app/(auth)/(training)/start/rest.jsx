@@ -10,15 +10,7 @@ const Rest = () => {
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
-
     const [timeLeft, setTimeLeft] = useState(rest);
-
-    useEffect(() => {
-        //console.log("currentIndex: ", currentIndex) //0
-        //console.log("rest: ", rest) //60
-       // console.log("currentSet: ", currentSet) //1
-        //console.log("totalSets: ", totalSets) //2
-    }, [currentIndex, rest]);
 
     useEffect(() => {
         // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
@@ -30,13 +22,12 @@ const Rest = () => {
             return () => clearTimeout(timerId);
         } else {
             router.back();
-            //handleEndRest();
         }
     }, [timeLeft]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log(`Aktueller Satz: ${currentSet}, Gesamtsätze: ${totalSets}`);
-    }, [currentSet, totalSets]);
+    }, [currentSet, totalSets]);*/
 
     return (
         <SafeAreaView style={styles.container}>

@@ -33,7 +33,6 @@ const Exercises = () => {
     }, [currentSets]);
 
     const handleCompleteSet = () => {
-        //console.log("currentSets: ", currentSets);
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
             router.navigate({
@@ -49,8 +48,7 @@ const Exercises = () => {
         } else {
             // Wenn dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
             console.log("letzter Satz nach dem else: ", currentSets)
-            //index + 1 <= exercises.exercises.length && currentSets === 1
-            if (index + 1 <= exercises.exercises.length) {
+            if (index + 1 < exercises.exercises.length) {
                 console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
@@ -73,10 +71,11 @@ const Exercises = () => {
         }
     };
 
-
+    const updateCurrentSets = (newIndex) => {
+        setCurrentSets(exercises.exercises[newIndex]?.sets || 0);
+    };
 
     return (
-
         <View style={styles.container}>
             <CustomHeader title={current.name}/>
             <Text>PAUSE: {current.rest}</Text>
@@ -127,6 +126,7 @@ const Exercises = () => {
                 handleCompleteSet={handleCompleteSet}
                 setIndex={setIndex}
                 currentSet={currentSets}
+                updateCurrentSets={updateCurrentSets}
             />
         </View>
     );
