@@ -71,10 +71,15 @@ const Settings = () => {
     };
 
     const handleUsernameChange = () => {
-        handleUpdateUsername(newUsername);
-        toggleUsernameModal();
+        //handleUpdateUsername(newUsername);
+        //toggleUsernameModal();
         //evtl username auf leer wenn aufgerufen - bzw wenn okay
+        console.log("Benutzername ändern")
     };
+
+    const handleProfileImageChange = () => {
+        console.log("Bild ändern")
+    }
 
     const currentColors = colorScheme === "dark" ? Object.entries(dark) : Object.entries(light);
     const limitedColors = currentColors.slice(0, 19);
@@ -104,12 +109,12 @@ const Settings = () => {
                         </View>
                     </Card>
                     <Text style={styles.title}>Account Einstellungen</Text>
-                    <Card style={[styles.card, styles.spacingTop]}>
+                    <Card style={[styles.card, styles.spacingTop]} clickable={true} onPress={handleProfileImageChange}>
                         <Image source={icons.camera}
                                style={{
                                    width: 30,
                                    height: 30,
-                                   resizeMode: "contain",
+                                   contentFit: "contain",
                                    tintColor: colors.baseColor
                                }}
                         />
@@ -120,7 +125,7 @@ const Settings = () => {
                                style={{
                                    width: 30,
                                    height: 30,
-                                   resizeMode: "contain",
+                                   contentFit: "contain",
                                    tintColor: colors.baseColor
                                }}
                         />
@@ -162,7 +167,7 @@ const Settings = () => {
                                style={{
                                    width: 30,
                                    height: 30,
-                                   resizeMode: "contain",
+                                   contentFit: "contain",
                                    tintColor: colors.baseColor
                                }}
                         />
@@ -170,7 +175,11 @@ const Settings = () => {
                     </Card>
                     <CustomModal isVisible={isModalVisible} onClose={toggleModal} styles={styles}>
                         <Text style={styles.modalText}>Wähle deine gewünschte Textgröße aus:</Text>
-                        <Picker selectedValue={textSize} onValueChange={handlePickerChange}>
+                        <Picker selectedValue={textSize}
+                                style={styles.picker}
+                                itemStyle={styles.pickerItem}
+                                onValueChange={handlePickerChange}
+                        >
                             <Picker.Item label="xSmall" value="xSmall"/>
                             <Picker.Item label="Small" value="small"/>
                             <Picker.Item label="Medium" value="medium"/>
@@ -208,7 +217,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             top: -50,
             width: "100%",
             height: "100%",
-            resizeMode: "contain",
+            contentFit: "contain",
             tintColor: colors.quaternaryLabel
         },
         container: {
@@ -291,7 +300,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         modalText: {
             fontSize: textStyles.body,
-            textAlign: "center"
+            textAlign: "center",
+            color: colors.label
         },
         radioGroupContainer: {
             flexDirection: "row",
@@ -334,6 +344,13 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         spacingTop: {
             marginTop: 5,
-        }
+        },
+        picker: {
+
+        },
+        pickerItem: {
+            color: colors.label,
+            fontSize: textStyles.title_2,
+        },
     })
 }

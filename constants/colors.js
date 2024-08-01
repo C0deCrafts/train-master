@@ -40,7 +40,7 @@ export const color = {
     gray_3: "rgb(199,199,204)",
     gray_4: "rgb(209,209,214)",
     gray_5: "rgb(229,229,234)",
-    gray_6: "rgb(242,242,247)"
+    gray_6: "rgb(242,242,247)",
 }
 
 export const light = {
@@ -80,6 +80,7 @@ export const light = {
     link: "rgb(0,122,255)",
     baseColor: "rgb(0,130,153)",
     colorButtonLabel: "rgb(0,0,0)",
+    dark: "#1E1E1E"
 }
 
 export const dark = {
@@ -119,4 +120,5 @@ export const dark = {
     link: "rgb(9,132,255)",
     baseColor: "rgb(0,130,153)",
     colorButtonLabel: "rgb(255,255,255)",
+    dark: "#1E1E1E"
 }

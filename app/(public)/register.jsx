@@ -126,7 +126,7 @@ const Register = () => {
                                    onSubmitEditing={()=> handleRegistration()}
                                    returnKeyType="done"
                         />
-                        <CustomButton title="Registrieren" containerStyles={{marginTop: 40}} handlePress={handleRegistration}/>
+                        <CustomButton title="Registrieren" containerStyles={{marginTop: 40}} handlePress={handleRegistration} textStyle={{color: colors.white}}/>
                         <Text style={styles.text}>oder</Text>
                         <View style={styles.loginIconContainer}>
                             <Image source={icons.apple} style={styles.loginIcons}/>
@@ -180,12 +180,12 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: "60%",
-        resizeMode: "contain",
+        contentFit: "contain",
         alignSelf: "center",
     },
     logoSmallDevices: {
         width: "50%",
-        resizeMode: "contain",
+        contentFit: "contain",
         alignSelf: "center",
         marginBottom: -40
     },
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         width: "100%",
         height: "100%",
-        resizeMode: "contain",
+        contentFit: "contain",
     },
     loginIconContainer: {
         paddingHorizontal: 80,

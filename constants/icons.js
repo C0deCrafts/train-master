@@ -2,9 +2,12 @@ import add from "../assets/icons/add_line.png"
 import apple from "../assets/icons/apple_fill.png";
 import back from "../assets/icons/left_line.png";
 import barbell from "../assets/icons/barbell_fill.png";
-import camera from "../assets/icons/camera_2_fill.png"
+import camera from "../assets/icons/camera_2_fill.png";
+import celebration from "../assets/icons/celebrate_line.png"
 import diary from "../assets/icons/notebook_2_fill.png";
 import facebook from "../assets/icons/facebook_fill.png";
+import fastForward from "../assets/icons/fast_forward_fill.png";
+import fastRewind from "../assets/icons/fast_rewind_fill.png";
 import fitness from "../assets/icons/fitness_fill.png";
 import friends from "../assets/icons/comment_2_fill.png"
 import fontsize from "../assets/icons/font_size_line.png"
@@ -29,8 +32,11 @@ export default {
     back,
     barbell,
     camera,
+    celebration,
     diary,
     facebook,
+    fastForward,
+    fastRewind,
     fitness,
     friends,
     fontsize,

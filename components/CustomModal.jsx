@@ -34,8 +34,4 @@ const createStyles = (colors, textStyles, appStyles) => StyleSheet.create({
         borderTopLeftRadius: appStyles.modalRadius,
         borderTopRightRadius: appStyles.modalRadius,
     },
-    modalText: {
-        fontSize: textStyles.body,
-        textAlign: "center"
-    },
 });

@@ -41,19 +41,19 @@ const Exercises = () => {
                     {exerciseItem.sets && (
                         <Card style={styles.cardStyle}>
                             <Text style={styles.cardHeader}>Sätze</Text>
-                            <Text style={styles.cardContent}>x{exerciseItem.sets}</Text>
+                            <Text style={styles.cardContent}>{exerciseItem.sets}x</Text>
                         </Card>
                     )}
                     {exerciseItem.repetitions && (
                         <Card style={styles.cardStyle}>
                             <Text style={styles.cardHeader}>WH</Text>
-                            <Text style={styles.cardContent}>x{exerciseItem.repetitions}</Text>
+                            <Text style={styles.cardContent}>{exerciseItem.repetitions}x</Text>
                         </Card>
                     )}
                     {exerciseItem.weight && (
                         <Card style={styles.cardStyle}>
                             <Text style={styles.cardHeader}>Gewicht</Text>
-                            <Text style={styles.cardContent}>kg{exerciseItem.weight}</Text>
+                            <Text style={styles.cardContent}>{exerciseItem.weight} kg</Text>
                         </Card>
                     )}
                 </View>

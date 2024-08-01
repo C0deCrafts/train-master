@@ -12,7 +12,7 @@ const TabIcon = ({icon, color, name, focused}) => {
         <View style={styles.container}>
             <Image
                 source={icon}
-                resizeMode="contain"
+                contentFit="contain"
                 tintColor={color}
                 style={{
                     width: 25,

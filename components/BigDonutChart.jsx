@@ -102,7 +102,7 @@ function BigDonutChart({
                 position: "absolute",
                 width: 40,
                 height: 40,
-                resizeMode: "contain",
+                contentFit: "contain",
                 top: 25,
                 left: radius - 20,
                 tintColor: colors.donutColorDefault

@@ -2,9 +2,8 @@ import {View, StyleSheet, FlatList} from "react-native";
 import CustomHeader from "../../../components/CustomHeader";
 import {router, useLocalSearchParams} from "expo-router";
 import {useAppStyle} from "../../../context/AppStyleContext";
-import {elements, icons, images} from "../../../constants";
-import {useContext } from "react";
-import {WorkoutContext} from "../../../context/WorkoutContext";
+import {elements} from "../../../constants";
+import {useContext, useEffect} from "react";
 import CustomButton from "../../../components/CustomButton";
 import ExerciseList from "../../../components/ExerciseList";
 
@@ -14,20 +13,25 @@ const WorkoutId = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
-
     const styles = createStyles(textStyles, colors, fontFamily);
     const workoutItem = item ? JSON.parse(item) : {};
 
+    useEffect(() => {
+        console.log("Workout: ", workout)
+        console.log("Workout: ", typeof workoutItem)
+    }, []);
+
     const handleStartWorkout = () => {
-        console.log("Start workout")
+        //console.log("Start workout: ", JSON.stringify(item))
+        router.push({ pathname: '/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
     }
 
     const exercises = ({item}) => {
-        const navigation = () => {
+        const handleNavigation = () => {
             router.navigate({pathname: "/exercise/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
         return (
-            <ExerciseList item={item} handleNavigation={navigation}/>
+            <ExerciseList item={item} handleNavigation={handleNavigation}/>
         )
     }
 

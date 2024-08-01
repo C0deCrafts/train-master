@@ -4,8 +4,9 @@ import {useContext, useEffect, useState} from "react";
 import {ActivityIndicator, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
-import {AppStyleProvider} from "../context/AppStyleContext";
+import {AppStyleProvider, useAppStyle} from "../context/AppStyleContext";
 import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
+import {dark} from "../constants/colors";
 
 const InitialLayout = () => {
     const {user, initialized, username} = useAuth();
@@ -53,6 +54,8 @@ const InitialLayout = () => {
 };
 
 const RootLayout = () => {
+    const {colorScheme} = useAppStyle();
+
     const [fontsLoaded, error] = useFonts({
         "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
         "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
@@ -78,7 +81,8 @@ const RootLayout = () => {
             <AuthProvider>
                 <WorkoutProvider>
                     <InitialLayout/>
-                    <StatusBar style="light"/>
+                    <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+                    {/*<StatusBar style="light"/>*/}
                 </WorkoutProvider>
             </AuthProvider>
         </AppStyleProvider>

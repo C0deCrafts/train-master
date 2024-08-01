@@ -79,10 +79,11 @@ const Home = () => {
     const selectedWorkout = workouts?.find(workout => workout.id === selectedWorkoutId);
     const currentDate = getCurrentDate();
 
+
     //fix status bar
     return (
         <SafeAreaView style={styles.backgroundImage}>
-            <StatusBar style={"dark"}/>
+            {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
             {/*colors.label*/}
             <Image
                 source={images.backgroundSymbol}
@@ -105,7 +106,7 @@ const Home = () => {
                                     width: 100,
                                     height: 100,
                                     borderRadius: 50,
-                                    resizeMode: "contain",
+                                    contentFit: "contain",
                                 }}
                             />
                             <View style={styles.cameraStyle}>
@@ -209,7 +210,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             top: 50,
             width: "100%",
             height: "100%",
-            resizeMode: "contain",
+            contentFit: "contain",
             tintColor: colors.quaternaryLabel
         },
         container: {
