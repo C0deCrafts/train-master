@@ -5,11 +5,6 @@ const StackTrainingLayout = () => {
             headerShown: false
         }}>
             <Stack.Screen name="training"/>
-            <Stack.Screen name="[workoutId]" />
-            <Stack.Screen name="exercise/[exerciseId]" />
-            <Stack.Screen name="start/exercises" />
-            <Stack.Screen name="start/rest" />
-            <Stack.Screen name="start/prevExercise" />
         </Stack>
     )
 }
