@@ -1,18 +1,18 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { Image } from 'expo-image';
-import {useAuth} from "../../../context/AuthProvider";
+import {useAuth} from "../../../../context/AuthProvider";
 import {useContext, useEffect, useRef, useState} from "react";
-import {elements, icons, images} from "../../../constants";
-import DonutChart from "../../../components/DonutChart";
+import {elements, icons, images} from "../../../../constants";
+import DonutChart from "../../../../components/DonutChart";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
 import {format} from 'date-fns';
 import {de} from 'date-fns/locale';
-import {useAppStyle} from "../../../context/AppStyleContext";
-import {dark} from "../../../constants/colors";
-import Card from "../../../components/Card";
-import {WorkoutContext} from "../../../context/WorkoutContext";
-import ExerciseList from "../../../components/ExerciseList";
+import {useAppStyle} from "../../../../context/AppStyleContext";
+import {dark} from "../../../../constants/colors";
+import Card from "../../../../components/Card";
+import {WorkoutContext} from "../../../../context/WorkoutContext";
+import ExerciseList from "../../../../components/ExerciseList";
 import {router} from "expo-router";
 
 const Home = () => {

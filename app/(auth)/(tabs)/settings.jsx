@@ -8,16 +8,16 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import {useState, useMemo} from "react";
-import {useAuth} from "../../context/AuthProvider";
-import {useAppStyle} from "../../context/AppStyleContext";
-import {images, icons} from "../../constants";
+import {useAuth} from "../../../context/AuthProvider";
+import {useAppStyle} from "../../../context/AppStyleContext";
+import {images, icons} from "../../../constants";
 import {Picker} from "@react-native-picker/picker";
-import ColorPicker from "../../components/ColorPicker";
-import {dark, light} from "../../constants/colors";
-import {appStyles} from "../../constants/elementStyles";
-import Card from "../../components/Card";
-import RadioButton from "../../components/RadioButton";
-import CustomModal from "../../components/CustomModal";
+import ColorPicker from "../../../components/ColorPicker";
+import {dark, light} from "../../../constants/colors";
+import {appStyles} from "../../../constants/elementStyles";
+import Card from "../../../components/Card";
+import RadioButton from "../../../components/RadioButton";
+import CustomModal from "../../../components/CustomModal";
 import {StatusBar} from "expo-status-bar";
 
 const Settings = () => {

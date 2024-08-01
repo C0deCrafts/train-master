@@ -5,14 +5,14 @@ import {
 } from 'react-native'
 import {useLocalSearchParams} from "expo-router";
 import {Video} from "expo-av";
-import {useAppStyle} from "../../../../context/AppStyleContext";
-import CustomHeader from "../../../../components/CustomHeader";
-import Card from "../../../../components/Card";
+import {useAppStyle} from "../../../../../context/AppStyleContext";
+import CustomHeader from "../../../../../components/CustomHeader";
+import Card from "../../../../../components/Card";
 import {useContext} from "react";
-import {WorkoutContext} from "../../../../context/WorkoutContext";
+import {WorkoutContext} from "../../../../../context/WorkoutContext";
 
 const Exercises = () => {
-    const { exercise, isHomeScreen } = useLocalSearchParams();
+    const { exercise } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();

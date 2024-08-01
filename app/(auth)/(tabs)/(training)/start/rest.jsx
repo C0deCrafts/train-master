@@ -1,8 +1,8 @@
 import {Text, View, StyleSheet, SafeAreaView, Image, TouchableOpacity} from "react-native";
 import {useEffect, useState} from "react";
 import {useLocalSearchParams, router} from "expo-router";
-import {useAppStyle} from "../../../../context/AppStyleContext";
-import {icons, images} from "../../../../constants";
+import {useAppStyle} from "../../../../../context/AppStyleContext";
+import {icons, images} from "../../../../../constants";
 
 const Rest = () => {
     const { exercises, currentIndex, rest, currentSet, totalSets } = useLocalSearchParams();

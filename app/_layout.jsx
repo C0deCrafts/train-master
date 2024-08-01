@@ -34,7 +34,8 @@ const InitialLayout = () => {
 
     useEffect(() => {
         if (initialized && !loadingWorkouts && user && username) {
-            router.replace("/home");
+            router.replace("/(tabs)/(homes)/home");
+            console.log("CanGoBack? ", router.canGoBack)
         }
     }, [initialized, loadingWorkouts, user, username]);
 

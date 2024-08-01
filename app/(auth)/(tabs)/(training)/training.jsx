@@ -1,11 +1,13 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native'
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import { Image } from 'expo-image';
-import {useAppStyle} from "../../../context/AppStyleContext";
+import {useAppStyle} from "../../../../context/AppStyleContext";
 import {useContext, useState} from "react";
-import Card from "../../../components/Card";
-import {WorkoutContext} from "../../../context/WorkoutContext";
-import CustomHeader from "../../../components/CustomHeader";
-import {elements, icons} from "../../../constants";
+import Card from "../../../../components/Card";
+import {WorkoutContext} from "../../../../context/WorkoutContext";
+import CustomHeader from "../../../../components/CustomHeader";
+import {elements, icons} from "../../../../constants";
+import CustomButton from "../../../../components/CustomButton";
+import {router} from "expo-router";
 
 const Training = () => {
     const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
@@ -92,6 +94,10 @@ const Training = () => {
                         //style={{backgroundColor: "red"}}
                     />
                 </View>
+                <Text>Test</Text>
+                <CustomButton title={"get outside"} handlePress={
+                    () => router.navigate("/outside/screen")
+                }/>
             </View>
             {/*<CustomButton title={"Id anzeigen"} handlePress={fetchExercises}/>
             <CustomButton title={"Workouts anzeigen"} handlePress={fetchWorkoutsWithExercises}/>*/}

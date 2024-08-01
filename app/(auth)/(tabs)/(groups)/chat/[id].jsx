@@ -11,12 +11,12 @@ import {
 import { Image } from 'expo-image';
 import {useLocalSearchParams} from "expo-router"
 import {useState, useLayoutEffect, useRef} from "react";
-import CustomHeader from "../../../../components/CustomHeader";
-import {useAuth} from "../../../../context/AuthProvider";
+import CustomHeader from "../../../../../components/CustomHeader";
+import {useAuth} from "../../../../../context/AuthProvider";
 import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
-import {FIRESTORE_DB} from "../../../../config/firebaseConfig";
-import {images} from "../../../../constants";
-import {useAppStyle} from "../../../../context/AppStyleContext";
+import {FIRESTORE_DB} from "../../../../../config/firebaseConfig";
+import {images} from "../../../../../constants";
+import {useAppStyle} from "../../../../../context/AppStyleContext";
 
 const GroupPage = () => {
     const { id, name } = useLocalSearchParams();

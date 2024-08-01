@@ -1,6 +1,6 @@
 import {View, Text, SafeAreaView} from "react-native";
 import {useLocalSearchParams} from "expo-router";
-import CustomHeader from "../../../../components/CustomHeader";
+import CustomHeader from "../../../../../components/CustomHeader";
 
 const PrevExercise = () => {
     const { exercises, currentIndex, timeLeft } = useLocalSearchParams();

@@ -1,11 +1,11 @@
 import {View, StyleSheet, FlatList} from "react-native";
-import CustomHeader from "../../../components/CustomHeader";
+import CustomHeader from "../../../../components/CustomHeader";
 import {router, useLocalSearchParams} from "expo-router";
-import {useAppStyle} from "../../../context/AppStyleContext";
-import {elements} from "../../../constants";
+import {useAppStyle} from "../../../../context/AppStyleContext";
+import {elements} from "../../../../constants";
 import {useContext, useEffect} from "react";
-import CustomButton from "../../../components/CustomButton";
-import ExerciseList from "../../../components/ExerciseList";
+import CustomButton from "../../../../components/CustomButton";
+import ExerciseList from "../../../../components/ExerciseList";
 
 
 const WorkoutId = () => {

@@ -5,12 +5,12 @@ import {
 } from 'react-native'
 import {router, useLocalSearchParams} from "expo-router";
 import {Video} from "expo-av";
-import {useAppStyle} from "../../../../context/AppStyleContext";
-import CustomHeader from "../../../../components/CustomHeader";
-import Card from "../../../../components/Card";
+import {useAppStyle} from "../../../../../context/AppStyleContext";
+import CustomHeader from "../../../../../components/CustomHeader";
+import Card from "../../../../../components/Card";
 import {useContext, useEffect, useState} from "react";
-import {WorkoutContext} from "../../../../context/WorkoutContext";
-import ExerciseNavigation from "../../../../components/ExerciseNavigation";
+import {WorkoutContext} from "../../../../../context/WorkoutContext";
+import ExerciseNavigation from "../../../../../components/ExerciseNavigation";
 
 const Exercises = () => {
     const { exercise } = useLocalSearchParams();
