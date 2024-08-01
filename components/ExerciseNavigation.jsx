@@ -43,7 +43,7 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
 
             {index + 1 >= exercises.length && currentSet === 1 ? (
                 <TouchableOpacity
-                    style={styles.buttonStart}
+                    style={styles.buttonDone}
                     onPress={() => {
 
                         //Route nach allerletzter Übung
@@ -52,7 +52,7 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
                     <Text style={styles.buttonStartLabel}>Erledigt</Text>
                 </TouchableOpacity>
             ) : (
-                <TouchableOpacity style={styles.buttonStart} onPress={
+                <TouchableOpacity style={styles.buttonDone} onPress={
                     handleCompleteSet
                 }>
                     <Text style={styles.buttonStartLabel}>Erledigt</Text>
@@ -102,8 +102,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
             padding: 10,
             backgroundColor: colors.baseColor,
             borderRadius: elements.buttonRadius,
+            minHeight: 62,
         },
-        buttonStart: {
+        buttonDone: {
             flex: 2,
             marginHorizontal: 5,
             alignItems: 'center',
@@ -111,6 +112,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             padding: 10,
             backgroundColor: colors.baseColor,
             borderRadius: elements.buttonRadius,
+            minHeight: 62,
         },
         buttonIcon: {
             width: 30,

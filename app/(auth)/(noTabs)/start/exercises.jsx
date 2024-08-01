@@ -39,7 +39,7 @@ const Exercises = () => {
             router.navigate({
                 pathname: "(noTabs)/start/rest",
                 params: {
-                    exercises: exercises.exercises,
+                    exercise: JSON.stringify(exercises.exercises),
                     currentIndex: index,
                     rest: current.rest,
                     currentSet: current.sets - currentSets + 1,
@@ -59,7 +59,7 @@ const Exercises = () => {
                 router.navigate({
                     pathname: "(noTabs)/start/rest",
                     params: {
-                        exercises: exercises.exercises,
+                        exercise: JSON.stringify(exercises.exercises),
                         currentIndex: index,
                         rest: current.rest,
                         currentSet: current.sets - currentSets + 1,

@@ -6,14 +6,16 @@ import {icons, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
 
 //fix small screens - no responsive design jet
+//buttons müssen noch ersetzt werden
 
 const Rest = () => {
-    const { exercises, currentIndex, rest, currentSet, totalSets } = useLocalSearchParams();
+    const { exercise, currentIndex, rest, currentSet, totalSets } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
     const [timeLeft, setTimeLeft] = useState(rest);
+    const exercises = exercise ? JSON.parse(exercise) : {};
 
     useEffect(() => {
         // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
@@ -41,9 +43,11 @@ const Rest = () => {
                 />
             </View>
 
-            <Text style={styles.text}>Pause</Text>
-            <Text style={styles.timer}>{timeLeft}</Text>
-            <Text style={styles.textSets}>Satz: {currentSet} von {totalSets} fertig</Text>
+            <View>
+                <Text style={styles.text}>Pause</Text>
+                <Text style={styles.timer}>{timeLeft}</Text>
+                <Text style={styles.textSets}>Satz: {currentSet} von {totalSets} fertig</Text>
+            </View>
 
             {currentSet === totalSets && (
                 <View style={styles.lastBox}>
@@ -64,12 +68,12 @@ const Rest = () => {
                     <Text style={styles.buttonLabel}>Pause beenden</Text>
                 </TouchableOpacity>
 
-                {currentSet === totalSets && (
+                {currentSet === totalSets && timeLeft > 0 &&(
                     <TouchableOpacity style={styles.button} onPress={() => router.navigate({
                         //nächste übung
                         pathname: "(noTabs)/start/prevExercise",
                         params: {
-                            exercises: exercises,
+                            exercise: JSON.stringify(exercises),
                             currentIndex: currentIndex,
                             timeLeft: timeLeft,
                         }
@@ -87,6 +91,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         container: {
             flex: 1,
             backgroundColor: colors.baseColor,
+            justifyContent: "space-between"
         },
         containerHeader: {
             backgroundColor: colors.baseColor,
@@ -145,7 +150,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         lastSet: {
             textAlign: "center",
             color: colors.colorButtonLabel,
-            fontFamily: fontFamily.Poppins_Regular,
+            fontFamily: fontFamily.Poppins_SemiBold,
             fontSize: textStyles.title_3,
             marginRight: 10,
         },
