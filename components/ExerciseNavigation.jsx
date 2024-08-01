@@ -112,9 +112,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         buttonStartLabel: {
             color: colors.colorButtonLabel,
-            fontSize: textStyles.body,
+            fontSize: textStyles.title_3,
             fontFamily: fontFamily.Poppins_SemiBold,
-            textTransform: "uppercase",
         },
     });
 }

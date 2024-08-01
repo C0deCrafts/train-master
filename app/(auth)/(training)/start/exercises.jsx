@@ -78,7 +78,6 @@ const Exercises = () => {
     return (
         <View style={styles.container}>
             <CustomHeader title={current.name}/>
-            <Text>PAUSE: {current.rest}</Text>
             {videoUrl && (
                 <Video
                     source={{uri: videoUrl}}
@@ -142,7 +141,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             backgroundColor: colors.secondary,
             flex: 1,
             paddingHorizontal: 20,
-            padding: 20,
+            //paddingVertical: 20,
         },
         text: {
             fontFamily: fontFamily.Poppins_Regular,
@@ -155,48 +154,43 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flexDirection: "row",
             justifyContent: "space-evenly",
             alignItems: "center",
-            marginBottom: 10
-            //backgroundColor: "red"
+            marginTop: 15,
+            marginBottom: 5,
         },
         cardStyle: {
             backgroundColor: colors.baseColor,
             width: "30%"
         },
         cardHeader: {
+            fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.footnote,
             color: colors.colorButtonLabel,
             textAlign: "center"
         },
         cardContent: {
+            fontFamily: fontFamily.Poppins_SemiBold,
             fontSize: textStyles.body,
-            fontWeight: "bold",
             color: colors.colorButtonLabel,
             textAlign: "center"
-        },
-        descriptionContainer: {
-
         },
         description: {
             fontSize: textStyles.body,
             textAlign: "justify",
         },
-        exerciseImage: {
-            width: "100%",
-            height: 370
-        },
         video: {
-            //width: windowWidth,
             height: 220,
             marginTop: 0,
         },
         information: {
             textAlign: "justify",
+            fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.body,
             color: colors.label
         },
         additionalInfo: {
             marginTop: 10,
             textAlign: "justify",
+            fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.body,
             color: colors.label
         },
@@ -204,7 +198,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flex: 1
         },
         bold: {
-            fontWeight: "bold",
+            fontFamily: fontFamily.Poppins_SemiBold
         }
     })
 }

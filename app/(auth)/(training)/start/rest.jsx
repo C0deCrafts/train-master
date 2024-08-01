@@ -89,7 +89,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         image: {
             width: "100%",
-            height: 300,
+            height: 270,
             tintColor: colors.colorButtonLabel
         },
         icon: {
@@ -99,20 +99,21 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         text: {
             color: colors.colorButtonLabel,
-            fontSize: 50,
-            fontWeight: "600",
+            fontSize: textStyles.largeTitle + 13,
+            fontFamily: fontFamily.Poppins_SemiBold,
             textAlign: "center",
         },
         timer: {
             color: colors.colorButtonLabel,
-            fontSize: 80,
-            fontWeight: "800",
+            fontSize: textStyles.largeTitle + 40,
+            fontFamily: fontFamily.Poppins_ExtraBold,
             textAlign: "center",
         },
         textSets: {
             marginTop: 20,
             color: colors.colorButtonLabel,
-            fontSize: 20,
+            fontFamily: fontFamily.Poppins_Regular,
+            fontSize: textStyles.title_3,
             textAlign: "center",
         },
         buttonBox: {
@@ -127,11 +128,11 @@ const createStyles = (textStyles, colors, fontFamily) => {
             paddingHorizontal: 20,
             borderRadius: 10,
             marginHorizontal: 15,
-            marginBottom: 20
+            marginBottom: 10
         },
         buttonLabel: {
-            fontSize: 18,
-            fontWeight: "600",
+            fontSize: textStyles.headline,
+            fontFamily: fontFamily.Poppins_SemiBold,
             color: colors.colorButtonLabel,
             textAlign: "center",
             textTransform: "uppercase"
@@ -139,9 +140,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
         lastSet: {
             textAlign: "center",
             color: colors.colorButtonLabel,
-            fontSize: 20,
+            fontFamily: fontFamily.Poppins_Regular,
+            fontSize: textStyles.title_3,
             marginRight: 10,
-            marginTop: 5
         },
         lastBox: {
             flexDirection: "row",
