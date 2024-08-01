@@ -13,15 +13,11 @@ const Rest = () => {
 
     const [timeLeft, setTimeLeft] = useState(rest);
 
-    //console.log("CURRENT SET: " + currentSet)
-    //console.log("TOTAL SET: " + totalSets)
-
-
     useEffect(() => {
-        console.log("currentIndex: ", currentIndex) //0
-        console.log("rest: ", rest) //60
-        console.log("currentSet: ", currentSet) //1
-        console.log("totalSets: ", totalSets) //2
+        //console.log("currentIndex: ", currentIndex) //0
+        //console.log("rest: ", rest) //60
+       // console.log("currentSet: ", currentSet) //1
+        //console.log("totalSets: ", totalSets) //2
     }, [currentIndex, rest]);
 
     useEffect(() => {
@@ -41,31 +37,6 @@ const Rest = () => {
     useEffect(() => {
         console.log(`Aktueller Satz: ${currentSet}, Gesamtsätze: ${totalSets}`);
     }, [currentSet, totalSets]);
-
-    /*const handleEndRest = () => {
-        console.log("CURRENT: ", currentSet)
-        console.log("TOTAL SETS: ", totalSets)
-        if (currentSet < totalSets) {
-            router.back(); // Gehe zurück zur vorherigen Übung
-        } else {
-            if (currentIndex + 1 < exercises.length) {
-                router.navigate({
-                    pathname: "start/exercises",
-                    params: {
-                        exercise: JSON.stringify({
-                            exercises: exercises,
-                            currentIndex: currentIndex + 1,
-                            //neu
-                            currentSet: 1
-                        }),
-                    },
-                });
-            } else {
-                router.dismissAll(); // Wenn es die letzte Übung war, zurück zum Home-Screen navigieren
-            }
-        }
-    };*/
-
 
     return (
         <SafeAreaView style={styles.container}>
@@ -98,19 +69,19 @@ const Rest = () => {
                     <Text style={styles.buttonLabel}>Pause beenden</Text>
                 </TouchableOpacity>
 
-                {/*currentSet === totalSets ? (
+                {currentSet === totalSets && (
                     <TouchableOpacity style={styles.button} onPress={() => router.navigate({
                         //nächste übung
-                        pathname: "start/exercises",
+                        pathname: "start/prevExercise",
                         params: {
                             exercises: exercises,
-                            currentInde: currentIndex,
+                            currentIndex: currentIndex,
                             timeLeft: timeLeft,
                         }
                     })}>
                         <Text style={styles.buttonLabel}>Vorschau der nächsten Übung</Text>
                     </TouchableOpacity>
-                ) : null*/}
+                )}
             </View>
         </SafeAreaView>
     )

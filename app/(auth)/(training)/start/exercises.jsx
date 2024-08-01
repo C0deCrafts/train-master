@@ -28,38 +28,12 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
-    //    const [currentSets, setCurrentSets] = useState(current.sets || 0); ????
-
-
     useEffect(() => {
-        //console.log("currentIndex: ", index)
-        //console.log("rest: ", current.rest)
-        //console.log("currentSet: ", currentSets)
-        //console.log("totalSets: ", totalSets)
-    }, [index, current.rest]);
-    //const [currentSets, setCurrentSets] = useState(() => current.sets || 0);
-
-    /*useEffect(() => {
-        if (exercises.exercises.length > 0 && current.sets) {
-            setCurrentSets(current.sets);
-        }
-    }, [index, exercises]);*/
-
-    /*useEffect(() => {
-        // Update currentSets when index changes
-
-        //dieser useEffect setzt mein current set zurück.... das solls nicht
-        if (current) {
-            setCurrentSets(current.sets || 0);
-        }
-    }, [index, current]);*/
-
-    /*useEffect(() => {
-        console.log("CurrentSETS: ", currentSets);
-    }, [currentSets]);*/
+        console.log("CurrentSets", currentSets)
+    }, [currentSets]);
 
     const handleCompleteSet = () => {
-        console.log("currentSets: ", currentSets);
+        //console.log("currentSets: ", currentSets);
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
             router.navigate({
@@ -68,14 +42,16 @@ const Exercises = () => {
                     exercises: exercises.exercises,
                     currentIndex: index,
                     rest: current.rest,
-                    currentSet: current.sets - currentSets + 1, // Berechnet die Nummer des aktuellen Satzes
-                    //currentSet: 10,
+                    currentSet: current.sets - currentSets + 1,
                     totalSets: current.sets, // Gesamtanzahl der Sätze
                 }
             });
         } else {
             // Wenn dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
-            if (index + 1 < exercises.exercises.length) {
+            console.log("letzter Satz nach dem else: ", currentSets)
+            //index + 1 <= exercises.exercises.length && currentSets === 1
+            if (index + 1 <= exercises.exercises.length) {
+                console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
@@ -86,16 +62,9 @@ const Exercises = () => {
                     params: {
                         exercises: exercises.exercises,
                         currentIndex: index,
-                        //rest: exercises.exercises[nextIndex].rest,
                         rest: current.rest,
                         currentSet: current.sets - currentSets + 1,
                         totalSets: current.sets, // Gesamtanzahl der Sätze
-                        //currentSets: 1,
-                        //totalSets: exercises.exercises[nextIndex].sets
-                        //currentIndex: index + 1,
-                        //rest: exercises.exercises[index + 1].rest,
-                        //currentSet: 1,
-                        //totalSets: exercises.exercises[index + 1].sets,
                     }
                 });
             } else {
@@ -157,6 +126,7 @@ const Exercises = () => {
                 exercises={exercises.exercises}
                 handleCompleteSet={handleCompleteSet}
                 setIndex={setIndex}
+                currentSet={currentSets}
             />
         </View>
     );

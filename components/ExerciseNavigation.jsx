@@ -5,11 +5,13 @@ import {elements, icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {router} from "expo-router";
 
-const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex }) => {
+const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, currentSet }) => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
+
+    console.log("EXERCISENAV: ", currentSet)
 
     return (
         <View style={styles.buttonContainer}>
@@ -25,18 +27,19 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex }) =
                 <Image source={icons.fastRewind} style={styles.buttonIcon} />
             </TouchableOpacity>
 
-            {index + 1 >= exercises.length ? (
+            {index + 1 >= exercises.length && currentSet === 1 ? (
                 <TouchableOpacity
                     style={styles.buttonStart}
                     onPress={() => {
-                        //router.navigate("home");
                         router.dismissAll();
                     }}
                 >
                     <Text style={styles.buttonStartLabel}>Erledigt</Text>
                 </TouchableOpacity>
             ) : (
-                <TouchableOpacity style={styles.buttonStart} onPress={handleCompleteSet}>
+                <TouchableOpacity style={styles.buttonStart} onPress={
+                    handleCompleteSet
+                }>
                     <Text style={styles.buttonStartLabel}>Erledigt</Text>
                 </TouchableOpacity>
             )}
@@ -45,7 +48,6 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex }) =
                 <TouchableOpacity
                     style={styles.buttonSmall}
                     onPress={() => {
-                        //router.navigate("home");
                         router.dismissAll();
                     }}
                 >
@@ -55,6 +57,7 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex }) =
                 <TouchableOpacity
                     style={styles.buttonSmall}
                     onPress={() => {
+                        //navigation.navigate("Rest");
                         setTimeout(() => {
                             setIndex(index + 1);
                         }, 10);
