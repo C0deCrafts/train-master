@@ -1,19 +1,19 @@
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {useAuth} from "../../../context/AuthProvider";
-import {FIRESTORE_DB} from "../../../config/firebaseConfig";
-import {getDoc, doc} from "firebase/firestore";
-import {useEffect, useRef, useState} from "react";
-import {colors, elements, icons, images} from "../../../constants";
-import DonutChart from "../../../components/DonutChart";
-import BigDonutChart from "../../../components/BigDonutChart";
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Image } from 'expo-image';
+import {useAuth} from "../../../../context/AuthProvider";
+import {useContext, useEffect, useRef, useState} from "react";
+import {elements, icons, images} from "../../../../constants";
+import DonutChart from "../../../../components/DonutChart";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
-import {workouts} from "../../../data/fitness";
 import {format} from 'date-fns';
 import {de} from 'date-fns/locale';
-import {useAppStyle} from "../../../context/AppStyleContext";
-import {dark, light} from "../../../constants/colors";
-import Card from "../../../components/Card";
+import {useAppStyle} from "../../../../context/AppStyleContext";
+import {dark} from "../../../../constants/colors";
+import Card from "../../../../components/Card";
+import {WorkoutContext} from "../../../../context/WorkoutContext";
+import ExerciseList from "../../../../components/ExerciseList";
+import {router} from "expo-router";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
@@ -22,9 +22,13 @@ const Home = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
 
     const {user, username} = useAuth();
-    //const [username, setUsername] = useState("");
-    const flatListRef = useRef(null);
-    const [selectedWorkoutId, setSelectedWorkoutId] = useState(1);
+    const {workouts} = useContext(WorkoutContext);
+    const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
+
+    useEffect(() => {
+        setSelectedWorkoutId(workouts[0]?.id);
+        console.log(selectedWorkoutId);
+    }, [workouts]);
 
     const getCurrentDate = () => {
         const today = new Date();
@@ -63,71 +67,23 @@ const Home = () => {
         )
     }
 
-    const renderExercise = ({item}) => {
-
+    const exercises = ({item}) => {
+        const navigation = () => {
+            router.navigate({pathname: "/exerciseDetail/[exerciseId]", params: {exercise: JSON.stringify(item)}})
+        }
         return (
-            <Card
-                  style={{marginBottom: 10}}
-                  //onPress={()=> console.log(item)}
-                  href={{pathname: `/(homes)/${item.id}`, params: {item: JSON.stringify(item)}}}
-                  clickable
-            ><View style={styles.exerciseContainer}>
-                <View style={styles.exercises}>
-                    <View>
-                        <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
-                    </View>
-                    <View>
-                        {item.sets && (
-                            <View style={{flexDirection: "row"}}>
-                                <View style={styles.smallIconContainer}>
-                                    <Image source={icons.repeat} style={styles.smallIcon}/>
-                                </View>
-                                <Text style={styles.exerciseDetails}>Sets: {item.sets}</Text>
-                            </View>
-                        )}
-                        {item.rest && (
-                            <View style={{flexDirection: "row"}}>
-                                <View style={styles.smallIconContainer}>
-                                    <Image source={icons.rest} style={styles.smallIcon}/>
-                                </View>
-                                <Text style={styles.exerciseDetails}>Pause: {item.rest} min</Text>
-                            </View>
-                        )}
-                        {item.duration && (
-                            <View style={{flexDirection: "row"}}>
-                                <View style={styles.smallIconContainer}>
-                                    <Image source={icons.time} style={styles.smallIcon}/>
-                                </View>
-                                <Text style={styles.exerciseDetails}>Dauer: {item.duration}</Text>
-                            </View>
-                        )}
-                        {item.heartRateZone && (
-                            <View style={{flexDirection: "row"}}>
-                                <View style={styles.smallIconContainer}>
-                                    <Image source={icons.heartbeat} style={styles.smallIcon}/>
-                                </View>
-                                <Text style={styles.exerciseDetails}>Herzrate: {item.heartRateZone}</Text>
-                            </View>
-                        )}
-                    </View>
-                </View>
-                {item.image && (
-                    <View style={styles.exerciseImageContainer}>
-                        <Image source={item.image} style={styles.exerciseImage}/>
-                    </View>
-                )}
-            </View>
-            </Card>
+            <ExerciseList item={item} handleNavigation={navigation}/>
         )
     }
 
-    const selectedWorkout = workouts.find(workout => workout.id === selectedWorkoutId);
+    const selectedWorkout = workouts?.find(workout => workout.id === selectedWorkoutId);
     const currentDate = getCurrentDate();
+
 
     //fix status bar
     return (
         <SafeAreaView style={styles.backgroundImage}>
-            <StatusBar style={"dark"}/>
+            {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
             {/*colors.label*/}
             <Image
                 source={images.backgroundSymbol}
@@ -150,7 +106,7 @@ const Home = () => {
                                     width: 100,
                                     height: 100,
                                     borderRadius: 50,
-                                    resizeMode: "contain",
+                                    contentFit: "contain",
                                 }}
                             />
                             <View style={styles.cameraStyle}>
@@ -219,10 +175,9 @@ const Home = () => {
                 </View>
                 <View>
                     <FlatList
-                        ref={flatListRef}
                         data={workouts}
                         renderItem={renderWorkout}
-                        keyExtractor={(item, index) => index.toString()}
+                        //keyExtractor={item => item.id}
                         horizontal={true} // Set horizontal to true for horizontal scrolling
                         showsHorizontalScrollIndicator={false}
                     />
@@ -230,8 +185,8 @@ const Home = () => {
                 {selectedWorkoutId !== null && (
                     <View style={styles.exerciseListContainer}>
                         <FlatList
-                            data={selectedWorkout.exercises}
-                            renderItem={renderExercise}
+                            data={selectedWorkout?.exercises}
+                            renderItem={exercises}
                             //keyExtractor={(item, index) => index.toString()}
                             showsVerticalScrollIndicator={false}
                         />
@@ -255,7 +210,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             top: 50,
             width: "100%",
             height: "100%",
-            resizeMode: "contain",
+            contentFit: "contain",
             tintColor: colors.quaternaryLabel
         },
         container: {

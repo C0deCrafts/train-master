@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {large_default, medium, small, xLarge, xSmall, xxLarge, fontFamily} from "../constants/textStyles";
-import {color, dark, light} from "../constants/colors";
+import {dark, light} from "../constants/colors";
 import {useColorScheme} from "react-native";
 import {StatusBar} from "expo-status-bar";
 
@@ -57,14 +57,14 @@ export const AppStyleProvider = ({ children }) => {
         }));
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("TextSize: ", textSize)
         console.log("Get: ", getTextStyles())
     }, [textSize]);
 
     useEffect(() => {
         console.log("Mode: ", colorScheme)
-    }, [colorScheme]);
+    }, [colorScheme]);*/
 
     return (
         <AppStyleContext.Provider value={{

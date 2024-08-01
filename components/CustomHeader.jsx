@@ -1,21 +1,20 @@
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import {useNavigation} from 'expo-router';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import { Image } from 'expo-image';
+import {router} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
-import {large_default} from "../constants/textStyles";
 import {StatusBar} from "expo-status-bar";
 
 const CustomHeader = ({title, backButtonVisible = false}) => {
-    const navigation = useNavigation();
-    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme, textSize} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
     const handleGoBack = () => {
-        navigation.goBack();
-    }
+        router.back();
+    };
 
     return (
         <>

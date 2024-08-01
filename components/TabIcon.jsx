@@ -1,5 +1,5 @@
-import {Image, StyleSheet, Text, View} from "react-native";
-import {fontFamily} from "../constants/textStyles";
+import {StyleSheet, Text, View} from "react-native";
+import { Image } from 'expo-image';
 import {useAppStyle} from "../context/AppStyleContext";
 
 const TabIcon = ({icon, color, name, focused}) => {
@@ -12,7 +12,7 @@ const TabIcon = ({icon, color, name, focused}) => {
         <View style={styles.container}>
             <Image
                 source={icon}
-                resizeMode="contain"
+                contentFit="contain"
                 tintColor={color}
                 style={{
                     width: 25,

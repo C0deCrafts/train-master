@@ -1,4 +1,4 @@
-import { Modal, TouchableOpacity, View, Text, Picker, Button, TextInput, StyleSheet } from 'react-native';
+import { Modal, TouchableOpacity, Button, StyleSheet } from 'react-native';
 
 const CustomModal = ({ isVisible, onClose, children, styles, onCloseLabel="Schließen" }) => {
     return (
@@ -33,9 +33,5 @@ const createStyles = (colors, textStyles, appStyles) => StyleSheet.create({
         backgroundColor: colors.secondary,
         borderTopLeftRadius: appStyles.modalRadius,
         borderTopRightRadius: appStyles.modalRadius,
-    },
-    modalText: {
-        fontSize: textStyles.body,
-        textAlign: "center"
     },
 });

@@ -1,12 +1,12 @@
 import {
     Alert,
-    Image,
     ImageBackground, Keyboard,
     Pressable,
     StyleSheet,
     Text, TouchableWithoutFeedback,
     View
 } from 'react-native'
+import { Image } from 'expo-image';
 import {SafeAreaView} from "react-native-safe-area-context";
 import {colors, icons, images} from "../../constants";
 import FormField from "../../components/FormField";
@@ -117,6 +117,7 @@ const Login = () => {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                     <SafeAreaView style={styles.content}>
                         <Spinner visible={loading}/>
+                        {/* FIX LOGO - don't visible ?? */}
                         <View style={styles.logoContainer}>
                             {isSmallDevice ? (
                                 <Image
@@ -129,7 +130,6 @@ const Login = () => {
                                     style={styles.logo}
                                 />
                             )}
-
                         </View>
                             <FormField placeholder="E-Mail"
                                        otherStyles={{marginBottom: 16}}
@@ -147,7 +147,7 @@ const Login = () => {
                             <Pressable onPress={handleForgotPassword}>
                                 <Text style={styles.forgotPasswordText}>Passwort vergessen?</Text>
                             </Pressable>
-                            <CustomButton title="Login" containerStyles={{marginTop: 40}} handlePress={handleLogin}/>
+                            <CustomButton title="Login" containerStyles={{marginTop: 40}} handlePress={handleLogin} textStyle={{color: colors.white}}/>
                             <Text style={styles.text}>oder</Text>
                             <View style={styles.loginIconContainer}>
                                 <Image source={icons.apple} style={styles.loginIcons}/>
@@ -198,12 +198,12 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: "60%",
-        resizeMode: "contain",
+        contentFit: "contain",
         alignSelf: "center",
     },
     logoSmallDevices: {
         width: "50%",
-        resizeMode: "contain",
+        contentFit: "contain",
         alignSelf: "center",
         marginBottom: -40
     },
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         width: "100%",
         height: "100%",
-        resizeMode: "contain",
+        contentFit: "contain",
     },
     loginIconContainer: {
         paddingHorizontal: 80,

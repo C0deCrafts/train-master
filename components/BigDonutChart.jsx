@@ -1,4 +1,5 @@
-import {View, StyleSheet, Animated, TextInput, Image} from "react-native";
+import {View, StyleSheet, Animated, TextInput} from "react-native";
+import { Image } from 'expo-image';
 import Svg, {G, Circle } from "react-native-svg";
 import {useEffect, useRef} from "react";
 import {colors, icons} from "../constants";
@@ -101,7 +102,7 @@ function BigDonutChart({
                 position: "absolute",
                 width: 40,
                 height: 40,
-                resizeMode: "contain",
+                contentFit: "contain",
                 top: 25,
                 left: radius - 20,
                 tintColor: colors.donutColorDefault

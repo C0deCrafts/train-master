@@ -1,15 +1,16 @@
-import {Alert, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image } from 'expo-image';
 import {useEffect, useState} from "react";
 import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
-import {FIRESTORE_DB} from "../../../config/firebaseConfig";
-import {icons, images} from "../../../constants";
+import {FIRESTORE_DB} from "../../../../config/firebaseConfig";
+import {icons, images} from "../../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
-import {useAuth} from "../../../context/AuthProvider";
+import {useAuth} from "../../../../context/AuthProvider";
 import {Link} from "expo-router";
-import CustomHeader from "../../../components/CustomHeader";
-import {useAppStyle} from "../../../context/AppStyleContext";
-import Card from "../../../components/Card";
-import elementStyles from "../../../constants/elementStyles";
+import CustomHeader from "../../../../components/CustomHeader";
+import {useAppStyle} from "../../../../context/AppStyleContext";
+import Card from "../../../../components/Card";
+import elementStyles from "../../../../constants/elementStyles";
 
 const FriendGroups = () => {
     const { user } = useAuth();
@@ -91,7 +92,7 @@ const FriendGroups = () => {
                       renderItem={({item})=> (
                           <Card key={item.id}
                                 clickable
-                                href={{pathname: `/(groups)/${item.id}`, params: {name: item.name}}}>
+                                href={{pathname: "/chat/[id]", params: {id: item.id, name: item.name}}}>
                               <Text style={styles.groupName}>{item.name}</Text>
                               <Text style={styles.groupDescription}>{item.description}</Text>
                           </Card>

@@ -1,7 +1,13 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native'
-import {colors} from "../constants";
+import {useAppStyle} from "../context/AppStyleContext";
 
-const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoading}) => {
+const CustomButton = ({title, handlePress, containerStyles, textStyle, isLoading}) => {
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+    const colors = getColors();
+    const textStyles = getTextStyles();
+
+    const styles = createStyles(textStyles, colors, fontFamily);
+
     return (
         <TouchableOpacity
             onPress={handlePress}
@@ -15,20 +21,21 @@ const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoadin
 
 export default CustomButton;
 
-const styles = StyleSheet.create({
+const createStyles = (textStyles, colors, fontFamily) => {
+return StyleSheet.create({
     container: {
-        backgroundColor: colors.buttonBackgroundDark,
+        backgroundColor: colors.dark,
         minHeight: 62,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
     },
     text: {
-        color: colors.textColorWhite,
-        fontFamily: "Poppins-Regular",
-        fontSize: 20
+        color: colors.colorButtonLabel,
+        fontFamily: fontFamily.Poppins_SemiBold,
+        fontSize: textStyles.title_3
     },
     loading: {
         opacity: 0.5
     }
-})
+})}

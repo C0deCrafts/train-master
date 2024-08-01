@@ -1,30 +1,34 @@
 import {
-    Image, ScrollView,
+    ScrollView,
     StyleSheet,
     Text, View
 } from 'react-native'
-import {useAppStyle} from "../../../context/AppStyleContext";
-import {SafeAreaView} from "react-native-safe-area-context";
-import {Link, useLocalSearchParams} from "expo-router";
-import CustomHeader from "../../../components/CustomHeader";
-import Card from "../../../components/Card";
+import {useLocalSearchParams} from "expo-router";
 import {Video} from "expo-av";
+import {useAppStyle} from "../../../../../context/AppStyleContext";
+import CustomHeader from "../../../../../components/CustomHeader";
+import Card from "../../../../../components/Card";
+import {useContext} from "react";
+import {WorkoutContext} from "../../../../../context/WorkoutContext";
 
-const TrainGroup = () => {
-    const { id, item } = useLocalSearchParams();
+const Exercises = () => {
+    const { exercise } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
+    const { exerciseVideos } = useContext(WorkoutContext);
 
     const styles = createStyles(textStyles, colors, fontFamily);
-    const workoutItem = item ? JSON.parse(item) : {};
+    const exerciseItem = exercise ? JSON.parse(exercise) : {};
+    const videoUrl = exerciseVideos[exerciseItem.id] || ""
 
     return (
+
         <View style={styles.container}>
-            <CustomHeader title={workoutItem.name} backButtonVisible={true}/>
-            {workoutItem.video && (
+            <CustomHeader title={exerciseItem.name} backButtonVisible={true}/>
+            {videoUrl && (
                 <Video
-                    source={workoutItem.video}
+                    source={{uri: videoUrl}}
                     style={styles.video}
                     resizeMode="contain"
                     useNativeControls={false}
@@ -33,34 +37,33 @@ const TrainGroup = () => {
                 />
             )}
             <View style={styles.content}>
-                {/*<Image source={workoutItem.image} style={styles.exerciseImage}/>*/}
                 <View style={styles.cardContainer}>
-                    {workoutItem.sets && (
+                    {exerciseItem.sets && (
                         <Card style={styles.cardStyle}>
                             <Text style={styles.cardHeader}>Sätze</Text>
-                            <Text style={styles.cardContent}>x{workoutItem.sets}</Text>
+                            <Text style={styles.cardContent}>{exerciseItem.sets}x</Text>
                         </Card>
                     )}
-                    {workoutItem.repetitions && (
+                    {exerciseItem.repetitions && (
                         <Card style={styles.cardStyle}>
                             <Text style={styles.cardHeader}>WH</Text>
-                            <Text style={styles.cardContent}>x{workoutItem.repetitions}</Text>
+                            <Text style={styles.cardContent}>{exerciseItem.repetitions}x</Text>
                         </Card>
                     )}
-                    {workoutItem.weight && (
+                    {exerciseItem.weight && (
                         <Card style={styles.cardStyle}>
                             <Text style={styles.cardHeader}>Gewicht</Text>
-                            <Text style={styles.cardContent}>x{workoutItem.weight}</Text>
+                            <Text style={styles.cardContent}>{exerciseItem.weight} kg</Text>
                         </Card>
                     )}
                 </View>
                 <ScrollView style={styles.scrollBox} showsVerticalScrollIndicator={false}>
-                    <Text style={styles.information}><Text style={styles.bold}>Infos:</Text> {workoutItem.description}</Text>
-                    {workoutItem.additionalInfo && (
-                        <Text style={styles.additionalInfo}><Text style={styles.bold}>Zusatzinfos:</Text> {workoutItem.additionalInfo}</Text>
+                    <Text style={styles.information}><Text style={styles.bold}>Infos:</Text> {exerciseItem.description}</Text>
+                    {exerciseItem.additionalInfo && (
+                        <Text style={styles.additionalInfo}><Text style={styles.bold}>Zusatzinfos:</Text> {exerciseItem.additionalInfo}</Text>
                     )}
-                    {workoutItem.heartRateZone && (
-                        <Text style={styles.additionalInfo}><Text style={styles.bold}>Heart Rate:</Text> {workoutItem.heartRateZone}</Text>
+                    {exerciseItem.heartRateZone && (
+                        <Text style={styles.additionalInfo}><Text style={styles.bold}>Heart Rate:</Text> {exerciseItem.heartRateZone}</Text>
                     )}
                 </ScrollView>
             </View>
@@ -145,4 +148,4 @@ const createStyles = (textStyles, colors, fontFamily) => {
     })
 }
 
-export default TrainGroup;
+export default Exercises;

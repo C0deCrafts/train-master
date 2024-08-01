@@ -1,5 +1,6 @@
-import {Image, Pressable, StyleSheet} from 'react-native'
-import {colors, icons} from "../constants";
+import {Pressable, StyleSheet} from 'react-native'
+import { Image } from 'expo-image';
+import {icons} from "../constants";
 import {signOut} from "firebase/auth";
 import {FIREBASE_AUTH} from "../config/firebaseConfig";
 import {useAppStyle} from "../context/AppStyleContext";

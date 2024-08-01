@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAppStyle } from "../context/AppStyleContext";
 import { Link } from "expo-router";
 import {elements} from "../constants";
