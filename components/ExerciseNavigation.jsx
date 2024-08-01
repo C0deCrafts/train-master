@@ -44,7 +44,11 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
             {index + 1 >= exercises.length && currentSet === 1 ? (
                 <TouchableOpacity
                     style={styles.buttonStart}
-                    onPress={() => {router.dismissAll();}}>
+                    onPress={() => {
+
+                        //Route nach allerletzter Übung
+                        router.replace("(tabs)/(training)/training")
+                    }}>
                     <Text style={styles.buttonStartLabel}>Erledigt</Text>
                 </TouchableOpacity>
             ) : (
@@ -58,7 +62,10 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
             {index + 1 >= exercises.length ? (
                 <TouchableOpacity
                     style={styles.buttonSmall}
-                    onPress={() => {router.dismissAll();}}>
+                    onPress={() => {
+
+                        router.replace("(tabs)/(training)/training")
+                        }}>
                     <Image source={icons.fastForward} style={styles.buttonIcon} />
                 </TouchableOpacity>
             ) : (

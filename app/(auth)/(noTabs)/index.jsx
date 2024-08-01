@@ -1,10 +1,12 @@
 import {View, Text, SafeAreaView} from "react-native";
+import CustomHeader from "../../../components/CustomHeader";
 
 const Index = () => {
     return (
-        <SafeAreaView>
+        <View>
+            <CustomHeader backButtonVisible={true}/>
             <Text>Layout</Text>
-        </SafeAreaView>
+        </View>
     );
 };
 

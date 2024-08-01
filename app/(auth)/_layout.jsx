@@ -6,8 +6,7 @@ const RootStack = () => {
             headerShown: false
         }}>
             <Stack.Screen name="(tabs)"/>
-            <Stack.Screen name="outside/index"/>
-            <Stack.Screen name="outside/screen"/>
+            <Stack.Screen name="(noTabs)"/>
         </Stack>
     )
 }

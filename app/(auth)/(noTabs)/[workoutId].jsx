@@ -1,12 +1,12 @@
 import {View, StyleSheet, FlatList, Text} from "react-native";
-import CustomHeader from "../../../../components/CustomHeader";
 import {router, useLocalSearchParams} from "expo-router";
-import {useAppStyle} from "../../../../context/AppStyleContext";
-import {elements} from "../../../../constants";
-import {useContext, useEffect} from "react";
-import CustomButton from "../../../../components/CustomButton";
-import ExerciseList from "../../../../components/ExerciseList";
-
+import {elements} from "../../../constants";
+import {useEffect} from "react";
+import {useAppStyle} from "../../../context/AppStyleContext";
+import ExerciseList from "../../../components/ExerciseList";
+import CustomHeader from "../../../components/CustomHeader";
+import CustomButton from "../../../components/CustomButton";
+import {SafeAreaView} from "react-native-safe-area-context";
 
 const WorkoutId = () => {
     const { workout, item } = useLocalSearchParams();
@@ -23,14 +23,13 @@ const WorkoutId = () => {
 
     const handleStartWorkout = () => {
         //console.log("Start workout: ", JSON.stringify(item))
-
-        //hier die route nach AUSSEN!!!
-        router.push({ pathname: 'outside/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
+        router.dismissAll();
+        router.replace({ pathname: '(noTabs)/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
     }
 
     const exercises = ({item}) => {
         const handleNavigation = () => {
-            router.navigate({pathname: "/exercise/[exerciseId]", params: {exercise: JSON.stringify(item)}})
+            router.navigate({pathname: "(noTabs)/exercise/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
         return (
             <ExerciseList item={item} handleNavigation={handleNavigation}/>
@@ -38,18 +37,20 @@ const WorkoutId = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <>
             <CustomHeader title={workoutItem.name} backButtonVisible={true}/>
-            <View style={styles.exerciseListContainer}>
-                <FlatList
-                    data={workoutItem.exercises}
-                    renderItem={exercises}
-                    //keyExtractor={(item, index) => index.toString()}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
-            <CustomButton title={"Workout starten"} handlePress={handleStartWorkout} containerStyles={styles.button}/>
-        </View>
+            <SafeAreaView style={styles.container}>
+                <View style={styles.exerciseListContainer}>
+                    <FlatList
+                        data={workoutItem.exercises}
+                        renderItem={exercises}
+                        //keyExtractor={(item, index) => index.toString()}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </View>
+                <CustomButton title={"Workout starten"} handlePress={handleStartWorkout} containerStyles={styles.button}/>
+            </SafeAreaView>
+        </>
     );
 };
 
@@ -57,7 +58,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
         container: {
             flex: 1,
+            //backgroundColor: "blue",
             backgroundColor: colors.primary,
+            paddingTop: -60
         },
         content: {
             backgroundColor: colors.secondary,
@@ -94,17 +97,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
             color: colors.colorButtonLabel,
             textAlign: "center"
         },
-        descriptionContainer: {
-
-        },
         description: {
             fontSize: textStyles.body,
             textAlign: "justify",
-        },
-        video: {
-            //width: windowWidth,
-            height: 220,
-            marginTop: 0,
         },
         information: {
             textAlign: "justify",
@@ -140,7 +135,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flex: 1,
             marginTop: 10,
             marginBottom: 10,
-            paddingHorizontal: 10
+            paddingHorizontal: 10,
+            //backgroundColor: "green"
         },
         exerciseName: {
             fontFamily: fontFamily.Poppins_SemiBold,

@@ -35,7 +35,7 @@ const Training = () => {
         return (
             <Card
                 style={styles.workout}
-                href={{pathname: `/(training)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
+                href={{pathname: `(noTabs)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
                 clickable
             >
                 {imageUrl && (
@@ -94,13 +94,11 @@ const Training = () => {
                         //style={{backgroundColor: "red"}}
                     />
                 </View>
-                <Text>Test</Text>
+                {/*
                 <CustomButton title={"get outside"} handlePress={
                     () => router.navigate("/outside/screen")
-                }/>
+                }/>*/}
             </View>
-            {/*<CustomButton title={"Id anzeigen"} handlePress={fetchExercises}/>
-            <CustomButton title={"Workouts anzeigen"} handlePress={fetchWorkoutsWithExercises}/>*/}
 
         </View>
     );
