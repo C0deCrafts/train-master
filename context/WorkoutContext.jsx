@@ -104,9 +104,19 @@ export const WorkoutProvider = ({ children }) => {
         }
     };
 
+    //for testing (later need a listener to the database)
+    const clearStorage = async () => {
+        try {
+            await AsyncStorage.clear();
+            console.log('Alle Daten im AsyncStorage wurden gelöscht.');
+        } catch (error) {
+            console.error('Fehler beim Löschen der Daten im AsyncStorage:', error);
+        }
+    };
+
 
     return (
-        <WorkoutContext.Provider value={{ workouts, exerciseImages, exerciseVideos, loadWorkouts }}>
+        <WorkoutContext.Provider value={{ workouts, clearStorage, exerciseImages, exerciseVideos, loadWorkouts }}>
             {children}
         </WorkoutContext.Provider>
     );

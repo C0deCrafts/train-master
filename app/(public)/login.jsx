@@ -198,11 +198,13 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: "60%",
+        height: 150,
         contentFit: "contain",
         alignSelf: "center",
     },
     logoSmallDevices: {
         width: "50%",
+        height: 150,
         contentFit: "contain",
         alignSelf: "center",
         marginBottom: -40

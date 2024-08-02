@@ -7,7 +7,7 @@ import {
     View
 } from 'react-native';
 import { Image } from 'expo-image';
-import {useState, useMemo} from "react";
+import {useState, useMemo, useContext} from "react";
 import {useAuth} from "../../../context/AuthProvider";
 import {useAppStyle} from "../../../context/AppStyleContext";
 import {images, icons} from "../../../constants";
@@ -19,6 +19,8 @@ import Card from "../../../components/Card";
 import RadioButton from "../../../components/RadioButton";
 import CustomModal from "../../../components/CustomModal";
 import {StatusBar} from "expo-status-bar";
+import CustomButton from "../../../components/CustomButton";
+import {WorkoutContext} from "../../../context/WorkoutContext";
 
 const Settings = () => {
     const { user, username, setUsername, email, handleUpdateUsername } = useAuth();
@@ -31,6 +33,8 @@ const Settings = () => {
     const [isUsernameModalVisible, setUsernameModalVisible] = useState(false);
     const [newUsername, setNewUsername] = useState("");
     const [selectedId, setSelectedId] = useState(colorScheme === "dark" ? "1" : "2");
+
+    const { clearStorage } = useContext(WorkoutContext);
 
     const radioButtons = useMemo(() => ([
         {
@@ -162,7 +166,7 @@ const Settings = () => {
                             ))}
                         </ScrollView>
                     </Card>
-                    <Card style={styles.card} clickable={true} onPress={toggleModal}>
+                    <Card style={[styles.card, styles.spacingBottom]} clickable={true} onPress={toggleModal}>
                         <Image source={icons.fontsize}
                                style={{
                                    width: 30,
@@ -198,6 +202,7 @@ const Settings = () => {
                         />
                         <Button title="OK" onPress={handleUsernameChange}/>
                     </CustomModal>
+                    <CustomButton title={"Cache löschen"} handlePress={clearStorage} containerStyles={{backgroundColor: colors.baseColor}}/>
                 </ScrollView>
             </View>
         </View>
@@ -344,6 +349,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         spacingTop: {
             marginTop: 5,
+        },
+        spacingBottom: {
+            marginBottom: 20,
         },
         picker: {
 
