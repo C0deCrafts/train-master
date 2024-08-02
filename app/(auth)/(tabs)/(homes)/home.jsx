@@ -14,7 +14,7 @@ import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseList from "../../../../components/ExerciseList";
 import {router} from "expo-router";
-import Animated, {FadeInDown} from "react-native-reanimated";
+import Animated, {FadeInDown, FadeInRight, FadeInUp} from "react-native-reanimated";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
@@ -54,17 +54,19 @@ const Home = () => {
         console.log("Image PICKER selected")
     };
 
-    const renderWorkout = ({item}) => {
+    const renderWorkout = ({item, index}) => {
         return (
-            <Card
-                style={item.id === selectedWorkoutId ? styles.workoutContainerSelected : styles.workoutContainer}
-                onPress={() => setSelectedWorkoutId(item.id)}
-                clickable
-            >
-                {/*<Image source={item.image} style={styles.workoutImage} />*/}
-                <Text
-                    style={item.id === selectedWorkoutId ? styles.workoutNameSelected : styles.workoutName}>{item.name}</Text>
-            </Card>
+            <Animated.View entering={FadeInRight.delay(100).duration(index * 300)}>
+                <Card
+                    style={item.id === selectedWorkoutId ? styles.workoutContainerSelected : styles.workoutContainer}
+                    onPress={() => setSelectedWorkoutId(item.id)}
+                    clickable
+                >
+                    {/*<Image source={item.image} style={styles.workoutImage} />*/}
+                    <Text
+                        style={item.id === selectedWorkoutId ? styles.workoutNameSelected : styles.workoutName}>{item.name}</Text>
+                </Card>
+            </Animated.View>
         )
     }
 
@@ -179,7 +181,7 @@ const Home = () => {
                     <FlatList
                         data={workouts}
                         renderItem={renderWorkout}
-                        //keyExtractor={item => item.id}
+                        keyExtractor={item => item.id}
                         horizontal={true} // Set horizontal to true for horizontal scrolling
                         showsHorizontalScrollIndicator={false}
                     />

@@ -8,6 +8,7 @@ import {WorkoutContext} from "../../../../context/WorkoutContext";
 import Card from "../../../../components/Card";
 import CustomButton from "../../../../components/CustomButton";
 import elementStyles from "../../../../constants/elementStyles";
+import Animated, {FadeInDown} from "react-native-reanimated";
 
 const PrevExercise = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
@@ -77,8 +78,12 @@ const PrevExercise = () => {
                 )}
             </View>
             <ScrollView style={styles.scrollBox} showsVerticalScrollIndicator={false}>
-                <Text style={styles.information}><Text style={styles.bold}>Infos:</Text> {nextExercise.description || "Keine Beschreibung"}</Text>
-                <Text style={styles.information}><Text style={styles.bold}>Zusatzinfos:</Text> {nextExercise.additionalInfo || "Keine Zusatzinfos"}</Text>
+                <Animated.Text
+                    entering={FadeInDown.delay(100).duration(300)}
+                    style={styles.information}><Text style={styles.bold}>Infos:</Text> {nextExercise.description || "Keine Beschreibung"}</Animated.Text>
+                <Animated.Text
+                    entering={FadeInDown.delay(200).duration(300)}
+                    style={styles.information}><Text style={styles.bold}>Zusatzinfos:</Text> {nextExercise.additionalInfo || "Keine Zusatzinfos"}</Animated.Text>
             </ScrollView>
             <Text style={styles.timerText}>Verbleibende Zeit bis zur nächsten Übung:</Text>
             <Text style={styles.time}>{timeLeft}s</Text>

@@ -4,6 +4,7 @@ import {useLocalSearchParams, router} from "expo-router";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {icons, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
+import Animated, {FadeInDown, FadeInRight} from "react-native-reanimated";
 
 //fix small screens - no responsive design jet
 //buttons müssen noch ersetzt werden
@@ -50,13 +51,16 @@ const Rest = () => {
             </View>
 
             {currentSet === totalSets && (
-                <View style={styles.lastBox}>
-                    <Text style={styles.lastSet}>Zeit zu glänzen! Letzter Satz!</Text>
+                <Animated.View
+                    entering={FadeInRight.delay(200).duration(300)}
+                    style={styles.lastBox}>
+                    <Text
+                        style={styles.lastSet}>Zeit zu glänzen! Letzter Satz!</Text>
                     <Image
                         style={styles.icon}
                         source={icons.celebration}
                     />
-                </View>
+                </Animated.View>
             )}
 
             <View style={styles.buttonBox}>

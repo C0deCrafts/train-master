@@ -8,7 +8,15 @@ import CustomHeader from "../../../../components/CustomHeader";
 import {elements, icons} from "../../../../constants";
 import CustomButton from "../../../../components/CustomButton";
 import {router} from "expo-router";
-import Animated, {FadeInDown, FadeInLeft, FadeInRight} from "react-native-reanimated";
+import Animated, {
+    BounceIn,
+    FadeInDown,
+    FadeInLeft,
+    FadeInRight,
+    FadeInUp,
+    FlipInEasyX,
+    ZoomIn
+} from "react-native-reanimated";
 
 const Training = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -28,13 +36,13 @@ const Training = () => {
         return minutes;
     };
 
-    const renderWorkout = ({item, index}) => {
+    const RenderWorkout = ({item, index}) => {
         const totalDuration = calculateTotalDuration(item);
         const imageUrl = item.image || '';
 
         return (
             <Animated.View
-                entering={FadeInRight.duration(400).delay(index * 200)}>
+                entering={FadeInDown.delay(100).duration(index * 500)}>
                 <Card
                     style={styles.workout}
                     href={{pathname: `(noTabs)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
@@ -90,7 +98,9 @@ const Training = () => {
                 <View style={styles.workoutContainer}>
                     <FlatList
                         data={workouts}
-                        renderItem={renderWorkout}
+                        renderItem={({ item, index }) => (
+                            <RenderWorkout item={item} index={index} />
+                        )}
                         keyExtractor={item => item.id}
                         horizontal={true} // Set horizontal to true for horizontal scrolling
                         showsHorizontalScrollIndicator={false}

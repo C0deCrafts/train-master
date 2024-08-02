@@ -20,7 +20,7 @@ const ExerciseList = ({item, index, handleNavigation }) => {
 
     return (
         <Animated.View
-            entering={FadeInDown.duration(400).delay(index * 200)}
+            entering={FadeInDown.delay(200).duration(index * 300)}
             style={{marginBottom: 10}}>
             <Card
                 //style={{marginBottom: 10}}
