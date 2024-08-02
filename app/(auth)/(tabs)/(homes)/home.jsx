@@ -14,6 +14,7 @@ import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseList from "../../../../components/ExerciseList";
 import {router} from "expo-router";
+import Animated, {FadeInDown} from "react-native-reanimated";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
@@ -27,7 +28,7 @@ const Home = () => {
 
     useEffect(() => {
         setSelectedWorkoutId(workouts[0]?.id);
-        console.log(selectedWorkoutId);
+        //console.log(selectedWorkoutId);
     }, [workouts]);
 
     const getCurrentDate = () => {
@@ -67,12 +68,13 @@ const Home = () => {
         )
     }
 
-    const exercises = ({item}) => {
+    const exercises = ({item, index}) => {
+        console.log("Index: ", index)
         const navigation = () => {
             router.navigate({pathname: "/exerciseDetail/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
         return (
-            <ExerciseList item={item} handleNavigation={navigation}/>
+            <ExerciseList item={item} index={index} handleNavigation={navigation}/>
         )
     }
 
@@ -187,7 +189,7 @@ const Home = () => {
                         <FlatList
                             data={selectedWorkout?.exercises}
                             renderItem={exercises}
-                            //keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(item, index) => index.toString()}
                             showsVerticalScrollIndicator={false}
                         />
                     </View>

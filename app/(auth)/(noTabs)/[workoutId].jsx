@@ -16,23 +16,18 @@ const WorkoutId = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
     const workoutItem = item ? JSON.parse(item) : {};
 
-    useEffect(() => {
-        console.log("Workout: ", workout)
-        console.log("Workout: ", typeof workoutItem)
-    }, []);
-
     const handleStartWorkout = () => {
         //console.log("Start workout: ", JSON.stringify(item))
         router.dismissAll();
         router.replace({ pathname: '(noTabs)/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
     }
 
-    const exercises = ({item}) => {
+    const exercises = ({item, index}) => {
         const handleNavigation = () => {
             router.navigate({pathname: "(noTabs)/exercise/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
         return (
-            <ExerciseList item={item} handleNavigation={handleNavigation}/>
+            <ExerciseList item={item} index={index} handleNavigation={handleNavigation}/>
         )
     }
 
@@ -44,7 +39,7 @@ const WorkoutId = () => {
                     <FlatList
                         data={workoutItem.exercises}
                         renderItem={exercises}
-                        //keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
                     />
                 </View>

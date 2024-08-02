@@ -29,10 +29,6 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
-    useEffect(() => {
-        console.log("CurrentSets", currentSets)
-    }, [currentSets]);
-
     const handleCompleteSet = () => {
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);

@@ -8,10 +8,10 @@ import CustomHeader from "../../../../components/CustomHeader";
 import {elements, icons} from "../../../../constants";
 import CustomButton from "../../../../components/CustomButton";
 import {router} from "expo-router";
+import Animated, {FadeInDown, FadeInLeft, FadeInRight} from "react-native-reanimated";
 
 const Training = () => {
-    const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
-    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const {workouts} = useContext(WorkoutContext);
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -28,53 +28,56 @@ const Training = () => {
         return minutes;
     };
 
-    const renderWorkout = ({item}) => {
+    const renderWorkout = ({item, index}) => {
         const totalDuration = calculateTotalDuration(item);
         const imageUrl = item.image || '';
 
         return (
-            <Card
-                style={styles.workout}
-                href={{pathname: `(noTabs)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
-                clickable
-            >
-                {imageUrl && (
-                    <Image
-                        source={{uri: item.image}}
-                        style={{
-                            width: "100%",
-                            height: 100,
-                            borderTopLeftRadius: elements.cardRadius,
-                            borderTopRightRadius: elements.cardRadius,
-                        }}
-                    />
-                )}
-                {/*<Image source={item.image} style={styles.workoutImage} />*/}
-                <View style={styles.cardContent}>
-                    <View style={styles.cardContainerTitleDescription}>
-                        <View>
-                            <Text style={[styles.cardTitle, styles.maxWith]}
-                                  numberOfLines={1}
-                                  ellipsizeMode="tail"
-                            >{item.name}</Text>
-                            <Text style={[styles.cardDescription, styles.maxWith]}
-                                  numberOfLines={2}
-                                  ellipsizeMode="tail"
-                            >
-                                {item.description}
-                            </Text>
+            <Animated.View
+                entering={FadeInRight.duration(400).delay(index * 200)}>
+                <Card
+                    style={styles.workout}
+                    href={{pathname: `(noTabs)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
+                    clickable
+                >
+                    {imageUrl && (
+                        <Image
+                            source={{uri: item.image}}
+                            style={{
+                                width: "100%",
+                                height: 100,
+                                borderTopLeftRadius: elements.cardRadius,
+                                borderTopRightRadius: elements.cardRadius,
+                            }}
+                        />
+                    )}
+                    {/*<Image source={item.image} style={styles.workoutImage} />*/}
+                    <View style={styles.cardContent}>
+                        <View style={styles.cardContainerTitleDescription}>
+                            <View>
+                                <Text style={[styles.cardTitle, styles.maxWith]}
+                                      numberOfLines={1}
+                                      ellipsizeMode="tail"
+                                >{item.name}</Text>
+                                <Text style={[styles.cardDescription, styles.maxWith]}
+                                      numberOfLines={2}
+                                      ellipsizeMode="tail"
+                                >
+                                    {item.description}
+                                </Text>
+                            </View>
+                            <View>
+                                <Image style={styles.icon} source={icons.forward}/>
+                            </View>
                         </View>
-                        <View>
-                            <Image style={styles.icon} source={icons.forward}/>
+                        <View style={styles.cardContainerDetails}>
+                            <Image source={icons.time} style={styles.smallIcon}/>
+                            <Text style={styles.cardDescription}>{totalDuration} Min</Text>
+                            <Text style={styles.cardDescription}> ● {item.exercises.length} Übungen</Text>
                         </View>
                     </View>
-                    <View style={styles.cardContainerDetails}>
-                        <Image source={icons.time} style={styles.smallIcon}/>
-                        <Text style={styles.cardDescription}>{totalDuration} Min</Text>
-                        <Text style={styles.cardDescription}> ● {item.exercises.length} Übungen</Text>
-                    </View>
-                </View>
-            </Card>
+                </Card>
+            </Animated.View>
         )
     }
 

@@ -1,5 +1,6 @@
 import add from "../assets/icons/add_line.png"
 import apple from "../assets/icons/apple_fill.png";
+import arrowRight from "../assets/icons/arrow_right_fill.png";
 import back from "../assets/icons/left_line.png";
 import barbell from "../assets/icons/barbell_fill.png";
 import camera from "../assets/icons/camera_2_fill.png";
@@ -29,6 +30,7 @@ import unlock from "../assets/icons/unlock_line.png";
 export default {
     add,
     apple,
+    arrowRight,
     back,
     barbell,
     camera,

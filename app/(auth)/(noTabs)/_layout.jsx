@@ -4,8 +4,6 @@ const StackTrainingLayout = () => {
         <Stack screenOptions={{
             headerShown: false
         }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="screen" />
             <Stack.Screen name="[workoutId]" />
             <Stack.Screen name="exercise/[exerciseId]" />
             <Stack.Screen name="start/exercises" />

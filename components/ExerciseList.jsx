@@ -5,8 +5,9 @@ import {elements, icons} from "../constants";
 import {useContext} from "react";
 import {WorkoutContext} from "../context/WorkoutContext";
 import {useAppStyle} from "../context/AppStyleContext";
+import Animated, {FadeInDown} from "react-native-reanimated";
 
-const ExerciseList = ({item, handleNavigation }) => {
+const ExerciseList = ({item, index, handleNavigation }) => {
     const { exerciseImages } = useContext(WorkoutContext);
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
@@ -18,50 +19,54 @@ const ExerciseList = ({item, handleNavigation }) => {
     //console.log("ImageURL: ", imageUrl)
 
     return (
-        <Card
-            style={{marginBottom: 10}}
-            onPress={handleNavigation}
-            clickable
-        >
-            <View style={styles.exerciseContainer}>
-                <View style={styles.exercises}>
-                    <View>
-                        <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
+        <Animated.View
+            entering={FadeInDown.duration(400).delay(index * 200)}
+            style={{marginBottom: 10}}>
+            <Card
+                //style={{marginBottom: 10}}
+                onPress={handleNavigation}
+                clickable
+            >
+                <View style={styles.exerciseContainer}>
+                    <View style={styles.exercises}>
+                        <View>
+                            <Text style={styles.exerciseName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
+                        </View>
+                        <View>
+                            {item.sets && (
+                                <View style={{flexDirection: "row"}}>
+                                    <View style={styles.smallIconContainer}>
+                                        <Image source={icons.repeat} style={styles.smallIcon}/>
+                                    </View>
+                                    <Text style={styles.exerciseDetails}>Sätze: {item.sets}</Text>
+                                </View>
+                            )}
+                            {item.repetitions && (
+                                <View style={{flexDirection: "row"}}>
+                                    <View style={styles.smallIconContainer}>
+                                        <Image source={icons.repeat} style={styles.smallIcon}/>
+                                    </View>
+                                    <Text style={styles.exerciseDetails}>Wiederholungen: {item.repetitions}</Text>
+                                </View>
+                            )}
+                            {item.heartRateZone && (
+                                <View style={{flexDirection: "row"}}>
+                                    <View style={styles.smallIconContainer}>
+                                        <Image source={icons.heartbeat} style={styles.smallIcon}/>
+                                    </View>
+                                    <Text style={styles.exerciseDetails}>Herzrate: {item.heartRateZone}</Text>
+                                </View>
+                            )}
+                        </View>
                     </View>
-                    <View>
-                        {item.sets && (
-                            <View style={{flexDirection: "row"}}>
-                                <View style={styles.smallIconContainer}>
-                                    <Image source={icons.repeat} style={styles.smallIcon}/>
-                                </View>
-                                <Text style={styles.exerciseDetails}>Sätze: {item.sets}</Text>
-                            </View>
-                        )}
-                        {item.repetitions && (
-                            <View style={{flexDirection: "row"}}>
-                                <View style={styles.smallIconContainer}>
-                                    <Image source={icons.repeat} style={styles.smallIcon}/>
-                                </View>
-                                <Text style={styles.exerciseDetails}>Wiederholungen: {item.repetitions}</Text>
-                            </View>
-                        )}
-                        {item.heartRateZone && (
-                            <View style={{flexDirection: "row"}}>
-                                <View style={styles.smallIconContainer}>
-                                    <Image source={icons.heartbeat} style={styles.smallIcon}/>
-                                </View>
-                                <Text style={styles.exerciseDetails}>Herzrate: {item.heartRateZone}</Text>
-                            </View>
-                        )}
-                    </View>
+                    {imageUrl && (
+                        <View style={styles.exerciseImageContainer}>
+                            <Image source={{ uri: imageUrl }} style={styles.exerciseImage} cachePolicy="memory-disk" />
+                        </View>
+                    )}
                 </View>
-                {imageUrl && (
-                    <View style={styles.exerciseImageContainer}>
-                        <Image source={{ uri: imageUrl }} style={styles.exerciseImage} cachePolicy="memory-disk" />
-                    </View>
-                )}
-            </View>
-        </Card>
+            </Card>
+        </Animated.View>
     )
 };
 
