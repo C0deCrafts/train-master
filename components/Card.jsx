@@ -3,7 +3,6 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAppStyle } from "../context/AppStyleContext";
 import { Link } from "expo-router";
 import {elements} from "../constants";
-import Animated, {FadeInDown} from "react-native-reanimated";
 
 const Card = ({ clickable, href, onPress, style, children, ...props }) => {
     const { getColors } = useAppStyle();

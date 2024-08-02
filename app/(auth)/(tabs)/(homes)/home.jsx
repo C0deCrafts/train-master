@@ -71,7 +71,7 @@ const Home = () => {
     }
 
     const exercises = ({item, index}) => {
-        console.log("Index: ", index)
+        //console.log("Index: ", index)
         const navigation = () => {
             router.navigate({pathname: "/exerciseDetail/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
