@@ -94,20 +94,6 @@ const TabsLayout = () => {
             }}
             redirect={!user}
             />
-            <Tabs.Screen name="steps" options={{
-                //headerShown: false,
-                title: "Einstellungen",
-                tabBarIcon: ({color, focused}) => (
-                    <TabIcon
-                        icon={icons.heartbeat}
-                        color={color}
-                        name="Steps"
-                        focused={focused}
-                    />
-                )
-            }}
-                         redirect={!user}
-            />
         </Tabs>
     );
 };

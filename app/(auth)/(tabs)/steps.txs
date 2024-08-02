@@ -3,6 +3,7 @@ import {StyleSheet, View, Text} from "react-native";
 import {useAppStyle} from "../../../context/AppStyleContext";
 import BigDonutChart from "../../../components/BigDonutChart";
 
+//use IOS health
 const Steps = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
