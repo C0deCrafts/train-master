@@ -21,6 +21,9 @@ const Exercises = () => {
     const { exerciseVideos } = useContext(WorkoutContext);
     const styles = createStyles(textStyles, colors, fontFamily);
 
+    const { startSession, completeCurrentExercise, loadWorkouts, workouts } = useContext(WorkoutContext);
+
+
     // Parse exercise JSON and initialize state
     const exercises = exercise ? JSON.parse(exercise) : {};
     const [index, setIndex] = useState(0);
@@ -29,7 +32,7 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
-    const handleCompleteSet = () => {
+    const handleCompleteSet = async () => {
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
             router.navigate({
@@ -47,17 +50,29 @@ const Exercises = () => {
             //console.log("letzter Satz nach dem else: ", currentSets)
 
 
-
             if (index + 1 < exercises.exercises.length) {
                 //console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
+
+                //hier complete exercise speichern
+                console.log("Current Exercise: ", exercises.exercises[index]);
+                const completeExercise = {
+                    exerciseId: exercises.exercises[index].id,
+                    duration: exercises.exercises[index].duration, // evlt ausrechnen
+                    caloriesBurned: 100,
+                    sets: exercises.exercises[index].sets,
+                    repetitions: exercises.exercises[index].repetitions
+                };
+                await completeCurrentExercise(completeExercise);
+
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
 
-                // Hier zusätzlich navigieren, um den Rest zwischen Übungen zu handhaben (??)
+
+                // Hier zusätzlich navigieren, damit man ein letztes mal auf den Rest Screen kommt, wo die
+                // nächste Übung angezeigt wird.
                 router.navigate({
                     pathname: "(noTabs)/start/rest",
-                    //pathname: "(noTabs)/start/exercises",
                     params: {
                         exercise: JSON.stringify(exercises.exercises),
                         currentIndex: index,
@@ -67,6 +82,18 @@ const Exercises = () => {
                     }
                 });
             } else {
+                //console.log("Letzte Übung")
+
+                //letzte Übung tracken
+                const completeExercise = {
+                    exerciseId: exercises.exercises[index].id,
+                    duration: exercises.exercises[index].duration, // evlt ausrechnen
+                    caloriesBurned: 500,
+                    sets: exercises.exercises[index].sets,
+                    repetitions: exercises.exercises[index].repetitions
+                };
+                await completeCurrentExercise(completeExercise);
+
                 router.replace("(tabs)/(training)/training")
             }
         }

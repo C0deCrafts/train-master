@@ -30,13 +30,7 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
             <TouchableOpacity
                 style={styles.buttonSmall}
                 disabled={index === 0} // Deaktiviert den Button, wenn am ersten Index
-                onPress={handlePrevious
-                    /*() => {
-                    setTimeout(() => {
-                        setIndex(index - 1);
-                    }, 10);
-                }*/
-                }
+                onPress={handlePrevious}
             >
                 <Image source={icons.fastRewind} style={styles.buttonIcon} />
             </TouchableOpacity>
@@ -44,11 +38,12 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
             {index + 1 >= exercises.length && currentSet === 1 ? (
                 <TouchableOpacity
                     style={styles.buttonDone}
-                    onPress={() => {
-
+                    onPress={
+                        //das wird wahrscheinlich nicht benötigt
                         //Route nach allerletzter Übung
-                        router.replace("(tabs)/(training)/training")
-                    }}>
+                        //router.replace("(tabs)/(training)/training")
+                        handleCompleteSet
+                    }>
                     <Text style={styles.buttonStartLabel}>Erledigt</Text>
                 </TouchableOpacity>
             ) : (
@@ -63,7 +58,8 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
                 <TouchableOpacity
                     style={styles.buttonSmall}
                     onPress={() => {
-
+                        //ich glaube das wird gebraucht, damit das Training
+                        //nicht getrackt wird - da ich hier nur auf weiter klicke
                         router.replace("(tabs)/(training)/training")
                         }}>
                     <Image source={icons.fastForward} style={styles.buttonIcon} />
@@ -71,14 +67,7 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
             ) : (
                 <TouchableOpacity
                     style={styles.buttonSmall}
-                    onPress={handleNext
-                    /*() => {
-                        //navigation.navigate("Rest");
-                        setTimeout(() => {
-                            setIndex(index + 1);
-                        }, 10);
-                    }*/
-                    }
+                    onPress={handleNext}
                 >
                     <Image source={icons.fastForward} style={styles.buttonIcon} />
                 </TouchableOpacity>
