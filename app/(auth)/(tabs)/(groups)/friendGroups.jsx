@@ -2,7 +2,7 @@ import {Alert, FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import { Image } from 'expo-image';
 import {useEffect, useState} from "react";
 import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
-import {FIRESTORE_DB} from "../../../../config/firebaseConfig";
+import {FIRESTORE_DB} from "../../../../utils/firebaseConfig";
 import {icons, images} from "../../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
 import {useAuth} from "../../../../context/AuthProvider";

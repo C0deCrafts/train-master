@@ -32,7 +32,6 @@ const PrevExercise = () => {
             const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
             return () => clearTimeout(timerId);
         } else if (timeLeft <= 0){
-            console.log("FERTIG");
             goBackTwice();
         }
     }, [timeLeft]);

@@ -1,12 +1,13 @@
 import {View, StyleSheet, FlatList, Text} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
 import {elements} from "../../../constants";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {useAppStyle} from "../../../context/AppStyleContext";
 import ExerciseList from "../../../components/ExerciseList";
 import CustomHeader from "../../../components/CustomHeader";
 import CustomButton from "../../../components/CustomButton";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {WorkoutContext} from "../../../context/WorkoutContext";
 
 const WorkoutId = () => {
     const { workout, item } = useLocalSearchParams();
@@ -16,11 +17,19 @@ const WorkoutId = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
     const workoutItem = item ? JSON.parse(item) : {};
 
-    const handleStartWorkout = () => {
+    const { startSession, completeCurrentExercise, loadWorkouts, workouts } = useContext(WorkoutContext);
+
+
+    const handleStartWorkout = async () => {
         //console.log("Start workout: ", JSON.stringify(item))
+        await startSession(workout);
         router.dismissAll();
         router.replace({ pathname: '(noTabs)/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
     }
+
+    useEffect(() => {
+        console.log("WorkoutID: ", workout)
+    }, [workout]);
 
     const exercises = ({item, index}) => {
         const handleNavigation = () => {

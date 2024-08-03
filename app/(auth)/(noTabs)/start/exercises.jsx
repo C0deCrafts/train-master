@@ -45,15 +45,19 @@ const Exercises = () => {
         } else {
             // Wenn dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
             //console.log("letzter Satz nach dem else: ", currentSets)
+
+
+
             if (index + 1 < exercises.exercises.length) {
                 //console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
 
-                // Hier zusätzlich navigieren, um den Rest zwischen Übungen zu handhaben
+                // Hier zusätzlich navigieren, um den Rest zwischen Übungen zu handhaben (??)
                 router.navigate({
                     pathname: "(noTabs)/start/rest",
+                    //pathname: "(noTabs)/start/exercises",
                     params: {
                         exercise: JSON.stringify(exercises.exercises),
                         currentIndex: index,

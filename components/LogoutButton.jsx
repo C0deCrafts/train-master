@@ -2,7 +2,7 @@ import {Pressable, StyleSheet} from 'react-native'
 import { Image } from 'expo-image';
 import {icons} from "../constants";
 import {signOut} from "firebase/auth";
-import {FIREBASE_AUTH} from "../config/firebaseConfig";
+import {FIREBASE_AUTH} from "../utils/firebaseConfig";
 import {useAppStyle} from "../context/AppStyleContext";
 
 const LogoutButton = () => {

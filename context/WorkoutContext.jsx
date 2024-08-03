@@ -1,7 +1,7 @@
-import { createContext, useState } from 'react';
-import {collection, getDocs, query, where} from "firebase/firestore";
-import {FIRESTORE_DB} from "../config/firebaseConfig";
+import {createContext, useEffect, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {cacheWorkouts, fetchWorkoutsWithExercises, loadCachedWorkouts} from "../utils/workoutUtils";
+import {completeExercise, fetchTrainingSessions, startTrainingSession} from "../utils/trainingSession";
 
 export const WorkoutContext = createContext();
 
@@ -9,87 +9,10 @@ export const WorkoutProvider = ({ children }) => {
     const [workouts, setWorkouts] = useState([]);
     const [exerciseImages, setExerciseImages] = useState({});
     const [exerciseVideos, setExerciseVideos] = useState({});
-
-    const fetchWorkoutsWithExercises = async () => {
-        try {
-            const workoutsCollection = collection(FIRESTORE_DB, 'workouts');
-            const workoutsSnapshot = await getDocs(workoutsCollection);
-
-            const workouts = [];
-            const images = {};
-            const videos = {}
-
-            for (const workoutDoc of workoutsSnapshot.docs) {
-                const workoutData = workoutDoc.data();
-                const exerciseIds = workoutData.exercises;
-
-                // Exercise-Dokumente abrufen
-                const exercisesCollection = collection(FIRESTORE_DB, 'exercises');
-                const q = query(exercisesCollection, where('id', 'in', exerciseIds));
-                const exercisesSnapshot = await getDocs(q);
-                const exercises = exercisesSnapshot.docs.map(doc => doc.data());
-
-                workouts.push({
-                    ...workoutData,
-                    exercises
-                });
-
-                // Bild-URLs für die WorkoutId abrufen und speichern
-                for (const exercise of exercises) {
-                    if (exercise.image) {
-                        images[exercise.id] = exercise.image;
-                    }
-                    if (exercise.video) {
-                        videos[exercise.id] = exercise.video;
-                    }
-                }
-            }
-
-            //setExerciseImages(images);
-            //setExerciseVideos(videos);
-            return {workouts, images, videos};
-        } catch (error) {
-            console.error("Error fetching workouts with exercises: ", error);
-        }
-    }
-
-    const cacheWorkouts = async (workouts, images, videos) => {
-        try {
-            //await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
-            await AsyncStorage.multiSet([
-                ['workouts', JSON.stringify(workouts)],
-                ['exerciseImages', JSON.stringify(images)],
-                ['exerciseVideos', JSON.stringify(videos)]
-            ]);
-        } catch (error) {
-            console.error("Error caching workouts: ", error);
-        }
-    };
-    const loadCachedWorkouts = async () => {
-        try {
-            //const cachedWorkouts = await AsyncStorage.getItem('workouts');
-            //return cachedWorkouts ? JSON.parse(cachedWorkouts) : null;
-            const [[, cachedWorkouts], [, cachedImages], [, cachedVideos]] = await AsyncStorage.multiGet(['workouts', 'exerciseImages', 'exerciseVideos']);
-            return {
-                workouts: cachedWorkouts ? JSON.parse(cachedWorkouts) : null,
-                images: cachedImages ? JSON.parse(cachedImages) : null,
-                videos: cachedVideos ? JSON.parse(cachedVideos) : null,
-            };
-        } catch (error) {
-            console.error("Error loading cached workouts: ", error);
-            return null;
-        }
-    };
+    const [currentSessionId, setCurrentSessionId] = useState(null);
+    const [trainingSessions, setTrainingSessions] = useState([]);
 
     const loadWorkouts = async () => {
-        /*const cachedWorkouts = await loadCachedWorkouts();
-        if(cachedWorkouts){
-            setWorkouts(cachedWorkouts);
-        }else {
-            const fetchedWorkouts = await fetchWorkoutsWithExercises();
-            setWorkouts(fetchedWorkouts);
-            await cacheWorkouts(fetchedWorkouts);
-        }*/
         const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
         if (cachedWorkouts && cachedImages && cachedVideos) {
             setWorkouts(cachedWorkouts);
@@ -104,6 +27,23 @@ export const WorkoutProvider = ({ children }) => {
         }
     };
 
+    const loadTrainingSessions = async () => {
+        const sessions = await fetchTrainingSessions();
+        setTrainingSessions(sessions)
+    }
+
+    const startSession = async (workoutId) => {
+        const sessionId = await startTrainingSession(workoutId);
+        setCurrentSessionId(sessionId);
+    }
+
+    const completeCurrentExercise = async (exercise) => {
+        if(!currentSessionId) {
+            throw new Error("No active training session");
+        }
+        await completeExercise(currentSessionId, exercise);
+    }
+
     //for testing (later need a listener to the database)
     const clearStorage = async () => {
         try {
@@ -114,9 +54,17 @@ export const WorkoutProvider = ({ children }) => {
         }
     };
 
+    useEffect(() => {
+        console.log("TrainingSession: ", JSON.stringify(trainingSessions));
+        console.log("SessionId: ", JSON.stringify(currentSessionId));
+    }, [trainingSessions, currentSessionId]);
+
+    /*useEffect(() => {
+        console.log("Workouts: ", JSON.stringify(workouts, null, 2));
+    }, [workouts]);*/
 
     return (
-        <WorkoutContext.Provider value={{ workouts, clearStorage, exerciseImages, exerciseVideos, loadWorkouts }}>
+        <WorkoutContext.Provider value={{ workouts, clearStorage, exerciseImages, exerciseVideos, loadWorkouts, startSession, completeCurrentExercise, loadTrainingSessions }}>
             {children}
         </WorkoutContext.Provider>
     );

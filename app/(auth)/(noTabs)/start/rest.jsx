@@ -20,7 +20,7 @@ const Rest = () => {
 
     useEffect(() => {
         // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
-        if (timeLeft > 0) {
+        if (timeLeft >= 0) {
             const timerId = setTimeout(() => {
                 setTimeLeft(timeLeft - 1);
             }, 1000);

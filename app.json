@@ -13,13 +13,17 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fitness.trainmaster"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,26 +36,14 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-      /*
-    only build local fonts
-    [
-      "expo-font",
-      {
-        "fonts": [
-          "./assets/fonts/Poppins-Black.ttf",
-          "./assets/fonts/Poppins-Bold.ttf",
-          "./assets/fonts/Poppins-ExtraBold.ttf",
-          "./assets/fonts/Poppins-ExtraLight.ttf",
-          "./assets/fonts/Poppins-Light.ttf",
-          "./assets/fonts/Poppins-Medium.ttf",
-          "./assets/fonts/Poppins-Regular.ttf",
-          "./assets/fonts/Poppins-SemiBold.ttf",
-          "./assets/fonts/Poppins-Thin.ttf"
-
-        ]
-      }
     ],
-    */
-    ]
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "b360674d-e02c-4d04-93d8-a5150a0d09f5"
+      }
+    }
   }
 }
