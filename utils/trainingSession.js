@@ -1,5 +1,5 @@
-import {collection, addDoc, query, where, getDocs, updateDoc, doc, getDoc} from 'firebase/firestore';
-import { FIRESTORE_DB, FIREBASE_AUTH } from './firebaseConfig';
+import {collection, addDoc, query, where, getDocs, updateDoc, doc, getDoc, deleteDoc} from 'firebase/firestore';
+import { FIRESTORE_DB } from './firebaseConfig';
 import { getAuth } from 'firebase/auth';
 
 // Start a new training session
@@ -11,6 +11,20 @@ const startTrainingSession = async (workoutId) => {
         throw new Error("No user is logged in");
     }
 
+    // Check for existing empty sessions
+    const sessionsCollection = collection(FIRESTORE_DB, 'trainingSessions');
+    const q = query(sessionsCollection, where('userId', '==', user.uid));
+    const sessionsSnapshot = await getDocs(q);
+
+    sessionsSnapshot.forEach(async (doc) => {
+        const session = doc.data();
+        if (session.exercisesCompleted.length === 0) {
+            await deleteDoc(doc.ref);
+        }
+    });
+
+
+    // Start a new session
     const trainingSession = {
         userId: user.uid,
         workoutId: workoutId,
@@ -54,5 +68,12 @@ const completeExercise = async (trainingSessionId, completedExercise) => {
     await updateDoc(sessionRef, sessionData);
 };
 
+// Delete a training session
+const deleteTrainingSession = async (trainingSessionId) => {
+    const sessionRef = doc(FIRESTORE_DB, 'trainingSessions', trainingSessionId);
+    await deleteDoc(sessionRef);
+    console.log("Training successfully deleted: ", trainingSessionId);
+};
 
-export {startTrainingSession, fetchTrainingSessions, completeExercise};
+
+export {startTrainingSession, fetchTrainingSessions, completeExercise, deleteTrainingSession};

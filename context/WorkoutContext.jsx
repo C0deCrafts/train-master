@@ -1,7 +1,12 @@
 import {createContext, useEffect, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {cacheWorkouts, fetchWorkoutsWithExercises, loadCachedWorkouts} from "../utils/workoutUtils";
-import {completeExercise, fetchTrainingSessions, startTrainingSession} from "../utils/trainingSession";
+import {
+    completeExercise,
+    deleteTrainingSession,
+    fetchTrainingSessions,
+    startTrainingSession
+} from "../utils/trainingSession";
 
 export const WorkoutContext = createContext();
 
@@ -10,6 +15,8 @@ export const WorkoutProvider = ({ children }) => {
     const [exerciseImages, setExerciseImages] = useState({});
     const [exerciseVideos, setExerciseVideos] = useState({});
     const [currentSessionId, setCurrentSessionId] = useState(null);
+
+    //actually unused
     const [trainingSessions, setTrainingSessions] = useState([]);
 
     const loadWorkouts = async () => {
@@ -42,15 +49,6 @@ export const WorkoutProvider = ({ children }) => {
             throw new Error("No active training session");
         }
         await completeExercise(currentSessionId, exercise);
-
-        /*const completedExercise = {
-            exerciseId: exercise.id,
-            duration: exercise.duration,
-            caloriesBurned: 500, // Beispiel Funktion für Kalorienberechnung
-            ...(exercise.sets && { sets: exercise.sets }), // Optional
-            ...(exercise.repetitions && { repetitions: exercise.repetitions }) // Optional
-        };
-        await completeExercise(currentSessionId, completedExercise);*/
     }
 
     //for testing (later need a listener to the database)
@@ -64,9 +62,8 @@ export const WorkoutProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        console.log("TrainingSession: ", JSON.stringify(trainingSessions));
         console.log("SessionId: ", JSON.stringify(currentSessionId));
-    }, [trainingSessions, currentSessionId]);
+    }, [currentSessionId]);
 
     /*useEffect(() => {
         console.log("Workouts: ", JSON.stringify(workouts, null, 2));
