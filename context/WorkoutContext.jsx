@@ -42,6 +42,15 @@ export const WorkoutProvider = ({ children }) => {
             throw new Error("No active training session");
         }
         await completeExercise(currentSessionId, exercise);
+
+        /*const completedExercise = {
+            exerciseId: exercise.id,
+            duration: exercise.duration,
+            caloriesBurned: 500, // Beispiel Funktion für Kalorienberechnung
+            ...(exercise.sets && { sets: exercise.sets }), // Optional
+            ...(exercise.repetitions && { repetitions: exercise.repetitions }) // Optional
+        };
+        await completeExercise(currentSessionId, completedExercise);*/
     }
 
     //for testing (later need a listener to the database)

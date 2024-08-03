@@ -56,14 +56,21 @@ const Exercises = () => {
 
                 //hier complete exercise speichern
                 console.log("Current Exercise: ", exercises.exercises[index]);
-                const completeExercise = {
+                /*const completeExercise = {
                     exerciseId: exercises.exercises[index].id,
                     duration: exercises.exercises[index].duration, // evlt ausrechnen
                     caloriesBurned: 100,
                     sets: exercises.exercises[index].sets,
                     repetitions: exercises.exercises[index].repetitions
+                };*/
+                const completedExercise = {
+                    exerciseId: exercises.exercises[index].id,
+                    duration: exercises.exercises[index].duration,
+                    caloriesBurned: 100,
+                    ...(exercises.exercises[index].sets && { sets: exercises.exercises[index] }), // Optional
+                    ...(exercises.exercises[index].repetitions && { repetitions: exercises.exercises[index].repetitions }) // Optional
                 };
-                await completeCurrentExercise(completeExercise);
+                await completeCurrentExercise(completedExercise);
 
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
@@ -89,8 +96,8 @@ const Exercises = () => {
                     exerciseId: exercises.exercises[index].id,
                     duration: exercises.exercises[index].duration, // evlt ausrechnen
                     caloriesBurned: 500,
-                    sets: exercises.exercises[index].sets,
-                    repetitions: exercises.exercises[index].repetitions
+                    ...(exercises.exercises[index].sets && { sets: exercises.exercises[index] }), // Optional
+                    ...(exercises.exercises[index].repetitions && { repetitions: exercises.exercises[index].repetitions }) // Optional
                 };
                 await completeCurrentExercise(completeExercise);
 
