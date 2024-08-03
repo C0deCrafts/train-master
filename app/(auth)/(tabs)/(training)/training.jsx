@@ -1,22 +1,16 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import { Image } from 'expo-image';
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import {elements, icons} from "../../../../constants";
-import CustomButton from "../../../../components/CustomButton";
-import {router} from "expo-router";
 import Animated, {
-    BounceIn,
     FadeInDown,
-    FadeInLeft,
-    FadeInRight,
-    FadeInUp,
-    FlipInEasyX,
-    ZoomIn
 } from "react-native-reanimated";
+import DailyStats from "../../../../components/DailyStats";
+import TodayStats from "../../../../components/TodayStats";
 
 const Training = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -93,6 +87,8 @@ const Training = () => {
     return (
         <View style={styles.container}>
             <CustomHeader title={"Training"}/>
+            <TodayStats/>
+
             <View style={styles.content}>
                 <Text style={styles.titleText}>Fitnesspläne</Text>
                 <View style={styles.workoutContainer}>
@@ -191,6 +187,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             height: 15,
             tintColor: colors.baseColor,
             marginRight: 5,
-        }
+        },
     })
 }

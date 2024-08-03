@@ -1,6 +1,7 @@
 import {collection, addDoc, query, where, getDocs, updateDoc, doc, getDoc, deleteDoc} from 'firebase/firestore';
 import { FIRESTORE_DB } from './firebaseConfig';
 import { getAuth } from 'firebase/auth';
+import {format} from "date-fns";
 
 // Start a new training session
 const startTrainingSession = async (workoutId) => {
@@ -38,8 +39,8 @@ const startTrainingSession = async (workoutId) => {
     return docRef.id;
 };
 
-// Fetch all training sessions for the logged-in user
-const fetchTrainingSessions = async () => {
+// Fetch all training sessions for the logged-in user OLD
+/*const fetchTrainingSessions = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
 
@@ -53,7 +54,45 @@ const fetchTrainingSessions = async () => {
 
     const sessions = sessionsSnapshot.docs.map(doc => doc.data());
     return sessions;
+};*/
+// Fetch daily statistics for the logged-in user
+const fetchDailyStats = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    //error unhandled promise
+    if (!user) {
+        throw new Error("No user is logged in");
+    }
+
+    const sessionsCollection = collection(FIRESTORE_DB, 'trainingSessions');
+    const q = query(sessionsCollection, where('userId', '==', user.uid));
+    const sessionsSnapshot = await getDocs(q);
+
+    const sessions = sessionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const dailyStats = {};
+
+    sessions.forEach(session => {
+        const date = format(new Date(session.date), 'yyyy-MM-dd');
+
+        if (!dailyStats[date]) {
+            dailyStats[date] = {
+                exercisesCompleted: 0,
+                workouts: 0,
+                totalDuration: 0,
+                totalCalories: 0,
+            };
+        }
+
+        dailyStats[date].exercisesCompleted += session.exercisesCompleted.length;
+        dailyStats[date].workouts += 1;
+        dailyStats[date].totalDuration += session.totalDuration;
+        dailyStats[date].totalCalories += session.totalCalories;
+    });
+
+    return dailyStats;
 };
+
 
 // Complete an exercise
 const completeExercise = async (trainingSessionId, completedExercise) => {
@@ -76,4 +115,4 @@ const deleteTrainingSession = async (trainingSessionId) => {
 };
 
 
-export {startTrainingSession, fetchTrainingSessions, completeExercise, deleteTrainingSession};
+export {startTrainingSession, fetchDailyStats, completeExercise, deleteTrainingSession};

@@ -15,6 +15,7 @@ import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseList from "../../../../components/ExerciseList";
 import {router} from "expo-router";
 import Animated, {FadeInDown, FadeInRight, FadeInUp} from "react-native-reanimated";
+import TodayStats from "../../../../components/TodayStats";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
@@ -127,53 +128,9 @@ const Home = () => {
                 <View style={styles.workoutInfoContainer}>
                     <Text style={styles.firstTitleText}>Aktivität</Text>
                 </View>
-                <View style={styles.workoutInfoBox}>
-                    {/*<View style={styles.boxStyleLarge}>
-                        <BigDonutChart
-                            key="minutes"
-                            //percentage={lastElapsedTime}
-                            color={colors.donutColorDefault}
-                            delay={1000}
-                            max={240}
-                            radius={60}
-                        />
-                    </View>*/}
-                    <View style={styles.donutChartContainer}>
-                        <View style={styles.boxStyle}>
-                            <DonutChart
-                                key="minutes"
-                                //percentage={lastElapsedTime}
-                                percentage={14}
-                                color={colors.baseColor}
-                                delay={1000}
-                                max={20}
-                            />
-                            <Text style={styles.headerCounterLabel}>Übungen</Text>
-                        </View>
-                        <View style={styles.boxStyle}>
-                            <DonutChart
-                                key="minutes"
-                                //percentage={lastElapsedTime}
-                                percentage={870}
-                                color={colors.baseColor}
-                                delay={1000}
-                                max={1000}
-                            />
-                            <Text style={styles.headerCounterLabel}>Kcal</Text>
-                        </View>
-                        <View style={styles.boxStyle}>
-                            <DonutChart
-                                key="minutes"
-                                //percentage={lastElapsedTime}
-                                percentage={120}
-                                color={colors.baseColor}
-                                delay={1000}
-                                max={240}
-                            />
-                            <Text style={styles.headerCounterLabel}>Minuten</Text>
-                        </View>
-                    </View>
-                </View>
+
+                <TodayStats/>
+
                 <View style={styles.workoutInfoContainer}>
                     <Text style={styles.titleText}>Fitnesspläne</Text>
                 </View>
@@ -228,13 +185,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-start"
-        },
-        workoutInfoBox: {
-            //flexDirection: "row",
-            //justifyContent: "space-between",
-            //backgroundColor: colors.boxBackgroundTransparent,
-            //padding: 10,
-            //borderRadius: 10
         },
         donutChartContainer: {
             flexDirection: "row",

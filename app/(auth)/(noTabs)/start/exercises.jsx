@@ -23,7 +23,6 @@ const Exercises = () => {
 
     const { startSession, completeCurrentExercise, loadWorkouts, workouts } = useContext(WorkoutContext);
 
-
     // Parse exercise JSON and initialize state
     const exercises = exercise ? JSON.parse(exercise) : {};
     const [index, setIndex] = useState(0);
@@ -54,7 +53,7 @@ const Exercises = () => {
                 //console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
 
-                //hier complete exercise speichern
+                //hier complete exercise speichern (evtl ändern und jedes set speichern!!!)
                 console.log("Current Exercise: ", exercises.exercises[index]);
                 /*const completeExercise = {
                     exerciseId: exercises.exercises[index].id,
@@ -67,7 +66,7 @@ const Exercises = () => {
                     exerciseId: exercises.exercises[index].id,
                     duration: exercises.exercises[index].duration,
                     caloriesBurned: 100,
-                    ...(exercises.exercises[index].sets && { sets: exercises.exercises[index] }), // Optional
+                    ...(exercises.exercises[index].sets && { sets: exercises.exercises[index].sets }), // Optional
                     ...(exercises.exercises[index].repetitions && { repetitions: exercises.exercises[index].repetitions }) // Optional
                 };
                 await completeCurrentExercise(completedExercise);
