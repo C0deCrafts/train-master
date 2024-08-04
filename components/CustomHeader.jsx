@@ -1,11 +1,13 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Pressable} from 'react-native';
 import { Image } from 'expo-image';
 import {router} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {StatusBar} from "expo-status-bar";
+import {signOut} from "firebase/auth";
+import {FIREBASE_AUTH} from "../utils/firebaseConfig";
 
-const CustomHeader = ({title, backButtonVisible = false}) => {
+const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = false}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -16,6 +18,11 @@ const CustomHeader = ({title, backButtonVisible = false}) => {
         router.back();
     };
 
+    const logout = () => {
+        signOut(FIREBASE_AUTH)
+    };
+
+
     return (
         <>
             <StatusBar style={colors.colorButtonLabel === "rgb(0,0,0)" ? "dark" : "light"}/>
@@ -23,6 +30,11 @@ const CustomHeader = ({title, backButtonVisible = false}) => {
                 {backButtonVisible && (
                     <TouchableOpacity onPress={handleGoBack} style={styles.backButtonContainer}>
                         <Image source={icons.back} style={styles.backButton}/>
+                    </TouchableOpacity>
+                )}
+                {logOutButtonVisible && (
+                    <TouchableOpacity onPress={logout} style={styles.logoutButtonContainer}>
+                        <Image source={icons.logout} style={styles.icon} />
                     </TouchableOpacity>
                 )}
                 <Text style={styles.headerTitle} numberOfLines={1} ellipsizeMode="tail">{title}</Text>
@@ -62,6 +74,17 @@ const createStyles = (textStyles, colors, fontFamily) => {
             maxWidth: "80%",
             textAlign: "center",
         },
+        logoutButtonContainer: {
+            position: "absolute",
+            top: 83,
+            right: 10,
+            zIndex: 1,
+        },
+        icon: {
+            width: 28,
+            height: 28,
+            tintColor: colors.colorButtonLabel,
+        }
     });
 }
 
