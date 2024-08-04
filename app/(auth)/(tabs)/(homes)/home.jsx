@@ -1,9 +1,8 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import { Image } from 'expo-image';
+import {Image} from 'expo-image';
 import {useAuth} from "../../../../context/AuthProvider";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {elements, icons, images} from "../../../../constants";
-import DonutChart from "../../../../components/DonutChart";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
 import {format} from 'date-fns';
@@ -14,7 +13,7 @@ import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseList from "../../../../components/ExerciseList";
 import {router} from "expo-router";
-import Animated, {FadeInDown, FadeInRight, FadeInUp} from "react-native-reanimated";
+import Animated, {FadeInRight} from "react-native-reanimated";
 import TodayStats from "../../../../components/TodayStats";
 
 const Home = () => {
@@ -23,7 +22,7 @@ const Home = () => {
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const {user, username} = useAuth();
+    const {username} = useAuth();
     const {workouts} = useContext(WorkoutContext);
     const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
 
@@ -36,7 +35,6 @@ const Home = () => {
         const today = new Date();
         return format(today, 'EEEE dd. MMMM', {locale: de});
     };
-
 
     //Function to handle selecting a profile image and safe it to asyncStorage
     const handlePressImage = async () => {
@@ -63,7 +61,6 @@ const Home = () => {
                     onPress={() => setSelectedWorkoutId(item.id)}
                     clickable
                 >
-                    {/*<Image source={item.image} style={styles.workoutImage} />*/}
                     <Text
                         style={item.id === selectedWorkoutId ? styles.workoutNameSelected : styles.workoutName}>{item.name}</Text>
                 </Card>
@@ -72,7 +69,6 @@ const Home = () => {
     }
 
     const exercises = ({item, index}) => {
-        //console.log("Index: ", index)
         const navigation = () => {
             router.navigate({pathname: "/exerciseDetail/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
@@ -89,8 +85,6 @@ const Home = () => {
     return (
         <>
             <SafeAreaView style={styles.backgroundImage}>
-                {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
-                {/*colors.label*/}
                 <Image
                     source={images.backgroundSymbol}
                     style={styles.image}
@@ -156,6 +150,8 @@ const Home = () => {
                     )}
                 </View>
             </SafeAreaView>
+            {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
+            {/*colors.label*/}
             <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
         </>
     );
@@ -181,8 +177,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flex: 1,
             paddingHorizontal: 20,
             paddingTop: 20,
-            //flexDirection: "column",
-            //justifyContent: "space-evenly"
         },
         headerContainer: {
             flexDirection: "row",
@@ -192,8 +186,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
         donutChartContainer: {
             flexDirection: "row",
             justifyContent: "space-evenly"
-            //gap: 15,
-            //alignItems: "flex-end"
         },
         content: {
             flex: 1,
@@ -202,14 +194,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "flex-end"
-            //backgroundColor: colors.white
         },
         boxStyleLarge: {
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "flex-end",
             gap: 10
-            //backgroundColor: colors.white
         },
         headerCounterLabel: {
             color: colors.label,
@@ -220,7 +210,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
         workoutInfoContainer: {
             alignItems: "flex-start",
             paddingBottom: 5,
-            //marginTop: 10
             marginBottom: 5
         },
         firstTitleText: {
@@ -301,22 +290,16 @@ const createStyles = (textStyles, colors, fontFamily) => {
         exerciseListContainer: {
             flex: 1,
             marginTop: 5,
-            //marginBottom: 5
         },
         exerciseContainer: {
             flexDirection: "row",
         },
         exercises: {
-            //backgroundColor: "blue",
             flexDirection: "column",
             flex: 1,
-            //width: "50%",
-            //gap: 10,
-            //alignItems: "flex-end",
             justifyContent: "space-between",
         },
         exerciseImageContainer: {
-            //backgroundColor: "red"
         },
         exerciseImage: {
             width: 100,

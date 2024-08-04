@@ -1,4 +1,4 @@
-import {createContext, useEffect, useState} from 'react';
+import {createContext, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {cacheWorkouts, fetchWorkoutsWithExercises, loadCachedWorkouts} from "../utils/workoutUtils";
 import {
@@ -16,6 +16,9 @@ export const WorkoutProvider = ({ children }) => {
 
     const [exerciseStartTime, setExerciseStartTime] = useState(null);
     const [setDurations, setSetDurations] = useState([]);
+
+    // Gewicht des Benutzers (dies sollte später aus den Benutzerdaten kommen)
+    const userWeight = 70; // Beispielgewicht in kg
 
     const loadWorkouts = async () => {
         const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
@@ -57,6 +60,12 @@ export const WorkoutProvider = ({ children }) => {
         }
     };
 
+    // Kalorienberechnung basierend auf MET, Gewicht und Zeit
+    const calculateCalories = (MET, weight, durationInSeconds) => {
+        const durationInHours = durationInSeconds / 3600;
+        return MET * weight * durationInHours;
+    }
+
     const completeCurrentExercise = async (exercise) => {
         if (!currentSessionId) {
             throw new Error("No active training session");
@@ -65,9 +74,13 @@ export const WorkoutProvider = ({ children }) => {
         setSetDurations(async prevDurations => {
             const totalDuration = prevDurations.reduce((acc, duration) => acc + duration, 0);
 
+            // Berechnung der verbrannten Kalorien
+            const caloriesBurned = calculateCalories(exercise.MET, userWeight, totalDuration);
+
             const completedExercise = {
                 ...exercise,
                 duration: totalDuration,
+                caloriesBurned: caloriesBurned,
                 test: prevDurations.length,
             };
 
@@ -92,16 +105,7 @@ export const WorkoutProvider = ({ children }) => {
         }
     };
 
-    /*useEffect(() => {
-        console.log("CurrentSetDurations: ", setDurations)
-    }, [setDurations]);*/
-
-    /*useEffect(() => {
-        console.log("SessionId: ", JSON.stringify(currentSessionId));
-    }, [currentSessionId]);*/
-
     return (
-        //setDurations
         <WorkoutContext.Provider value={{ workouts, clearStorage, exerciseImages, exerciseVideos, loadWorkouts, startSession, startExerciseTimer, stopExerciseTimer, completeCurrentExercise }}>
             {children}
         </WorkoutContext.Provider>

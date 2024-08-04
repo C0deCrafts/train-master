@@ -40,9 +40,7 @@ const Exercises = () => {
     );
 
     const handleCompleteSet = async () => {
-        //console.log("stop timer wird aufgerufen")
-        stopExerciseTimer(); // Timer stoppen und sicherstellen, dass es abgeschlossen ist
-        //console.log("STOP TIMER ABGESCHLOSSEN")
+        stopExerciseTimer();
 
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
@@ -57,26 +55,23 @@ const Exercises = () => {
                 }
             });
         } else {
-            //console.log("================================Letzter Satz - hier komm ich zum rest und duration wurde schon gestoppt")
-
+            //Letzter Satz - hier komme ich zum rest screen und die duration wurde schon gestoppt
             const completedExercise = {
                 exerciseId: exercises.exercises[index].id,
-                caloriesBurned: 100,
+                MET: exercises.exercises[index].MET,
                 ...(exercises.exercises[index].sets && {sets: exercises.exercises[index].sets}),
                 ...(exercises.exercises[index].repetitions && {repetitions: exercises.exercises[index].repetitions})
             };
             //console.log(`Hier wird im Exercises gespeichert: Completing exercise: ${JSON.stringify(completedExercise)}`);
             await completeCurrentExercise(completedExercise);
 
-            // Wenn dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
+            // Da dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
             if (index + 1 < exercises.exercises.length) {
-                //console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
 
-                // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die
-                // nächste Übung angezeigt wird.
+                // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die nächste Übung angezeigt wird.
                 router.navigate({
                     pathname: "(noTabs)/start/rest",
                     params: {
@@ -88,7 +83,7 @@ const Exercises = () => {
                     }
                 });
             } else {
-                //console.log("-----ALLERLETZTE Übung----")
+                // ALLERLETZTE Übung und ALLERLETZTER Satz
                 router.replace("(tabs)/(training)/training")
             }
         }
@@ -166,7 +161,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             backgroundColor: colors.secondary,
             flex: 1,
             paddingHorizontal: 20,
-            //paddingVertical: 20,
         },
         text: {
             fontFamily: fontFamily.Poppins_Regular,

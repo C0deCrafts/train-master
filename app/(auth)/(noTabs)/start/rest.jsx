@@ -18,11 +18,6 @@ const Rest = () => {
     const [timeLeft, setTimeLeft] = useState(rest);
     const exercises = exercise ? JSON.parse(exercise) : {};
 
-    /*useEffect(() => {
-        console.log("CurrentINDEX:  ", currentIndex)
-        console.log(`TEST: ${currentSet} === ${totalSets}?`);
-    }, [currentIndex]);*/
-
     useEffect( () => {
         // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
         if (timeLeft >= 0) {
@@ -35,10 +30,6 @@ const Rest = () => {
             router.back();
         }
     }, [timeLeft]);
-
-    /*if(currentSet === totalSets && timeLeft < 1) {
-        console.log("Letzter Satz von der Übung, hier bin ich wieder im RESTSCREEN")
-    }*/
 
     return (
         <SafeAreaView style={styles.container}>
@@ -70,7 +61,6 @@ const Rest = () => {
 
             <View style={styles.buttonBox}>
                 <TouchableOpacity style={styles.button} onPress={
-                    //handleEndRest
                     () => router.back()}
                 >
                     <Text style={styles.buttonLabel}>Pause beenden</Text>

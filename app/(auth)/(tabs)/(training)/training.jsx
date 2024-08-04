@@ -1,7 +1,7 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, StyleSheet, Text, View} from 'react-native'
 import { Image } from 'expo-image';
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {useContext, useEffect, useState} from "react";
+import {useContext} from "react";
 import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import CustomHeader from "../../../../components/CustomHeader";
@@ -9,8 +9,6 @@ import {elements, icons} from "../../../../constants";
 import Animated, {
     FadeInDown,
 } from "react-native-reanimated";
-import DailyStats from "../../../../components/DailyStats";
-import TodayStats from "../../../../components/TodayStats";
 
 const Training = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -83,12 +81,9 @@ const Training = () => {
         )
     }
 
-
     return (
         <View style={styles.container}>
             <CustomHeader title={"Training"}/>
-            <TodayStats/>
-
             <View style={styles.content}>
                 <Text style={styles.titleText}>Fitnesspläne</Text>
                 <View style={styles.workoutContainer}>
@@ -100,13 +95,8 @@ const Training = () => {
                         keyExtractor={item => item.id}
                         horizontal={true} // Set horizontal to true for horizontal scrolling
                         showsHorizontalScrollIndicator={false}
-                        //style={{backgroundColor: "red"}}
                     />
                 </View>
-                {/*
-                <CustomButton title={"get outside"} handlePress={
-                    () => router.navigate("/outside/screen")
-                }/>*/}
             </View>
 
         </View>
@@ -135,12 +125,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
             color: colors.label
         },
         workoutContainer: {
-            //backgroundColor: colors.secondary,
-            //borderRadius: elements.cardRadius,
         },
         workout: {
             backgroundColor: colors.secondary,
-            //fix color
             marginRight: 10,
             marginTop: 10,
             padding: 0,
@@ -180,7 +167,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             width: 30,
             height: 30,
             tintColor: colors.baseColor,
-            //backgroundColor: "red"
         },
         smallIcon: {
             width: 15,

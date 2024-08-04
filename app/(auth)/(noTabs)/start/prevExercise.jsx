@@ -20,7 +20,6 @@ const PrevExercise = () => {
     const { exerciseVideos } = useContext(WorkoutContext);
 
     const exercises = exercise ? JSON.parse(exercise) : {};
-    //const nextIndex = parseInt(currentIndex) + 1 >= exercises.length ? 0 : currentIndex + 1; // Fallback auf den ersten Index, falls am Ende
     const nextIndex = parseInt(currentIndex) + 1
     const nextExercise = exercises[nextIndex];
     const videoUrl = exerciseVideos[nextExercise?.id] || ""

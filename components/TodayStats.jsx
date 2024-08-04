@@ -3,12 +3,11 @@ import {View, Text, StyleSheet} from 'react-native';
 import {WorkoutContext} from "../context/WorkoutContext";
 import {fetchDailyStats} from "../utils/trainingSession";
 import DonutChart from "./DonutChart";
-import {elements} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {format} from "date-fns";
 
 const TodayStats = () => {
-    const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
@@ -22,7 +21,6 @@ const TodayStats = () => {
             const stats = await fetchDailyStats();
             setDailyStats(stats);
         };
-
         loadDailyStats();
     }, [workouts]);
 
@@ -49,16 +47,29 @@ const TodayStats = () => {
                     />
                     <Text style={styles.headerCounterLabel}>Kcal</Text>
                 </View>
-                <View style={styles.boxStyle}>
-                    <DonutChart
-                        key="minutes"
-                        percentage={dailyStats[today]?.totalDuration / 60 || 0}
-                        color={colors.baseColor}
-                        delay={1000}
-                        max={240}
-                    />
-                    <Text style={styles.headerCounterLabel}>Minuten</Text>
-                </View>
+                {dailyStats[today]?.totalDuration / 60 < 1 ? (
+                    <View style={styles.boxStyle}>
+                        <DonutChart
+                            key="minutes"
+                            percentage={dailyStats[today]?.totalDuration || 0}
+                            color={colors.baseColor}
+                            delay={1000}
+                            max={240}
+                        />
+                        <Text style={styles.headerCounterLabel}>Sekunden</Text>
+                    </View>
+                ) : (
+                    <View style={styles.boxStyle}>
+                        <DonutChart
+                            key="minutes"
+                            percentage={dailyStats[today]?.totalDuration / 60 || 0}
+                            color={colors.baseColor}
+                            delay={1000}
+                            max={240}
+                        />
+                        <Text style={styles.headerCounterLabel}>Minuten</Text>
+                    </View>
+                )}
             </View>
     );
 };
