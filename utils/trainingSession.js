@@ -39,23 +39,6 @@ const startTrainingSession = async (workoutId) => {
     return docRef.id;
 };
 
-// Fetch all training sessions for the logged-in user OLD
-/*const fetchTrainingSessions = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-        throw new Error("No user is logged in");
-    }
-
-    const sessionsCollection = collection(FIRESTORE_DB, 'trainingSessions');
-    const q = query(sessionsCollection, where('userId', '==', user.uid));
-    const sessionsSnapshot = await getDocs(q);
-
-    const sessions = sessionsSnapshot.docs.map(doc => doc.data());
-    return sessions;
-};*/
-// Fetch daily statistics for the logged-in user
 const fetchDailyStats = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -93,7 +76,6 @@ const fetchDailyStats = async () => {
     return dailyStats;
 };
 
-
 // Complete an exercise
 const completeExercise = async (trainingSessionId, completedExercise) => {
     const sessionRef = doc(FIRESTORE_DB, 'trainingSessions', trainingSessionId);
@@ -113,6 +95,5 @@ const deleteTrainingSession = async (trainingSessionId) => {
     await deleteDoc(sessionRef);
     console.log("Training successfully deleted: ", trainingSessionId);
 };
-
 
 export {startTrainingSession, fetchDailyStats, completeExercise, deleteTrainingSession};

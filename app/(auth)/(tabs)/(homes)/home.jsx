@@ -87,74 +87,77 @@ const Home = () => {
 
     //fix status bar
     return (
-        <SafeAreaView style={styles.backgroundImage}>
-            {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
-            {/*colors.label*/}
-            <Image
-                source={images.backgroundSymbol}
-                style={styles.image}
-            />
-            <View style={styles.container}>
-                <View style={styles.headerContainer}>
-                    <View>
-                        <Text style={styles.dateText}>{currentDate}</Text>
-                        <Text style={styles.greetingText}>Hallo
-                            <Text style={styles.usernameText}>{" "}{username}!</Text>
-                        </Text>
-                    </View>
-                    {/* ImageViewer with TouchableOpacity for the camera button */}
-                    <TouchableOpacity onPress={handlePressImage} style={{zIndex: 2}}>
-                        <View style={styles.imageContainer}>
-                            <Image
-                                source={images.avatar}
-                                style={{
-                                    width: 100,
-                                    height: 100,
-                                    borderRadius: 50,
-                                    contentFit: "contain",
-                                }}
-                            />
-                            <View style={styles.cameraStyle}>
-                                <Image source={icons.camera} style={{
-                                    width: 25,
-                                    height: 25,
-                                    tintColor: colors.label
-                                }}/>
-                            </View>
+        <>
+            <SafeAreaView style={styles.backgroundImage}>
+                {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
+                {/*colors.label*/}
+                <Image
+                    source={images.backgroundSymbol}
+                    style={styles.image}
+                />
+                <View style={styles.container}>
+                    <View style={styles.headerContainer}>
+                        <View>
+                            <Text style={styles.dateText}>{currentDate}</Text>
+                            <Text style={styles.greetingText}>Hallo
+                                <Text style={styles.usernameText}>{" "}{username}!</Text>
+                            </Text>
                         </View>
-                    </TouchableOpacity>
-                </View>
+                        {/* ImageViewer with TouchableOpacity for the camera button */}
+                        <TouchableOpacity onPress={handlePressImage} style={{zIndex: 2}}>
+                            <View style={styles.imageContainer}>
+                                <Image
+                                    source={images.avatar}
+                                    style={{
+                                        width: 100,
+                                        height: 100,
+                                        borderRadius: 50,
+                                        contentFit: "contain",
+                                    }}
+                                />
+                                <View style={styles.cameraStyle}>
+                                    <Image source={icons.camera} style={{
+                                        width: 25,
+                                        height: 25,
+                                        tintColor: colors.label
+                                    }}/>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={styles.workoutInfoContainer}>
-                    <Text style={styles.firstTitleText}>Aktivität</Text>
-                </View>
+                    <View style={styles.workoutInfoContainer}>
+                        <Text style={styles.firstTitleText}>Aktivität</Text>
+                    </View>
 
-                <TodayStats/>
+                    <TodayStats/>
 
-                <View style={styles.workoutInfoContainer}>
-                    <Text style={styles.titleText}>Fitnesspläne</Text>
-                </View>
-                <View>
-                    <FlatList
-                        data={workouts}
-                        renderItem={renderWorkout}
-                        keyExtractor={item => item.id}
-                        horizontal={true} // Set horizontal to true for horizontal scrolling
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
-                {selectedWorkoutId !== null && (
-                    <View style={styles.exerciseListContainer}>
+                    <View style={styles.workoutInfoContainer}>
+                        <Text style={styles.titleText}>Fitnesspläne</Text>
+                    </View>
+                    <View>
                         <FlatList
-                            data={selectedWorkout?.exercises}
-                            renderItem={exercises}
-                            keyExtractor={(item, index) => index.toString()}
-                            showsVerticalScrollIndicator={false}
+                            data={workouts}
+                            renderItem={renderWorkout}
+                            keyExtractor={item => item.id}
+                            horizontal={true} // Set horizontal to true for horizontal scrolling
+                            showsHorizontalScrollIndicator={false}
                         />
                     </View>
-                )}
-            </View>
-        </SafeAreaView>
+                    {selectedWorkoutId !== null && (
+                        <View style={styles.exerciseListContainer}>
+                            <FlatList
+                                data={selectedWorkout?.exercises}
+                                renderItem={exercises}
+                                keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                            />
+                        </View>
+                    )}
+                </View>
+            </SafeAreaView>
+            <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+        </>
     );
 };
 

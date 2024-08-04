@@ -3,12 +3,12 @@ import {
     StyleSheet,
     Text, View
 } from 'react-native'
-import {router, useLocalSearchParams} from "expo-router";
+import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
 import {Video} from "expo-av";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import Card from "../../../../components/Card";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState, useCallback} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseNavigation from "../../../../components/ExerciseNavigation";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -18,10 +18,9 @@ const Exercises = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
-    const { exerciseVideos } = useContext(WorkoutContext);
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const { startSession, completeCurrentExercise, loadWorkouts, workouts } = useContext(WorkoutContext);
+    const { exerciseVideos, startExerciseTimer, stopExerciseTimer, completeCurrentExercise } = useContext(WorkoutContext);
 
     // Parse exercise JSON and initialize state
     const exercises = exercise ? JSON.parse(exercise) : {};
@@ -31,7 +30,20 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
+    // useFocusEffect wird ausgeführt, wenn der Bildschirm in den Fokus kommt
+    useFocusEffect(
+        useCallback(() => {
+            // Timer starten, wenn der Bildschirm in den Fokus kommt
+            startExerciseTimer();
+            //console.log("Exercises Screen is focused and timer started");
+        }, [])
+    );
+
     const handleCompleteSet = async () => {
+        //console.log("stop timer wird aufgerufen")
+        stopExerciseTimer(); // Timer stoppen und sicherstellen, dass es abgeschlossen ist
+        //console.log("STOP TIMER ABGESCHLOSSEN")
+
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
             router.navigate({
@@ -45,37 +57,25 @@ const Exercises = () => {
                 }
             });
         } else {
+            //console.log("================================Letzter Satz - hier komm ich zum rest und duration wurde schon gestoppt")
+
+            const completedExercise = {
+                exerciseId: exercises.exercises[index].id,
+                caloriesBurned: 100,
+                ...(exercises.exercises[index].sets && {sets: exercises.exercises[index].sets}),
+                ...(exercises.exercises[index].repetitions && {repetitions: exercises.exercises[index].repetitions})
+            };
+            //console.log(`Hier wird im Exercises gespeichert: Completing exercise: ${JSON.stringify(completedExercise)}`);
+            await completeCurrentExercise(completedExercise);
+
             // Wenn dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
-            //console.log("letzter Satz nach dem else: ", currentSets)
-
-
             if (index + 1 < exercises.exercises.length) {
                 //console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
-
-                //hier complete exercise speichern (evtl ändern und jedes set speichern!!!)
-                console.log("Current Exercise: ", exercises.exercises[index]);
-                /*const completeExercise = {
-                    exerciseId: exercises.exercises[index].id,
-                    duration: exercises.exercises[index].duration, // evlt ausrechnen
-                    caloriesBurned: 100,
-                    sets: exercises.exercises[index].sets,
-                    repetitions: exercises.exercises[index].repetitions
-                };*/
-                const completedExercise = {
-                    exerciseId: exercises.exercises[index].id,
-                    duration: exercises.exercises[index].duration,
-                    caloriesBurned: 100,
-                    ...(exercises.exercises[index].sets && { sets: exercises.exercises[index].sets }), // Optional
-                    ...(exercises.exercises[index].repetitions && { repetitions: exercises.exercises[index].repetitions }) // Optional
-                };
-                await completeCurrentExercise(completedExercise);
-
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
 
-
-                // Hier zusätzlich navigieren, damit man ein letztes mal auf den Rest Screen kommt, wo die
+                // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die
                 // nächste Übung angezeigt wird.
                 router.navigate({
                     pathname: "(noTabs)/start/rest",
@@ -88,18 +88,7 @@ const Exercises = () => {
                     }
                 });
             } else {
-                //console.log("Letzte Übung")
-
-                //letzte Übung tracken
-                const completeExercise = {
-                    exerciseId: exercises.exercises[index].id,
-                    duration: exercises.exercises[index].duration, // evlt ausrechnen
-                    caloriesBurned: 500,
-                    ...(exercises.exercises[index].sets && { sets: exercises.exercises[index] }), // Optional
-                    ...(exercises.exercises[index].repetitions && { repetitions: exercises.exercises[index].repetitions }) // Optional
-                };
-                await completeCurrentExercise(completeExercise);
-
+                //console.log("-----ALLERLETZTE Übung----")
                 router.replace("(tabs)/(training)/training")
             }
         }

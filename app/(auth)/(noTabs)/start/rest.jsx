@@ -4,7 +4,7 @@ import {useLocalSearchParams, router} from "expo-router";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {icons, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
-import Animated, {FadeInDown, FadeInRight} from "react-native-reanimated";
+import Animated, {FadeInRight} from "react-native-reanimated";
 
 //fix small screens - no responsive design jet
 //buttons müssen noch ersetzt werden
@@ -18,7 +18,12 @@ const Rest = () => {
     const [timeLeft, setTimeLeft] = useState(rest);
     const exercises = exercise ? JSON.parse(exercise) : {};
 
-    useEffect(() => {
+    /*useEffect(() => {
+        console.log("CurrentINDEX:  ", currentIndex)
+        console.log(`TEST: ${currentSet} === ${totalSets}?`);
+    }, [currentIndex]);*/
+
+    useEffect( () => {
         // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
         if (timeLeft >= 0) {
             const timerId = setTimeout(() => {
@@ -31,9 +36,9 @@ const Rest = () => {
         }
     }, [timeLeft]);
 
-    /*useEffect(() => {
-        console.log(`Aktueller Satz: ${currentSet}, Gesamtsätze: ${totalSets}`);
-    }, [currentSet, totalSets]);*/
+    /*if(currentSet === totalSets && timeLeft < 1) {
+        console.log("Letzter Satz von der Übung, hier bin ich wieder im RESTSCREEN")
+    }*/
 
     return (
         <SafeAreaView style={styles.container}>
@@ -66,7 +71,6 @@ const Rest = () => {
             <View style={styles.buttonBox}>
                 <TouchableOpacity style={styles.button} onPress={
                     //handleEndRest
-
                     () => router.back()}
                 >
                     <Text style={styles.buttonLabel}>Pause beenden</Text>

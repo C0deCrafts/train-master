@@ -1,20 +1,23 @@
-import React from 'react';
+import {useContext} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from "expo-image";
 import {elements, icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {router} from "expo-router";
+import {WorkoutContext} from "../context/WorkoutContext";
 
-const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, currentSet, updateCurrentSets }) => {
+const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, currentSet, updateCurrentSets}) => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
+    const { startExerciseTimer } = useContext(WorkoutContext);
 
     const handlePrevious = () => {
         if (index > 0) {
             setIndex(index - 1);
             updateCurrentSets(index - 1);
+            startExerciseTimer();
         }
     };
 
@@ -22,6 +25,7 @@ const ExerciseNavigation = ({ index, exercises, handleCompleteSet, setIndex, cur
         if (index + 1 < exercises.length) {
             setIndex(index + 1);
             updateCurrentSets(index + 1);
+            startExerciseTimer();
         }
     };
 
