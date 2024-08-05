@@ -1,7 +1,7 @@
 import {collection, addDoc, query, where, getDocs, updateDoc, doc, getDoc, deleteDoc} from 'firebase/firestore';
-import { FIRESTORE_DB } from './firebaseConfig';
-import { getAuth } from 'firebase/auth';
-import {format} from "date-fns";
+import {FIRESTORE_DB} from './firebaseConfig';
+import {getAuth} from 'firebase/auth';
+import {eachDayOfInterval, endOfWeek, format, startOfWeek} from "date-fns";
 
 // Start a new training session
 const startTrainingSession = async (workoutId) => {
@@ -52,7 +52,7 @@ const fetchDailyStats = async () => {
     const q = query(sessionsCollection, where('userId', '==', user.uid));
     const sessionsSnapshot = await getDocs(q);
 
-    const sessions = sessionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const sessions = sessionsSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
     const dailyStats = {};
 
     sessions.forEach(session => {
@@ -76,6 +76,51 @@ const fetchDailyStats = async () => {
     return dailyStats;
 };
 
+
+const fetchWeeklyStats = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+        throw new Error("No user is logged in");
+    }
+
+    const sessionsCollection = collection(FIRESTORE_DB, 'trainingSessions');
+    const q = query(sessionsCollection, where('userId', '==', user.uid));
+    const sessionsSnapshot = await getDocs(q);
+
+    const sessions = sessionsSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    const weeklyStats = {};
+
+
+    const startDate = startOfWeek(new Date(), {weekStartsOn: 1});
+    const endDate = endOfWeek(new Date(), {weekStartsOn: 1});
+    const daysOfWeek = eachDayOfInterval({start: startDate, end: endDate}).slice(0, 7);
+
+    daysOfWeek.forEach(day => {
+        const date = format(day, 'yyyy-MM-dd');
+        weeklyStats[date] = {
+            exercisesCompleted: 0,
+            workouts: 0,
+            totalDuration: 0,
+            totalCalories: 0,
+        };
+    });
+
+    sessions.forEach(session => {
+        const date = format(new Date(session.date), 'yyyy-MM-dd');
+
+        if (weeklyStats[date]) {
+            weeklyStats[date].exercisesCompleted += session.exercisesCompleted.length;
+            weeklyStats[date].workouts += 1;
+            weeklyStats[date].totalDuration += session.totalDuration;
+            weeklyStats[date].totalCalories += session.totalCalories;
+        }
+    });
+
+    return weeklyStats;
+};
+
 // Complete an exercise
 const completeExercise = async (trainingSessionId, completedExercise) => {
     const sessionRef = doc(FIRESTORE_DB, 'trainingSessions', trainingSessionId);
@@ -96,4 +141,4 @@ const deleteTrainingSession = async (trainingSessionId) => {
     console.log("Training successfully deleted: ", trainingSessionId);
 };
 
-export {startTrainingSession, fetchDailyStats, completeExercise, deleteTrainingSession};
+export {startTrainingSession, fetchDailyStats, fetchWeeklyStats, completeExercise, deleteTrainingSession};

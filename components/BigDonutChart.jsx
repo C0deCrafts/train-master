@@ -9,8 +9,8 @@ import {useAppStyle} from "../context/AppStyleContext";
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 function BigDonutChart({
-                           radius = 70,
-                           strokeWidth = 25,
+                           radius = 65,
+                           strokeWidth = 23,
                            progress,
                            max = 10000,
                        }) {
