@@ -2,7 +2,6 @@ import {createContext, useContext, useEffect, useState} from "react";
 import {large_default, medium, small, xLarge, xSmall, xxLarge, fontFamily} from "../constants/textStyles";
 import {dark, light} from "../constants/colors";
 import {useColorScheme} from "react-native";
-import {StatusBar} from "expo-status-bar";
 
 const AppStyleContext = createContext({});
 
@@ -32,7 +31,7 @@ export const AppStyleProvider = ({ children }) => {
         const darkColors = [
             light.baseColor, light.red, light.green, light.mint_2, light.teal, light.teal_2, light.cyan_2, light.blue, light.indigo, light.indigo_2, light.purple, light.purple_2, light.pink, light.pink_2,
             dark.baseColor, dark.red, dark.green, dark.mint_2, dark.teal, dark.teal_2, dark.cyan_2, dark.blue, dark.indigo, dark.indigo_2, dark.purple, dark.purple_2, dark.pink, dark.pink_2
-            ];
+        ];
         return darkColors.includes(color);
 
     };

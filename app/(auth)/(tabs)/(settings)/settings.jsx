@@ -1,9 +1,7 @@
 import {
-    Button,
     ScrollView,
     StyleSheet,
     Text,
-    TextInput,
     View
 } from 'react-native';
 import { Image } from 'expo-image';
@@ -26,7 +24,7 @@ import CustomHeader from "../../../../components/CustomHeader";
 
 const Settings = () => {
     const { user, username, setUsername, email, handleUpdateUsername } = useAuth();
-    const { textSize, setTextSize, getTextStyles, getColors, getAllBaseColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const { textSize, setTextSize, getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);

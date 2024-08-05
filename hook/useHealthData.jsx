@@ -1,7 +1,5 @@
-import {createContext, useContext, useEffect, useState} from "react";
-import AppleHealthKit from 'react-native-health'
-
-const AppleHealthKitContext = createContext();
+import { useEffect, useState } from 'react';
+import AppleHealthKit from 'react-native-health';
 
 const permissions = {
     permissions: {
@@ -10,10 +8,9 @@ const permissions = {
     },
 };
 
-export const AppleHealthKitProvider = ({ children }) => {
+const useHealthData = () => {
     const [hasPermission, setHasPermission] = useState(false);
-    const [stepCount, setStepCount] = useState(null)
-    const [showStepsCount, setShowStepsCount] = useState(false);
+    const [steps, setSteps] = useState(null);
 
     const initAppleHealthKit = () => {
         AppleHealthKit.initHealthKit(permissions, (err) => {
@@ -40,24 +37,19 @@ export const AppleHealthKitProvider = ({ children }) => {
                 console.log('Error getting the steps: ', err);
                 return;
             }
-            console.log("Result: ", results.value)
-            setStepCount(results.value);
+            setSteps(results.value);
         });
     }
 
     useEffect(() => {
-      initAppleHealthKit();
+        initAppleHealthKit();
     }, []);
 
     useEffect(() => {
         getSteps();
     }, [hasPermission]);
 
-    return (
-        <AppleHealthKitContext.Provider value={{ hasPermission, stepCount, showStepsCount, setShowStepsCount }}>
-            {children}
-        </AppleHealthKitContext.Provider>
-    );
-}
+    return { steps };
+};
 
-export const useAppleHealthKit = () => useContext(AppleHealthKitContext);
+export default useHealthData;

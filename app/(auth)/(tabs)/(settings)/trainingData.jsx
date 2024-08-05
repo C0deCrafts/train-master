@@ -1,24 +1,20 @@
 import {View, Text, Switch, StyleSheet} from "react-native";
 import CustomHeader from "../../../../components/CustomHeader";
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {useEffect, useState} from "react";
-import {useAppleHealthKit} from "../../../../context/AppleHealthKitContext";
+import {useContext} from "react";
 import {Image} from "expo-image";
 import {icons} from "../../../../constants";
 import Card from "../../../../components/Card";
+import {SettingsContext} from "../../../../context/SettingsContext";
 
 const TrainingData = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
-    const {showStepsCount, setShowStepsCount} = useAppleHealthKit();
+    const {showStepsCount, setShowStepsCount} = useContext(SettingsContext);
 
     const toggleSwitch = () => setShowStepsCount(previousState => !previousState);
-
-    useEffect(() => {
-        console.log("Enabled? ", showStepsCount)
-    }, [showStepsCount]);
 
     return (
         <>

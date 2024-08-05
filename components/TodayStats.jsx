@@ -5,7 +5,8 @@ import {fetchDailyStats} from "../utils/trainingSession";
 import DonutChart from "./DonutChart";
 import {useAppStyle} from "../context/AppStyleContext";
 import {format} from "date-fns";
-import {useAppleHealthKit} from "../context/AppleHealthKitContext";
+import useHealthData from "../hook/useHealthData";
+import {SettingsContext} from "../context/SettingsContext";
 
 const TodayStats = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -17,7 +18,8 @@ const TodayStats = () => {
     const {workouts} = useContext(WorkoutContext);
     const today = format(new Date(), 'yyyy-MM-dd');
 
-    const {hasPermission, stepCount, showStepsCount} = useAppleHealthKit();
+    const {showStepsCount} = useContext(SettingsContext);
+    const {steps} = useHealthData();
 
     useEffect(() => {
         const loadDailyStats = async () => {
@@ -26,11 +28,6 @@ const TodayStats = () => {
         };
         loadDailyStats();
     }, [workouts]);
-
-    useEffect(() => {
-        console.log("HasPersmission? ", hasPermission)
-        console.log("Steps? ", stepCount)
-    }, []);
 
     return (
             <View style={styles.donutChartContainer}>
@@ -77,11 +74,11 @@ const TodayStats = () => {
                         <Text style={styles.headerCounterLabel}>Minuten</Text>
                     </View>
                 )}
-                {hasPermission && showStepsCount && (
+                {showStepsCount && (
                     <View style={styles.boxStyle}>
                         <DonutChart
                             key="minutes"
-                            percentage={stepCount}
+                            percentage={steps}
                             color={colors.baseColor}
                             delay={1000}
                             max={10000}
