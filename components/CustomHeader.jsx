@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, StyleSheet, Pressable} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import { Image } from 'expo-image';
 import {router} from 'expo-router';
 import {icons} from "../constants";
@@ -25,7 +25,6 @@ const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = f
 
     return (
         <>
-            <StatusBar style={colors.colorButtonLabel === "rgb(0,0,0)" ? "dark" : "light"}/>
             <View style={styles.headerContainer}>
                 {backButtonVisible && (
                     <TouchableOpacity onPress={handleGoBack} style={styles.backButtonContainer}>
@@ -39,6 +38,7 @@ const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = f
                 )}
                 <Text style={styles.headerTitle} numberOfLines={1} ellipsizeMode="tail">{title}</Text>
             </View>
+            <StatusBar style={colors.colorButtonLabel === "rgb(0,0,0)" ? "dark" : "light"}/>
         </>
 
     );
@@ -48,7 +48,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
         headerContainer: {
             width: "100%",
-            height: 120,
+            //120
+            height: 110,
             backgroundColor: colors.baseColor,
             alignItems: 'center',
             justifyContent: 'flex-end',
@@ -58,7 +59,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         backButtonContainer: {
             position: "absolute",
-            top: 83,
+            top: 73,
             left: 10,
             zIndex: 1,
         },
@@ -76,7 +77,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         logoutButtonContainer: {
             position: "absolute",
-            top: 83,
+            top: 73,
             right: 10,
             zIndex: 1,
         },
