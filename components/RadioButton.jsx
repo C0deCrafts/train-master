@@ -1,7 +1,13 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
+import {useAppStyle} from "../context/AppStyleContext";
 
-const RadioButton = ({ button, isSelected, onPress, colors, styles }) => {
+const RadioButton = ({ button, isSelected, onPress }) => {
+    const {getColors, getTextStyles,fontFamily} = useAppStyle();
+    const colors = getColors();
+    const textStyles = getTextStyles();
+    const styles = createStyles(textStyles, colors, fontFamily);
+
     return (
         <TouchableOpacity onPress={!isSelected ? onPress : null}
                           disabled={isSelected}>
@@ -22,7 +28,8 @@ const RadioButton = ({ button, isSelected, onPress, colors, styles }) => {
 
 export default RadioButton;
 
-const createStyles = (colors) => StyleSheet.create({
+const createStyles = (textStyles, colors, fontFamily) => {
+    return StyleSheet.create({
     radioButton: {
         alignItems: "center",
         gap: 5
@@ -55,4 +62,10 @@ const createStyles = (colors) => StyleSheet.create({
         borderWidth: 2,
         borderColor: colors.baseColor,
     },
-});
+    text: {
+        fontFamily: fontFamily.Poppins_Regular,
+        color: colors.label,
+        textAlign: "left",
+        fontSize: textStyles.subhead,
+    }
+})};
