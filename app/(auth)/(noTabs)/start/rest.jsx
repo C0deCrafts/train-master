@@ -4,6 +4,7 @@ import {useLocalSearchParams, router} from "expo-router";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {icons, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
+import Animated, {FadeInRight} from "react-native-reanimated";
 
 //fix small screens - no responsive design jet
 //buttons müssen noch ersetzt werden
@@ -17,9 +18,9 @@ const Rest = () => {
     const [timeLeft, setTimeLeft] = useState(rest);
     const exercises = exercise ? JSON.parse(exercise) : {};
 
-    useEffect(() => {
+    useEffect( () => {
         // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
-        if (timeLeft > 0) {
+        if (timeLeft >= 0) {
             const timerId = setTimeout(() => {
                 setTimeLeft(timeLeft - 1);
             }, 1000);
@@ -29,10 +30,6 @@ const Rest = () => {
             router.back();
         }
     }, [timeLeft]);
-
-    /*useEffect(() => {
-        console.log(`Aktueller Satz: ${currentSet}, Gesamtsätze: ${totalSets}`);
-    }, [currentSet, totalSets]);*/
 
     return (
         <SafeAreaView style={styles.container}>
@@ -50,19 +47,20 @@ const Rest = () => {
             </View>
 
             {currentSet === totalSets && (
-                <View style={styles.lastBox}>
-                    <Text style={styles.lastSet}>Zeit zu glänzen! Letzter Satz!</Text>
+                <Animated.View
+                    entering={FadeInRight.delay(200).duration(300)}
+                    style={styles.lastBox}>
+                    <Text
+                        style={styles.lastSet}>Zeit zu glänzen! Letzter Satz!</Text>
                     <Image
                         style={styles.icon}
                         source={icons.celebration}
                     />
-                </View>
+                </Animated.View>
             )}
 
             <View style={styles.buttonBox}>
                 <TouchableOpacity style={styles.button} onPress={
-                    //handleEndRest
-
                     () => router.back()}
                 >
                     <Text style={styles.buttonLabel}>Pause beenden</Text>

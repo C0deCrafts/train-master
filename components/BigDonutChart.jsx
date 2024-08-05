@@ -1,126 +1,88 @@
-import {View, StyleSheet, Animated, TextInput} from "react-native";
-import { Image } from 'expo-image';
-import Svg, {G, Circle } from "react-native-svg";
+import {View, StyleSheet, TextInput} from "react-native";
+import {Image} from 'expo-image';
+import Svg, {G, Circle} from "react-native-svg";
 import {useEffect, useRef} from "react";
 import {colors, icons} from "../constants";
+import Animated, {useAnimatedProps, useSharedValue, withTiming} from "react-native-reanimated";
+import {useAppStyle} from "../context/AppStyleContext";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
 function BigDonutChart({
-                        percentage = 75,
-                        radius = 40,
-                        strokeWidth = 10,
-                        duration = 500,
-                        color = "tomato",
-                        delay = 0,
-                        textColor,
-                        max = 100,
-                    }){
+                           radius = 100,
+                           strokeWidth = 35,
+                           progress,
+                           //color = "tomato",
+                           //max = 1000,
+                       }) {
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+    const colors = getColors();
+    const textStyles = getTextStyles();
 
-    const animatedValue = useRef(new Animated.Value(0)).current;
-    const circleRef = useRef();
-    const inputRef = useRef();
-    const halfCircle = radius + strokeWidth;
-    const circleCircumference = 2 * Math.PI * radius;
-    const animation = (toValue) => {
-        return Animated.timing(animatedValue, {
-            toValue,
-            duration,
-            delay,
-            useNativeDriver: true,
-        }).start();
-    }
-    /*
-      const animation = (toValue) => {
-        return Animated.timing(animatedValue, {
-            toValue,
-            duration,
-            delay,
-            useNativeDriver: true,
-        }).start(()=>{
-            //animation(toValue === 0 ? percentage : 0)
-        });
-    }
-    * */
+    const styles = createStyles(textStyles, colors, fontFamily, strokeWidth);
 
+    const innerRadius = radius - strokeWidth / 2;
+    const circumference = 2 * Math.PI * innerRadius;
+
+    const fill = useSharedValue(0);
 
     useEffect(() => {
-        animation(percentage);
-        animatedValue.addListener(v => {
-            if(circleRef?.current){
-                const maxPerc = 100 * v.value / max;
-                const strokeDashoffset =
-                    circleCircumference - (circleCircumference * maxPerc / 100);
-                circleRef.current.setNativeProps({
-                    strokeDashoffset,
-                });
-            }
-            if(inputRef?.current){
-                inputRef.current.setNativeProps({
-                    text: `${Math.round(v.value)}`,
-                })
-            }
-        })
+        fill.value = withTiming(progress, {duration: 1500});
+    }, [progress]);
 
-        return () => {
-            animatedValue.removeAllListeners();
-        };
-    }, [max, percentage]);
+    const animatedProps = useAnimatedProps(() => ({
+        strokeDasharray: [circumference * fill.value, circumference]
+    }));
 
     return (
-        <View>
-            <Svg width={radius*2}
-                 height={radius*2}
-                 viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}
-            >
-                <G rotation="-90" origin={`${halfCircle}, ${halfCircle}`}>
-                    <Circle
-                        cx="50%"
-                        cy="50%"
-                        stroke={color}
-                        strokeWidth={strokeWidth}
-                        r={radius}
-                        fill="transparent"
-                        strokeOpacity={0.2}
-                    />
-                    <AnimatedCircle
-                        ref={circleRef}
-                        cx="50%"
-                        cy="50%"
-                        stroke={color}
-                        strokeWidth={strokeWidth}
-                        r={radius}
-                        fill="transparent"
-                        strokeDasharray={circleCircumference}
-                        strokeDashoffset={circleCircumference}
-                        strokeLinecap="round"
-                    />
-                </G>
-            </Svg>
-            <Image source={icons.fitness} style={{
-                position: "absolute",
-                width: 40,
-                height: 40,
-                contentFit: "contain",
-                top: 25,
-                left: radius - 20,
-                tintColor: colors.donutColorDefault
-            }}/>
-            <AnimatedInput
-                ref={inputRef}
-                editable={false}
-                defaultValue="0"
-                style={[
-                    StyleSheet.absoluteFillObject,
-                    { fontSize: radius / 2, color: textColor ?? color },
-                    { fontFamily: "Poppins-Bold", textAlign: "center" },
-                    { top: 50}
-                ]}
+        <View style={{
+            width: radius * 2,
+            height: radius * 2,
+            alignSelf: "center"
+        }}>
+            <Svg>
+                {/*Background*/}
+                <Circle
+                    r={innerRadius}
+                    cx={radius}
+                    cy={radius}
+                    strokeWidth={strokeWidth}
+                    stroke={colors.baseColor}
+                    opacity={0.2}
+                    fill="transparent"
 
-            />
+                />
+                {/*Foreground*/}
+                <AnimatedCircle
+                    r={innerRadius}
+                    cx={radius}
+                    cy={radius}
+                    originX={radius}
+                    originY={radius}
+                    fill="transparent"
+                    strokeWidth={strokeWidth}
+                    stroke={colors.baseColor}
+                    strokeLinecap="round"
+                    rotation={"-90"}
+                    animatedProps={animatedProps}
+                />
+            </Svg>
+            <Image source={icons.arrowRight} style={styles.icon}/>
         </View>
     )
+}
+
+const createStyles = (textStyles, colors, fontFamily, strokeWidth) => {
+    return StyleSheet.create({
+        icon: {
+            position: 'absolute',
+            alignSelf: 'center',
+            top: strokeWidth * 0.1,
+            width: strokeWidth * 0.8,
+            height: strokeWidth * 0.8,
+            tintColor: colors.colorButtonLabel
+        }
+    })
 }
 
 export default BigDonutChart;

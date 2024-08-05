@@ -2,7 +2,6 @@ import {Tabs} from "expo-router";
 import TabIcon from "../../../components/TabIcon";
 import {icons} from "../../../constants";
 import {useAuth} from "../../../context/AuthProvider";
-import LogoutButton from "../../../components/LogoutButton";
 import {useAppStyle} from "../../../context/AppStyleContext";
 
 const TabsLayout = () => {
@@ -79,10 +78,9 @@ const TabsLayout = () => {
             }}
             redirect={!user}
             />
-            <Tabs.Screen name="settings" options={{
-                //headerShown: false,
+            <Tabs.Screen name="(settings)" options={{
+                headerShown: false,
                 title: "Einstellungen",
-                headerRight: () => <LogoutButton/>,
                 tabBarIcon: ({color, focused}) => (
                     <TabIcon
                         icon={icons.setting}

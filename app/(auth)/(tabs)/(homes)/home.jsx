@@ -1,9 +1,8 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import { Image } from 'expo-image';
+import {Image} from 'expo-image';
 import {useAuth} from "../../../../context/AuthProvider";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {elements, icons, images} from "../../../../constants";
-import DonutChart from "../../../../components/DonutChart";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
 import {format} from 'date-fns';
@@ -14,6 +13,8 @@ import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseList from "../../../../components/ExerciseList";
 import {router} from "expo-router";
+import Animated, {FadeInRight} from "react-native-reanimated";
+import TodayStats from "../../../../components/TodayStats";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
@@ -21,20 +22,19 @@ const Home = () => {
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const {user, username} = useAuth();
+    const {username} = useAuth();
     const {workouts} = useContext(WorkoutContext);
     const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
 
     useEffect(() => {
         setSelectedWorkoutId(workouts[0]?.id);
-        console.log(selectedWorkoutId);
+        //console.log(selectedWorkoutId);
     }, [workouts]);
 
     const getCurrentDate = () => {
         const today = new Date();
         return format(today, 'EEEE dd. MMMM', {locale: de});
     };
-
 
     //Function to handle selecting a profile image and safe it to asyncStorage
     const handlePressImage = async () => {
@@ -53,26 +53,27 @@ const Home = () => {
         console.log("Image PICKER selected")
     };
 
-    const renderWorkout = ({item}) => {
+    const renderWorkout = ({item, index}) => {
         return (
-            <Card
-                style={item.id === selectedWorkoutId ? styles.workoutContainerSelected : styles.workoutContainer}
-                onPress={() => setSelectedWorkoutId(item.id)}
-                clickable
-            >
-                {/*<Image source={item.image} style={styles.workoutImage} />*/}
-                <Text
-                    style={item.id === selectedWorkoutId ? styles.workoutNameSelected : styles.workoutName}>{item.name}</Text>
-            </Card>
+            <Animated.View entering={FadeInRight.delay(100).duration(index * 300)}>
+                <Card
+                    style={item.id === selectedWorkoutId ? styles.workoutContainerSelected : styles.workoutContainer}
+                    onPress={() => setSelectedWorkoutId(item.id)}
+                    clickable
+                >
+                    <Text
+                        style={item.id === selectedWorkoutId ? styles.workoutNameSelected : styles.workoutName}>{item.name}</Text>
+                </Card>
+            </Animated.View>
         )
     }
 
-    const exercises = ({item}) => {
+    const exercises = ({item, index}) => {
         const navigation = () => {
             router.navigate({pathname: "/exerciseDetail/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
         return (
-            <ExerciseList item={item} handleNavigation={navigation}/>
+            <ExerciseList item={item} index={index} handleNavigation={navigation}/>
         )
     }
 
@@ -82,118 +83,77 @@ const Home = () => {
 
     //fix status bar
     return (
-        <SafeAreaView style={styles.backgroundImage}>
+        <>
+            <SafeAreaView style={styles.backgroundImage}>
+                <Image
+                    source={images.backgroundSymbol}
+                    style={styles.image}
+                />
+                <View style={styles.container}>
+                    <View style={styles.headerContainer}>
+                        <View>
+                            <Text style={styles.dateText}>{currentDate}</Text>
+                            <Text style={styles.greetingText}>Hallo
+                                <Text style={styles.usernameText}>{" "}{username}!</Text>
+                            </Text>
+                        </View>
+                        {/* ImageViewer with TouchableOpacity for the camera button */}
+                        <TouchableOpacity onPress={handlePressImage} style={{zIndex: 2}}>
+                            <View style={styles.imageContainer}>
+                                <Image
+                                    source={images.avatar}
+                                    style={{
+                                        width: 100,
+                                        height: 100,
+                                        borderRadius: 50,
+                                        contentFit: "contain",
+                                    }}
+                                />
+                                <View style={styles.cameraStyle}>
+                                    <Image source={icons.camera} style={{
+                                        width: 25,
+                                        height: 25,
+                                        tintColor: colors.label
+                                    }}/>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.workoutInfoContainer}>
+                        <Text style={styles.firstTitleText}>Aktivität</Text>
+                    </View>
+
+                    <TodayStats/>
+
+                    <View style={styles.workoutInfoContainer}>
+                        <Text style={styles.titleText}>Fitnesspläne</Text>
+                    </View>
+                    <View>
+                        <FlatList
+                            data={workouts}
+                            renderItem={renderWorkout}
+                            keyExtractor={item => item.id}
+                            horizontal={true} // Set horizontal to true for horizontal scrolling
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </View>
+                    {selectedWorkoutId !== null && (
+                        <View style={styles.exerciseListContainer}>
+                            <FlatList
+                                data={selectedWorkout?.exercises}
+                                renderItem={exercises}
+                                keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                            />
+                        </View>
+                    )}
+                </View>
+            </SafeAreaView>
             {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
             {/*colors.label*/}
-            <Image
-                source={images.backgroundSymbol}
-                style={styles.image}
-            />
-            <View style={styles.container}>
-                <View style={styles.headerContainer}>
-                    <View>
-                        <Text style={styles.dateText}>{currentDate}</Text>
-                        <Text style={styles.greetingText}>Hallo
-                            <Text style={styles.usernameText}>{" "}{username}!</Text>
-                        </Text>
-                    </View>
-                    {/* ImageViewer with TouchableOpacity for the camera button */}
-                    <TouchableOpacity onPress={handlePressImage} style={{zIndex: 2}}>
-                        <View style={styles.imageContainer}>
-                            <Image
-                                source={images.avatar}
-                                style={{
-                                    width: 100,
-                                    height: 100,
-                                    borderRadius: 50,
-                                    contentFit: "contain",
-                                }}
-                            />
-                            <View style={styles.cameraStyle}>
-                                <Image source={icons.camera} style={{
-                                    width: 25,
-                                    height: 25,
-                                    tintColor: colors.label
-                                }}/>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.workoutInfoContainer}>
-                    <Text style={styles.firstTitleText}>Aktivität</Text>
-                </View>
-                <View style={styles.workoutInfoBox}>
-                    {/*<View style={styles.boxStyleLarge}>
-                        <BigDonutChart
-                            key="minutes"
-                            //percentage={lastElapsedTime}
-                            color={colors.donutColorDefault}
-                            delay={1000}
-                            max={240}
-                            radius={60}
-                        />
-                    </View>*/}
-                    <View style={styles.donutChartContainer}>
-                        <View style={styles.boxStyle}>
-                            <DonutChart
-                                key="minutes"
-                                //percentage={lastElapsedTime}
-                                percentage={14}
-                                color={colors.baseColor}
-                                delay={1000}
-                                max={20}
-                            />
-                            <Text style={styles.headerCounterLabel}>Übungen</Text>
-                        </View>
-                        <View style={styles.boxStyle}>
-                            <DonutChart
-                                key="minutes"
-                                //percentage={lastElapsedTime}
-                                percentage={870}
-                                color={colors.baseColor}
-                                delay={1000}
-                                max={1000}
-                            />
-                            <Text style={styles.headerCounterLabel}>Kcal</Text>
-                        </View>
-                        <View style={styles.boxStyle}>
-                            <DonutChart
-                                key="minutes"
-                                //percentage={lastElapsedTime}
-                                percentage={120}
-                                color={colors.baseColor}
-                                delay={1000}
-                                max={240}
-                            />
-                            <Text style={styles.headerCounterLabel}>Minuten</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.workoutInfoContainer}>
-                    <Text style={styles.titleText}>Fitnesspläne</Text>
-                </View>
-                <View>
-                    <FlatList
-                        data={workouts}
-                        renderItem={renderWorkout}
-                        //keyExtractor={item => item.id}
-                        horizontal={true} // Set horizontal to true for horizontal scrolling
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
-                {selectedWorkoutId !== null && (
-                    <View style={styles.exerciseListContainer}>
-                        <FlatList
-                            data={selectedWorkout?.exercises}
-                            renderItem={exercises}
-                            //keyExtractor={(item, index) => index.toString()}
-                            showsVerticalScrollIndicator={false}
-                        />
-                    </View>
-                )}
-            </View>
-        </SafeAreaView>
+            <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+        </>
     );
 };
 
@@ -217,26 +177,15 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flex: 1,
             paddingHorizontal: 20,
             paddingTop: 20,
-            //flexDirection: "column",
-            //justifyContent: "space-evenly"
         },
         headerContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-start"
         },
-        workoutInfoBox: {
-            //flexDirection: "row",
-            //justifyContent: "space-between",
-            //backgroundColor: colors.boxBackgroundTransparent,
-            //padding: 10,
-            //borderRadius: 10
-        },
         donutChartContainer: {
             flexDirection: "row",
             justifyContent: "space-evenly"
-            //gap: 15,
-            //alignItems: "flex-end"
         },
         content: {
             flex: 1,
@@ -245,14 +194,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "flex-end"
-            //backgroundColor: colors.white
         },
         boxStyleLarge: {
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "flex-end",
             gap: 10
-            //backgroundColor: colors.white
         },
         headerCounterLabel: {
             color: colors.label,
@@ -263,7 +210,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
         workoutInfoContainer: {
             alignItems: "flex-start",
             paddingBottom: 5,
-            //marginTop: 10
             marginBottom: 5
         },
         firstTitleText: {
@@ -344,22 +290,16 @@ const createStyles = (textStyles, colors, fontFamily) => {
         exerciseListContainer: {
             flex: 1,
             marginTop: 5,
-            //marginBottom: 5
         },
         exerciseContainer: {
             flexDirection: "row",
         },
         exercises: {
-            //backgroundColor: "blue",
             flexDirection: "column",
             flex: 1,
-            //width: "50%",
-            //gap: 10,
-            //alignItems: "flex-end",
             justifyContent: "space-between",
         },
         exerciseImageContainer: {
-            //backgroundColor: "red"
         },
         exerciseImage: {
             width: 100,

@@ -8,7 +8,7 @@ import {Link} from "expo-router";
 import {useEffect, useRef, useState} from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import {FIREBASE_AUTH, FIRESTORE_DB} from "../../config/firebaseConfig";
+import {FIREBASE_AUTH, FIRESTORE_DB} from "../../utils/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {

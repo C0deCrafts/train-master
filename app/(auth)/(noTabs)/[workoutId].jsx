@@ -1,12 +1,13 @@
-import {View, StyleSheet, FlatList, Text} from "react-native";
+import {View, StyleSheet, FlatList} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
 import {elements} from "../../../constants";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {useAppStyle} from "../../../context/AppStyleContext";
 import ExerciseList from "../../../components/ExerciseList";
 import CustomHeader from "../../../components/CustomHeader";
 import CustomButton from "../../../components/CustomButton";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {WorkoutContext} from "../../../context/WorkoutContext";
 
 const WorkoutId = () => {
     const { workout, item } = useLocalSearchParams();
@@ -16,23 +17,25 @@ const WorkoutId = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
     const workoutItem = item ? JSON.parse(item) : {};
 
-    useEffect(() => {
-        console.log("Workout: ", workout)
-        console.log("Workout: ", typeof workoutItem)
-    }, []);
+    const { startSession } = useContext(WorkoutContext);
 
-    const handleStartWorkout = () => {
-        //console.log("Start workout: ", JSON.stringify(item))
+
+    const handleStartWorkout = async () => {
+        await startSession(workout);
         router.dismissAll();
         router.replace({ pathname: '(noTabs)/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
     }
 
-    const exercises = ({item}) => {
+    useEffect(() => {
+        console.log("WorkoutID: ", workout)
+    }, [workout]);
+
+    const exercises = ({item, index}) => {
         const handleNavigation = () => {
             router.navigate({pathname: "(noTabs)/exercise/[exerciseId]", params: {exercise: JSON.stringify(item)}})
         }
         return (
-            <ExerciseList item={item} handleNavigation={handleNavigation}/>
+            <ExerciseList item={item} index={index} handleNavigation={handleNavigation}/>
         )
     }
 
@@ -44,7 +47,7 @@ const WorkoutId = () => {
                     <FlatList
                         data={workoutItem.exercises}
                         renderItem={exercises}
-                        //keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
                     />
                 </View>
@@ -58,7 +61,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
         container: {
             flex: 1,
-            //backgroundColor: "blue",
             backgroundColor: colors.primary,
             paddingTop: -60
         },
@@ -80,7 +82,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             justifyContent: "space-evenly",
             alignItems: "center",
             marginBottom: 10
-            //backgroundColor: "red"
         },
         cardStyle: {
             backgroundColor: colors.baseColor,
@@ -119,24 +120,18 @@ const createStyles = (textStyles, colors, fontFamily) => {
             fontWeight: "bold",
         },
         exercises: {
-            //backgroundColor: "blue",
             flexDirection: "column",
             flex: 1,
-            //width: "50%",
-            //gap: 10,
-            //alignItems: "flex-end",
             justifyContent: "space-between",
         },
         exerciseContainer: {
             flexDirection: "row",
-            //backgroundColor: "green"
         },
         exerciseListContainer: {
             flex: 1,
             marginTop: 10,
             marginBottom: 10,
             paddingHorizontal: 10,
-            //backgroundColor: "green"
         },
         exerciseName: {
             fontFamily: fontFamily.Poppins_SemiBold,
@@ -168,7 +163,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             tintColor: colors.colorButtonLabel,
         },
         exerciseImageContainer: {
-            //backgroundColor: "red"
         },
         exerciseImage: {
             width: 100,

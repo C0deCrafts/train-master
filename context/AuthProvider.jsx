@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth"
 import { createContext, useContext, useEffect, useState } from "react";
-import {FIREBASE_AUTH, FIRESTORE_DB} from "../config/firebaseConfig";
+import {FIREBASE_AUTH, FIRESTORE_DB} from "../utils/firebaseConfig";
 import {doc, getDoc, updateDoc} from "firebase/firestore";
 
 const AuthContext = createContext({});
@@ -18,9 +18,9 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user)=> {
             //console.log("onAuthStateChanged", user);
-            console.log("USER:", user)
+            //console.log("USER:", user)
             setUser(user);
-            console.log("USER:", user)
+            //console.log("USER:", user)
             setInitialized(true)
 
             if (user) {
@@ -50,13 +50,9 @@ export const AuthProvider = ({ children }) => {
             setUsername(newUsername); // Aktualisiere den Zustand mit dem neuen Benutzernamen
             console.log("Username geändert: ", newUsername);
         } catch (err) {
-            console.error(err);
+            console.error("Error beim ändern des Usernamens: ",err);
         }
     };
-
-    useEffect(() => {
-        console.log("Username: ", username)
-    }, [username]);
 
     return <AuthContext.Provider value={{ user, initialized, username, setUsername, email, handleUpdateUsername }}>
         {children}

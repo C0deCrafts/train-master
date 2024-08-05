@@ -16,7 +16,7 @@ import { Dimensions } from 'react-native';
 import {useEffect, useState, useRef} from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import {sendPasswordResetEmail, signInWithEmailAndPassword} from "firebase/auth";
-import {FIREBASE_AUTH} from "../../config/firebaseConfig";
+import {FIREBASE_AUTH} from "../../utils/firebaseConfig";
 
 const Login = () => {
     const [isSmallDevice, setIsSmallDevice] = useState(false)
@@ -193,16 +193,18 @@ const styles = StyleSheet.create({
     logoContainer: {
         position: "relative",
         //backgroundColor: "green",
-        paddingTop: 80,
+        paddingTop: 90,
         paddingBottom: 60
     },
     logo: {
         width: "60%",
+        height: 150,
         contentFit: "contain",
         alignSelf: "center",
     },
     logoSmallDevices: {
         width: "50%",
+        height: 150,
         contentFit: "contain",
         alignSelf: "center",
         marginBottom: -40

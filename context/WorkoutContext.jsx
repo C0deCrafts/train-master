@@ -1,7 +1,11 @@
-import { createContext, useState } from 'react';
-import {collection, getDocs, query, where} from "firebase/firestore";
-import {FIRESTORE_DB} from "../config/firebaseConfig";
+import {createContext, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {cacheWorkouts, fetchWorkoutsWithExercises, loadCachedWorkouts} from "../utils/workoutUtils";
+import {
+    completeExercise,
+    startTrainingSession
+} from "../utils/trainingSession";
+import useHealthData from "../hook/useHealthData";
 
 export const WorkoutContext = createContext();
 
@@ -9,87 +13,16 @@ export const WorkoutProvider = ({ children }) => {
     const [workouts, setWorkouts] = useState([]);
     const [exerciseImages, setExerciseImages] = useState({});
     const [exerciseVideos, setExerciseVideos] = useState({});
+    const [currentSessionId, setCurrentSessionId] = useState(null);
 
-    const fetchWorkoutsWithExercises = async () => {
-        try {
-            const workoutsCollection = collection(FIRESTORE_DB, 'workouts');
-            const workoutsSnapshot = await getDocs(workoutsCollection);
+    const [exerciseStartTime, setExerciseStartTime] = useState(null);
+    const [setDurations, setSetDurations] = useState([]);
+    const {weight} = useHealthData();
 
-            const workouts = [];
-            const images = {};
-            const videos = {}
-
-            for (const workoutDoc of workoutsSnapshot.docs) {
-                const workoutData = workoutDoc.data();
-                const exerciseIds = workoutData.exercises;
-
-                // Exercise-Dokumente abrufen
-                const exercisesCollection = collection(FIRESTORE_DB, 'exercises');
-                const q = query(exercisesCollection, where('id', 'in', exerciseIds));
-                const exercisesSnapshot = await getDocs(q);
-                const exercises = exercisesSnapshot.docs.map(doc => doc.data());
-
-                workouts.push({
-                    ...workoutData,
-                    exercises
-                });
-
-                // Bild-URLs für die WorkoutId abrufen und speichern
-                for (const exercise of exercises) {
-                    if (exercise.image) {
-                        images[exercise.id] = exercise.image;
-                    }
-                    if (exercise.video) {
-                        videos[exercise.id] = exercise.video;
-                    }
-                }
-            }
-
-            //setExerciseImages(images);
-            //setExerciseVideos(videos);
-            return {workouts, images, videos};
-        } catch (error) {
-            console.error("Error fetching workouts with exercises: ", error);
-        }
-    }
-
-    const cacheWorkouts = async (workouts, images, videos) => {
-        try {
-            //await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
-            await AsyncStorage.multiSet([
-                ['workouts', JSON.stringify(workouts)],
-                ['exerciseImages', JSON.stringify(images)],
-                ['exerciseVideos', JSON.stringify(videos)]
-            ]);
-        } catch (error) {
-            console.error("Error caching workouts: ", error);
-        }
-    };
-    const loadCachedWorkouts = async () => {
-        try {
-            //const cachedWorkouts = await AsyncStorage.getItem('workouts');
-            //return cachedWorkouts ? JSON.parse(cachedWorkouts) : null;
-            const [[, cachedWorkouts], [, cachedImages], [, cachedVideos]] = await AsyncStorage.multiGet(['workouts', 'exerciseImages', 'exerciseVideos']);
-            return {
-                workouts: cachedWorkouts ? JSON.parse(cachedWorkouts) : null,
-                images: cachedImages ? JSON.parse(cachedImages) : null,
-                videos: cachedVideos ? JSON.parse(cachedVideos) : null,
-            };
-        } catch (error) {
-            console.error("Error loading cached workouts: ", error);
-            return null;
-        }
-    };
+    // Gewicht des Benutzers (dies sollte später aus den Benutzerdaten kommen)
+    const userWeight = weight || 70; // Beispielgewicht in kg
 
     const loadWorkouts = async () => {
-        /*const cachedWorkouts = await loadCachedWorkouts();
-        if(cachedWorkouts){
-            setWorkouts(cachedWorkouts);
-        }else {
-            const fetchedWorkouts = await fetchWorkoutsWithExercises();
-            setWorkouts(fetchedWorkouts);
-            await cacheWorkouts(fetchedWorkouts);
-        }*/
         const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
         if (cachedWorkouts && cachedImages && cachedVideos) {
             setWorkouts(cachedWorkouts);
@@ -104,9 +37,78 @@ export const WorkoutProvider = ({ children }) => {
         }
     };
 
+    const startSession = async (workoutId) => {
+        const sessionId = await startTrainingSession(workoutId);
+        setCurrentSessionId(sessionId);
+    }
+
+    const startExerciseTimer = () => {
+        const startTime = new Date();
+        setExerciseStartTime(startTime);
+        console.log(`Exercise timer started at: ${startTime}`);
+    };
+
+    const stopExerciseTimer = ()  => {
+        if(exerciseStartTime){
+            const endTime = new Date();
+            const durationInSeconds = (endTime - exerciseStartTime) / 1000; // Dauer in Sekunden
+            setSetDurations(prevDurations => [...prevDurations, durationInSeconds]);
+
+            console.log(`Exercise timer stopped at: ${endTime}`);
+            console.log(`Exercise duration: ${durationInSeconds} seconds`);
+            setExerciseStartTime(null); // Timer zurücksetzen
+        } else {
+            console.log("No timer started")
+        }
+    };
+
+    // Kalorienberechnung basierend auf MET, Gewicht und Zeit
+    const calculateCalories = (MET, weight, durationInSeconds) => {
+        const durationInHours = durationInSeconds / 3600;
+        return MET * weight * durationInHours;
+    }
+
+    const completeCurrentExercise = async (exercise) => {
+        if (!currentSessionId) {
+            throw new Error("No active training session");
+        }
+
+        setSetDurations(async prevDurations => {
+            const totalDuration = prevDurations.reduce((acc, duration) => acc + duration, 0);
+
+            // Berechnung der verbrannten Kalorien
+            const caloriesBurned = calculateCalories(exercise.MET, userWeight, totalDuration);
+
+            const completedExercise = {
+                ...exercise,
+                duration: totalDuration,
+                caloriesBurned: caloriesBurned,
+                test: prevDurations.length,
+            };
+
+            //console.log("Duration der einzelnen Sätze: ", prevDurations);
+            //console.log("Summe TotalDuration: ", totalDuration);
+            //console.log("Es wurden soviele Sätze gespeichert: " + prevDurations.length + " von: " + exercise.sets + " Sets");
+
+            await completeExercise(currentSessionId, completedExercise).then(() => {
+                setSetDurations([]);
+                console.log("Exercise completed and durations reset");
+            });
+        });
+    }
+
+    //for testing (later need a listener to the database)
+    const clearStorage = async () => {
+        try {
+            await AsyncStorage.clear();
+            console.log('Alle Daten im AsyncStorage wurden gelöscht.');
+        } catch (error) {
+            console.error('Fehler beim Löschen der Daten im AsyncStorage:', error);
+        }
+    };
 
     return (
-        <WorkoutContext.Provider value={{ workouts, exerciseImages, exerciseVideos, loadWorkouts }}>
+        <WorkoutContext.Provider value={{ workouts, clearStorage, exerciseImages, exerciseVideos, loadWorkouts, startSession, startExerciseTimer, stopExerciseTimer, completeCurrentExercise }}>
             {children}
         </WorkoutContext.Provider>
     );

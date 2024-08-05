@@ -14,7 +14,7 @@ import {useState, useLayoutEffect, useRef} from "react";
 import CustomHeader from "../../../../../components/CustomHeader";
 import {useAuth} from "../../../../../context/AuthProvider";
 import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
-import {FIRESTORE_DB} from "../../../../../config/firebaseConfig";
+import {FIRESTORE_DB} from "../../../../../utils/firebaseConfig";
 import {images} from "../../../../../constants";
 import {useAppStyle} from "../../../../../context/AppStyleContext";
 

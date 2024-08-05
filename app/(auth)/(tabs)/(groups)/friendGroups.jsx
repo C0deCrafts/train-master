@@ -2,7 +2,7 @@ import {Alert, FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import { Image } from 'expo-image';
 import {useEffect, useState} from "react";
 import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
-import {FIRESTORE_DB} from "../../../../config/firebaseConfig";
+import {FIRESTORE_DB} from "../../../../utils/firebaseConfig";
 import {icons, images} from "../../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
 import {useAuth} from "../../../../context/AuthProvider";
@@ -11,6 +11,8 @@ import CustomHeader from "../../../../components/CustomHeader";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import Card from "../../../../components/Card";
 import elementStyles from "../../../../constants/elementStyles";
+import Animated, {FadeInDown, FadeInRight, FadeInUp} from "react-native-reanimated";
+import index from "../../../index";
 
 const FriendGroups = () => {
     const { user } = useAuth();
@@ -77,6 +79,19 @@ const FriendGroups = () => {
         );
     };
 
+    const ChatList = ({item, index}) => {
+        return (
+            <Animated.View entering={FadeInDown.delay(200).duration(index * 300)}>
+                <Card key={item.id}
+                      clickable
+                      href={{pathname: "/chat/[id]", params: {id: item.id, name: item.name}}}>
+                    <Text style={styles.groupName}>{item.name}</Text>
+                    <Text style={styles.groupDescription}>{item.description}</Text>
+                </Card>
+            </Animated.View>
+        )
+    }
+
     return (
         <View style={styles.container}>
             <CustomHeader title={"Gruppen"}/>
@@ -89,13 +104,8 @@ const FriendGroups = () => {
                       keyExtractor={(item)=> item.id}
                       numColumns={1}
                       contentContainerStyle={styles.scrollContainer}
-                      renderItem={({item})=> (
-                          <Card key={item.id}
-                                clickable
-                                href={{pathname: "/chat/[id]", params: {id: item.id, name: item.name}}}>
-                              <Text style={styles.groupName}>{item.name}</Text>
-                              <Text style={styles.groupDescription}>{item.description}</Text>
-                          </Card>
+                      renderItem={({item, index})=> (
+                          <ChatList item={item} index={index}/>
                       )}
             />
             <Pressable style={styles.fab} onPress={handleAddGroup}>
@@ -118,7 +128,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             top: 50,
             width: "100%",
             height: "100%",
-            resizeMode: "contain",
+            contentFit: "contain",
             tintColor: colors.quaternaryLabel
         },
         scrollContainer: {

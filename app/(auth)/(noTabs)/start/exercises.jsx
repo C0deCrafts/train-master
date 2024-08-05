@@ -3,12 +3,12 @@ import {
     StyleSheet,
     Text, View
 } from 'react-native'
-import {router, useLocalSearchParams} from "expo-router";
+import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
 import {Video} from "expo-av";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import Card from "../../../../components/Card";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState, useCallback} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseNavigation from "../../../../components/ExerciseNavigation";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -18,8 +18,9 @@ const Exercises = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
-    const { exerciseVideos } = useContext(WorkoutContext);
     const styles = createStyles(textStyles, colors, fontFamily);
+
+    const { exerciseVideos, startExerciseTimer, stopExerciseTimer, completeCurrentExercise } = useContext(WorkoutContext);
 
     // Parse exercise JSON and initialize state
     const exercises = exercise ? JSON.parse(exercise) : {};
@@ -29,11 +30,18 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
-    useEffect(() => {
-        console.log("CurrentSets", currentSets)
-    }, [currentSets]);
+    // useFocusEffect wird ausgeführt, wenn der Bildschirm in den Fokus kommt
+    useFocusEffect(
+        useCallback(() => {
+            // Timer starten, wenn der Bildschirm in den Fokus kommt
+            startExerciseTimer();
+            //console.log("Exercises Screen is focused and timer started");
+        }, [])
+    );
 
-    const handleCompleteSet = () => {
+    const handleCompleteSet = async () => {
+        stopExerciseTimer();
+
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
             router.navigate({
@@ -47,15 +55,23 @@ const Exercises = () => {
                 }
             });
         } else {
-            // Wenn dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
-            console.log("letzter Satz nach dem else: ", currentSets)
+            //Letzter Satz - hier komme ich zum rest screen und die duration wurde schon gestoppt
+            const completedExercise = {
+                exerciseId: exercises.exercises[index].id,
+                MET: exercises.exercises[index].MET,
+                ...(exercises.exercises[index].sets && {sets: exercises.exercises[index].sets}),
+                ...(exercises.exercises[index].repetitions && {repetitions: exercises.exercises[index].repetitions})
+            };
+            //console.log(`Hier wird im Exercises gespeichert: Completing exercise: ${JSON.stringify(completedExercise)}`);
+            await completeCurrentExercise(completedExercise);
+
+            // Da dies der letzte Satz war, führe die Logik aus, um zur nächsten Übung zu wechseln
             if (index + 1 < exercises.exercises.length) {
-                console.log("letzter Satz, currentSets: ", currentSets)
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
 
-                // Hier zusätzlich navigieren, um den Rest zwischen Übungen zu handhaben
+                // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die nächste Übung angezeigt wird.
                 router.navigate({
                     pathname: "(noTabs)/start/rest",
                     params: {
@@ -67,6 +83,7 @@ const Exercises = () => {
                     }
                 });
             } else {
+                // ALLERLETZTE Übung und ALLERLETZTER Satz
                 router.replace("(tabs)/(training)/training")
             }
         }
@@ -144,7 +161,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             backgroundColor: colors.secondary,
             flex: 1,
             paddingHorizontal: 20,
-            //paddingVertical: 20,
         },
         text: {
             fontFamily: fontFamily.Poppins_Regular,

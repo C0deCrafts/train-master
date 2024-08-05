@@ -1,17 +1,17 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, StyleSheet, Text, View} from 'react-native'
 import { Image } from 'expo-image';
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import {elements, icons} from "../../../../constants";
-import CustomButton from "../../../../components/CustomButton";
-import {router} from "expo-router";
+import Animated, {
+    FadeInDown,
+} from "react-native-reanimated";
 
 const Training = () => {
-    const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
-    const {getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const {workouts} = useContext(WorkoutContext);
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -28,56 +28,58 @@ const Training = () => {
         return minutes;
     };
 
-    const renderWorkout = ({item}) => {
+    const RenderWorkout = ({item, index}) => {
         const totalDuration = calculateTotalDuration(item);
         const imageUrl = item.image || '';
 
         return (
-            <Card
-                style={styles.workout}
-                href={{pathname: `(noTabs)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
-                clickable
-            >
-                {imageUrl && (
-                    <Image
-                        source={{uri: item.image}}
-                        style={{
-                            width: "100%",
-                            height: 100,
-                            borderTopLeftRadius: elements.cardRadius,
-                            borderTopRightRadius: elements.cardRadius,
-                        }}
-                    />
-                )}
-                {/*<Image source={item.image} style={styles.workoutImage} />*/}
-                <View style={styles.cardContent}>
-                    <View style={styles.cardContainerTitleDescription}>
-                        <View>
-                            <Text style={[styles.cardTitle, styles.maxWith]}
-                                  numberOfLines={1}
-                                  ellipsizeMode="tail"
-                            >{item.name}</Text>
-                            <Text style={[styles.cardDescription, styles.maxWith]}
-                                  numberOfLines={2}
-                                  ellipsizeMode="tail"
-                            >
-                                {item.description}
-                            </Text>
+            <Animated.View
+                entering={FadeInDown.delay(100).duration(index * 500)}>
+                <Card
+                    style={styles.workout}
+                    href={{pathname: `(noTabs)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
+                    clickable
+                >
+                    {imageUrl && (
+                        <Image
+                            source={{uri: item.image}}
+                            style={{
+                                width: "100%",
+                                height: 100,
+                                borderTopLeftRadius: elements.cardRadius,
+                                borderTopRightRadius: elements.cardRadius,
+                            }}
+                        />
+                    )}
+                    {/*<Image source={item.image} style={styles.workoutImage} />*/}
+                    <View style={styles.cardContent}>
+                        <View style={styles.cardContainerTitleDescription}>
+                            <View>
+                                <Text style={[styles.cardTitle, styles.maxWith]}
+                                      numberOfLines={1}
+                                      ellipsizeMode="tail"
+                                >{item.name}</Text>
+                                <Text style={[styles.cardDescription, styles.maxWith]}
+                                      numberOfLines={2}
+                                      ellipsizeMode="tail"
+                                >
+                                    {item.description}
+                                </Text>
+                            </View>
+                            <View>
+                                <Image style={styles.icon} source={icons.forward}/>
+                            </View>
                         </View>
-                        <View>
-                            <Image style={styles.icon} source={icons.forward}/>
+                        <View style={styles.cardContainerDetails}>
+                            <Image source={icons.time} style={styles.smallIcon}/>
+                            <Text style={styles.cardDescription}>{totalDuration} Min</Text>
+                            <Text style={styles.cardDescription}> ● {item.exercises.length} Übungen</Text>
                         </View>
                     </View>
-                    <View style={styles.cardContainerDetails}>
-                        <Image source={icons.time} style={styles.smallIcon}/>
-                        <Text style={styles.cardDescription}>{totalDuration} Min</Text>
-                        <Text style={styles.cardDescription}> ● {item.exercises.length} Übungen</Text>
-                    </View>
-                </View>
-            </Card>
+                </Card>
+            </Animated.View>
         )
     }
-
 
     return (
         <View style={styles.container}>
@@ -87,17 +89,14 @@ const Training = () => {
                 <View style={styles.workoutContainer}>
                     <FlatList
                         data={workouts}
-                        renderItem={renderWorkout}
+                        renderItem={({ item, index }) => (
+                            <RenderWorkout item={item} index={index} />
+                        )}
                         keyExtractor={item => item.id}
                         horizontal={true} // Set horizontal to true for horizontal scrolling
                         showsHorizontalScrollIndicator={false}
-                        //style={{backgroundColor: "red"}}
                     />
                 </View>
-                {/*
-                <CustomButton title={"get outside"} handlePress={
-                    () => router.navigate("/outside/screen")
-                }/>*/}
             </View>
 
         </View>
@@ -126,12 +125,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
             color: colors.label
         },
         workoutContainer: {
-            //backgroundColor: colors.secondary,
-            //borderRadius: elements.cardRadius,
         },
         workout: {
             backgroundColor: colors.secondary,
-            //fix color
             marginRight: 10,
             marginTop: 10,
             padding: 0,
@@ -171,13 +167,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
             width: 30,
             height: 30,
             tintColor: colors.baseColor,
-            //backgroundColor: "red"
         },
         smallIcon: {
             width: 15,
             height: 15,
             tintColor: colors.baseColor,
             marginRight: 5,
-        }
+        },
     })
 }
