@@ -71,7 +71,7 @@ const TabsLayout = () => {
                     <TabIcon
                         icon={icons.fitness}
                         color={color}
-                        name="Start"
+                        name="Training"
                         focused={focused}
                     />
                 )

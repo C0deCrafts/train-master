@@ -1,19 +1,18 @@
-import {View, StyleSheet, TextInput} from "react-native";
+import {View, StyleSheet} from "react-native";
 import {Image} from 'expo-image';
-import Svg, {G, Circle} from "react-native-svg";
-import {useEffect, useRef} from "react";
-import {colors, icons} from "../constants";
+import Svg, {Circle} from "react-native-svg";
+import {useEffect} from "react";
+import {icons} from "../constants";
 import Animated, {useAnimatedProps, useSharedValue, withTiming} from "react-native-reanimated";
 import {useAppStyle} from "../context/AppStyleContext";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 function BigDonutChart({
-                           radius = 100,
-                           strokeWidth = 35,
+                           radius = 70,
+                           strokeWidth = 25,
                            progress,
-                           //color = "tomato",
-                           //max = 1000,
+                           max = 10000,
                        }) {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const colors = getColors();
@@ -27,8 +26,8 @@ function BigDonutChart({
     const fill = useSharedValue(0);
 
     useEffect(() => {
-        fill.value = withTiming(progress, {duration: 1500});
-    }, [progress]);
+        fill.value = withTiming(progress / max, {duration: 1500});
+    }, [progress, max]);
 
     const animatedProps = useAnimatedProps(() => ({
         strokeDasharray: [circumference * fill.value, circumference]
@@ -41,7 +40,7 @@ function BigDonutChart({
             alignSelf: "center"
         }}>
             <Svg>
-                {/*Background*/}
+                {/* Background */}
                 <Circle
                     r={innerRadius}
                     cx={radius}
@@ -50,9 +49,8 @@ function BigDonutChart({
                     stroke={colors.baseColor}
                     opacity={0.2}
                     fill="transparent"
-
                 />
-                {/*Foreground*/}
+                {/* Foreground */}
                 <AnimatedCircle
                     r={innerRadius}
                     cx={radius}

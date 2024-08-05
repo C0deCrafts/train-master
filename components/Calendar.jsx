@@ -5,6 +5,7 @@ import {format} from "date-fns";
 import {de} from "date-fns/locale";
 import {Image} from "expo-image";
 import {icons} from "../constants";
+import WeekStats from "./WeekStats";
 
 const Calendar = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
@@ -19,9 +20,12 @@ const Calendar = () => {
     return (
         <View>
             <View style={styles.calendarHeader}>
+                <Image style={styles.image} source={icons.back}/>
                 <Text style={styles.titleText}>{formattedDate}</Text>
                 <Image style={styles.image} source={icons.calendar}/>
+                <Image style={styles.image} source={icons.forward}/>
             </View>
+            <WeekStats/>
         </View>
     );
 };
@@ -40,6 +44,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             justifyContent: "space-between",
             alignItems: "center",
             marginTop: 15,
+            marginBottom: 10,
         },
         titleText: {
             fontFamily: fontFamily.Poppins_SemiBold,

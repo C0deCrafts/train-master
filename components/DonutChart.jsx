@@ -14,6 +14,7 @@ function DonutChart({
                         delay = 0,
                         textColor,
                         max = 100,
+                        withLabel = true,
                     }){
 
     const animatedValue = useRef(new Animated.Value(0)).current;
@@ -29,19 +30,6 @@ function DonutChart({
             useNativeDriver: true,
         }).start();
     }
-    /*
-      const animation = (toValue) => {
-        return Animated.timing(animatedValue, {
-            toValue,
-            duration,
-            delay,
-            useNativeDriver: true,
-        }).start(()=>{
-            //animation(toValue === 0 ? percentage : 0)
-        });
-    }
-    * */
-
 
     useEffect(() => {
         animation(percentage);
@@ -96,17 +84,19 @@ function DonutChart({
                     />
                 </G>
             </Svg>
-            <AnimatedInput
-                ref={inputRef}
-                editable={false}
-                defaultValue="0"
-                style={[
-                    StyleSheet.absoluteFillObject,
-                    { fontSize: radius / 2, color: textColor ?? color },
-                    { fontWeight: "900", textAlign: "center" },
-                ]}
+            {withLabel && (
+                <AnimatedInput
+                    ref={inputRef}
+                    editable={false}
+                    defaultValue="0"
+                    style={[
+                        StyleSheet.absoluteFillObject,
+                        { fontSize: radius / 2, color: textColor ?? color },
+                        { fontWeight: "900", textAlign: "center" },
+                    ]}
 
-            />
+                />
+            )}
         </View>
     )
 }
