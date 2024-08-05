@@ -7,6 +7,7 @@ import {useFonts} from "expo-font";
 import {AppStyleProvider, useAppStyle} from "../context/AppStyleContext";
 import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
 import {dark} from "../constants/colors";
+import {AppleHealthKitProvider} from "../context/AppleHealthKitContext";
 
 const InitialLayout = () => {
     const {user, initialized, username} = useAuth();
@@ -81,9 +82,11 @@ const RootLayout = () => {
         <AppStyleProvider>
             <AuthProvider>
                 <WorkoutProvider>
-                    <InitialLayout/>
-                    <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
-                    {/*<StatusBar style="light"/>*/}
+                    <AppleHealthKitProvider>
+                        <InitialLayout/>
+                        <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+                        {/*<StatusBar style="light"/>*/}
+                    </AppleHealthKitProvider>
                 </WorkoutProvider>
             </AuthProvider>
         </AppStyleProvider>

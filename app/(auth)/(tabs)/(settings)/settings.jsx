@@ -80,6 +80,7 @@ const Settings = () => {
 
     const handleProfileImageChange = () => {
         console.log("Bild ändern")
+        router.navigate("/trainingData")
     }
 
     const handleTrainDataChange = () => {

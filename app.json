@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fitness.trainmaster"
+      "bundleIdentifier": "com.fitness.trainmaster",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.",
+        "NSHealthShareUpdateDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -33,9 +37,10 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "photosPermission": "\nDie App greift auf Ihre Fotos zu, um Ihnen das Teilen mit Ihren Freunden zu ermöglichen. Außerdem können Sie ein Benutzerprofil einrichten."
         }
-      ]
+      ],
+      "react-native-health"
     ],
     "extra": {
       "router": {
