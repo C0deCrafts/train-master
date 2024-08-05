@@ -9,6 +9,7 @@ import {elements, icons} from "../../../../constants";
 import Animated, {
     FadeInDown,
 } from "react-native-reanimated";
+import Calendar from "../../../../components/Calendar";
 
 const Training = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -85,6 +86,9 @@ const Training = () => {
         <View style={styles.container}>
             <CustomHeader title={"Training"}/>
             <View style={styles.content}>
+
+                <Calendar/>
+
                 <Text style={styles.titleText}>Fitnesspläne</Text>
                 <View style={styles.workoutContainer}>
                     <FlatList

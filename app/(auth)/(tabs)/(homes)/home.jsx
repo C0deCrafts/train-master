@@ -150,9 +150,7 @@ const Home = () => {
                     )}
                 </View>
             </SafeAreaView>
-            {/* <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>*/}
-            {/*colors.label*/}
-            <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+            <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
         </>
     );
 };

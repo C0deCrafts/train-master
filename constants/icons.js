@@ -3,6 +3,7 @@ import apple from "../assets/icons/apple_fill.png";
 import arrowRight from "../assets/icons/arrow_right_fill.png";
 import back from "../assets/icons/left_line.png";
 import barbell from "../assets/icons/barbell_fill.png";
+import calendar from "../assets/icons/calendar_2_fill.png";
 import camera from "../assets/icons/camera_2_fill.png";
 import celebration from "../assets/icons/celebrate_line.png"
 import diary from "../assets/icons/notebook_2_fill.png";
@@ -35,6 +36,7 @@ export default {
     back,
     barbell,
     camera,
+    calendar,
     celebration,
     diary,
     facebook,
