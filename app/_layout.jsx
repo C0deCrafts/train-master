@@ -7,7 +7,7 @@ import {useFonts} from "expo-font";
 import {AppStyleProvider, useAppStyle} from "../context/AppStyleContext";
 import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
 import {dark} from "../constants/colors";
-import {SettingsProvider} from "../context/SettingsContext";
+import {AccountSettingProvider} from "../context/AccountSettingContext";
 
 const InitialLayout = () => {
     const {user, initialized, username} = useAuth();
@@ -55,6 +55,7 @@ const InitialLayout = () => {
     )
 };
 
+
 const RootLayout = () => {
     const {colorScheme} = useAppStyle();
 
@@ -82,11 +83,11 @@ const RootLayout = () => {
         <AppStyleProvider>
             <AuthProvider>
                 <WorkoutProvider>
-                    <SettingsProvider>
+                    <AccountSettingProvider>
                         <InitialLayout/>
                         <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
                         {/*<StatusBar style="light"/>*/}
-                    </SettingsProvider>
+                    </AccountSettingProvider>
                 </WorkoutProvider>
             </AuthProvider>
         </AppStyleProvider>

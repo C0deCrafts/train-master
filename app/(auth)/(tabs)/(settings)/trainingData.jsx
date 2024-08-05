@@ -1,18 +1,17 @@
 import {View, Text, Switch, StyleSheet} from "react-native";
 import CustomHeader from "../../../../components/CustomHeader";
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {useContext} from "react";
 import {Image} from "expo-image";
 import {icons} from "../../../../constants";
 import Card from "../../../../components/Card";
-import {SettingsContext} from "../../../../context/SettingsContext";
+import {useAccountSetting} from "../../../../context/AccountSettingContext";
 
 const TrainingData = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
-    const {showStepsCount, setShowStepsCount} = useContext(SettingsContext);
+    const {showStepsCount, setShowStepsCount} = useAccountSetting();
 
     const toggleSwitch = () => setShowStepsCount(previousState => !previousState);
 

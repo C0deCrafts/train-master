@@ -6,7 +6,7 @@ import DonutChart from "./DonutChart";
 import {useAppStyle} from "../context/AppStyleContext";
 import {format} from "date-fns";
 import useHealthData from "../hook/useHealthData";
-import {SettingsContext} from "../context/SettingsContext";
+import {useAccountSetting} from "../context/AccountSettingContext";
 
 const TodayStats = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -18,7 +18,7 @@ const TodayStats = () => {
     const {workouts} = useContext(WorkoutContext);
     const today = format(new Date(), 'yyyy-MM-dd');
 
-    const {showStepsCount} = useContext(SettingsContext);
+    const {showStepsCount} = useAccountSetting();
     const {steps} = useHealthData();
 
     useEffect(() => {
