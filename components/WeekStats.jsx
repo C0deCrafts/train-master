@@ -5,18 +5,14 @@ import {eachDayOfInterval, endOfWeek, format, startOfWeek} from "date-fns";
 import useHealthData from "../hook/useHealthData";
 import {useAccountSetting} from "../context/AccountSettingContext";
 import {de} from "date-fns/locale";
-import {useContext, useEffect} from "react";
 import Card from "./Card";
 import BigDonutChart from "./BigDonutChart";
-import {WorkoutContext} from "../context/WorkoutContext";
 
 const WeekStats = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
-
-    const {workouts} = useContext(WorkoutContext);
 
     const {showStepsCount} = useAccountSetting();
     const {steps} = useHealthData();
@@ -54,10 +50,17 @@ const WeekStats = () => {
                 })}
             </View>
             <Card style={{marginTop: 20, padding: 15}}>
-                <BigDonutChart
-                    progress={5000}
-                    max={20000}
-                />
+                <View style={styles.bigChartContainer}>
+                    <View>
+                        <Text style={styles.text} numberOfLines={2} ellipsizeMode="tail">Abgeschlossene Workouts</Text>
+                        <Text style={styles.details}>17</Text>
+
+                    </View>
+                    <BigDonutChart
+                        progress={5000}
+                        max={20000}
+                    />
+                </View>
                 <Text style={styles.text}>Schritte</Text>
                 {steps ? (
                     <View style={styles.detailsContainer}>
@@ -71,10 +74,10 @@ const WeekStats = () => {
                 ):(
                     <View style={styles.detailsContainer}>
                         <View style={styles.container}>
-                            <Text style={styles.details}>0/0</Text>
+                            <Text style={styles.details}>0</Text>
                         </View>
                         <View style={styles.container}>
-                            <Text style={styles.kcal}>KCAL</Text>
+                            <Text style={styles.kcal}>205 KCAL</Text>
                         </View>
                     </View>
                 )}
@@ -111,6 +114,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             color: colors.label,
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
+            width: 150
             //paddingHorizontal: 10
         },
         details: {
@@ -129,6 +133,10 @@ const createStyles = (textStyles, colors, fontFamily) => {
             fontFamily: fontFamily.Poppins_SemiBold,
             fontSize: textStyles.title_1,
         },
+        bigChartContainer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+        }
     })
 }
 
