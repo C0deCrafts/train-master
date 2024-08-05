@@ -1,9 +1,7 @@
 import {
-    Button,
     ScrollView,
     StyleSheet,
     Text,
-    TextInput,
     View
 } from 'react-native';
 import { Image } from 'expo-image';
@@ -23,10 +21,11 @@ import CustomButton from "../../../../components/CustomButton";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import {router} from "expo-router";
 import CustomHeader from "../../../../components/CustomHeader";
+import CustomCard from "../../../../components/CustomCard";
 
 const Settings = () => {
     const { user, username, setUsername, email, handleUpdateUsername } = useAuth();
-    const { textSize, setTextSize, getTextStyles, getColors, getAllBaseColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const { textSize, setTextSize, getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
@@ -111,44 +110,29 @@ const Settings = () => {
                                 }}
                             />
                             <View>
-                                <Text style={styles.userName}>{username}</Text>
-                                <Text style={styles.email}>{email.toLowerCase()}</Text>
+                                <Text style={styles.userName} numberOfLines={1} ellipsizeMode={"tail"}>{username}</Text>
+                                <Text style={styles.email} numberOfLines={1} ellipsizeMode={"tail"}>{email.toLowerCase()}</Text>
                             </View>
                         </Card>
                         <Text style={styles.title}>Account Einstellungen</Text>
-                        <Card style={[styles.card, styles.spacingTop]} clickable={true} onPress={handleProfileImageChange}>
-                            <Image source={icons.camera}
-                                   style={{
-                                       width: 30,
-                                       height: 30,
-                                       contentFit: "contain",
-                                       tintColor: colors.baseColor
-                                   }}
-                            />
-                            <Text style={styles.text}>Profilbild ändern</Text>
-                        </Card>
-                        <Card style={styles.card} clickable={true} onPress={handleUserdataChange}>
-                            <Image source={icons.profile}
-                                   style={{
-                                       width: 30,
-                                       height: 30,
-                                       contentFit: "contain",
-                                       tintColor: colors.baseColor
-                                   }}
-                            />
-                            <Text style={styles.text}>Benutzerdaten ändern</Text>
-                        </Card>
-                        <Card style={styles.card} clickable={true} onPress={handleTrainDataChange}>
-                            <Image source={icons.heartbeat}
-                                   style={{
-                                       width: 30,
-                                       height: 30,
-                                       contentFit: "contain",
-                                       tintColor: colors.baseColor
-                                   }}
-                            />
-                            <Text style={styles.text}>Trainingsdaten ändern</Text>
-                        </Card>
+                        <CustomCard
+                            label={"Profilbild ändern"}
+                            image={icons.camera}
+                            onPress={handleProfileImageChange}
+                            clickable
+                        />
+                        <CustomCard
+                            label={"Benutzerdaten ändern"}
+                            image={icons.profile}
+                            onPress={handleUserdataChange}
+                            clickable
+                        />
+                        <CustomCard
+                            label={"Trainingsdaten ändern"}
+                            image={icons.heartbeat}
+                            onPress={handleTrainDataChange}
+                            clickable
+                        />
                         <Text style={styles.title}>App Einstellungen</Text>
                         <Text style={[styles.titleSmall, styles.spacingTop]}>Erscheinungsbild</Text>
                         <Card>
@@ -159,8 +143,6 @@ const Settings = () => {
                                         button={button}
                                         isSelected={selectedId === button.id}
                                         onPress={handleDarkModeChange}
-                                        colors={colors}
-                                        styles={styles}
                                     />
 
                                 ))}
@@ -180,17 +162,13 @@ const Settings = () => {
                                 ))}
                             </ScrollView>
                         </Card>
-                        <Card style={[styles.card, styles.spacingBottom]} clickable={true} onPress={toggleModal}>
-                            <Image source={icons.fontsize}
-                                   style={{
-                                       width: 30,
-                                       height: 30,
-                                       contentFit: "contain",
-                                       tintColor: colors.baseColor
-                                   }}
-                            />
-                            <Text style={styles.text}>Ändere Textgröße</Text>
-                        </Card>
+                        <CustomCard
+                            label={"Ändere Textgröße"}
+                            image={icons.fontsize}
+                            onPress={toggleModal}
+                            clickable
+                            extraStyles={styles.spacingBottom}
+                        />
                         <CustomModal isVisible={isModalVisible} onClose={toggleModal} styles={styles}>
                             <Text style={styles.modalText}>Wähle deine gewünschte Textgröße aus:</Text>
                             <Picker selectedValue={textSize}
@@ -256,12 +234,14 @@ const createStyles = (textStyles, colors, fontFamily) => {
         userName: {
             fontSize: textStyles.body,
             fontFamily: fontFamily.Poppins_SemiBold,
-            color: colors.label
+            color: colors.label,
+            width: 300,
         },
         email: {
             fontSize: textStyles.footnote,
             fontFamily: fontFamily.Poppins_Regular,
-            color: colors.label
+            color: colors.label,
+            width: 300,
         },
         userCard: {
             backgroundColor: "transparent",
@@ -272,9 +252,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             marginTop: 20
         },
         card: {
-            //backgroundColor: "transparent",
-            //borderBottomColor: colors.opaqueSeparator,
-            //borderBottomWidth: 1,
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center",

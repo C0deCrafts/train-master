@@ -5,6 +5,7 @@ import {
     completeExercise,
     startTrainingSession
 } from "../utils/trainingSession";
+import useHealthData from "../hook/useHealthData";
 
 export const WorkoutContext = createContext();
 
@@ -16,9 +17,10 @@ export const WorkoutProvider = ({ children }) => {
 
     const [exerciseStartTime, setExerciseStartTime] = useState(null);
     const [setDurations, setSetDurations] = useState([]);
+    const {weight} = useHealthData();
 
     // Gewicht des Benutzers (dies sollte später aus den Benutzerdaten kommen)
-    const userWeight = 70; // Beispielgewicht in kg
+    const userWeight = weight || 70; // Beispielgewicht in kg
 
     const loadWorkouts = async () => {
         const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();

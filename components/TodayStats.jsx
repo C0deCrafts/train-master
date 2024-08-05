@@ -5,6 +5,8 @@ import {fetchDailyStats} from "../utils/trainingSession";
 import DonutChart from "./DonutChart";
 import {useAppStyle} from "../context/AppStyleContext";
 import {format} from "date-fns";
+import useHealthData from "../hook/useHealthData";
+import {useAccountSetting} from "../context/AccountSettingContext";
 
 const TodayStats = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -16,6 +18,9 @@ const TodayStats = () => {
     const {workouts} = useContext(WorkoutContext);
     const today = format(new Date(), 'yyyy-MM-dd');
 
+    const {showStepsCount} = useAccountSetting();
+    const {steps} = useHealthData();
+
     useEffect(() => {
         const loadDailyStats = async () => {
             const stats = await fetchDailyStats();
@@ -23,7 +28,6 @@ const TodayStats = () => {
         };
         loadDailyStats();
     }, [workouts]);
-
 
     return (
             <View style={styles.donutChartContainer}>
@@ -68,6 +72,18 @@ const TodayStats = () => {
                             max={240}
                         />
                         <Text style={styles.headerCounterLabel}>Minuten</Text>
+                    </View>
+                )}
+                {showStepsCount && (
+                    <View style={styles.boxStyle}>
+                        <DonutChart
+                            key="minutes"
+                            percentage={steps}
+                            color={colors.baseColor}
+                            delay={1000}
+                            max={10000}
+                        />
+                        <Text style={styles.headerCounterLabel}>Schritte</Text>
                     </View>
                 )}
             </View>

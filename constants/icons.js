@@ -23,6 +23,7 @@ import profile from "../assets/icons/user_2_fill.png";
 import rest from "../assets/icons/sleep_line.png"
 import repeat from "../assets/icons/refresh_2_line.png"
 import setting from "../assets/icons/settings_3_fill.png";
+import steps from "../assets/icons/walk_fill.png"
 import sun from "../assets/icons/sun_line.png"
 import time from "../assets/icons/time_line.png"
 import unlock from "../assets/icons/unlock_line.png";
@@ -53,6 +54,7 @@ export default {
     rest,
     repeat,
     setting,
+    steps,
     sun,
     time,
     unlock,
