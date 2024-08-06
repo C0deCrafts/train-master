@@ -1,6 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
 import {useAppStyle} from "../context/AppStyleContext";
-import {useAccountSetting} from "../context/AccountSettingContext";
 import {format} from "date-fns";
 import {de} from "date-fns/locale";
 import {Image} from "expo-image";
