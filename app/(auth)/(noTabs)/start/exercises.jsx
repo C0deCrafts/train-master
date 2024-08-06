@@ -1,5 +1,4 @@
 import {
-    AppState,
     ScrollView,
     StyleSheet,
     Text, View
@@ -9,7 +8,7 @@ import {Video} from "expo-av";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import Card from "../../../../components/Card";
-import {useContext, useState, useCallback, useEffect} from "react";
+import {useContext, useState, useCallback} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseNavigation from "../../../../components/ExerciseNavigation";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -31,19 +30,6 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
-    // AppState-Listener hinzufügen
-    /*useEffect(() => {
-        const subscription = AppState.addEventListener("change", async (nextAppState) => {
-            if (nextAppState === "active") {
-                console.log('App in den Vordergrund, Timer wird gestartet (Exercise)');
-                startExerciseTimer();
-            }
-        });
-
-        return () => subscription.remove();
-    }, []);*/
-
-    // useFocusEffect wird ausgeführt, wenn der Bildschirm in den Fokus kommt
     useFocusEffect(
         useCallback(() => {
             // Timer starten, wenn der Bildschirm in den Fokus kommt

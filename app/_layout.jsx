@@ -1,5 +1,5 @@
 import {AuthProvider, useAuth} from "../context/AuthProvider";
-import {Slot, SplashScreen, useRouter, useSegments} from "expo-router";
+import {Slot, useRouter, useSegments} from "expo-router";
 import {useContext, useEffect, useState} from "react";
 import {ActivityIndicator, Alert, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
@@ -8,7 +8,6 @@ import {AppStyleProvider, useAppStyle} from "../context/AppStyleContext";
 import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
 import {dark} from "../constants/colors";
 import {AccountSettingProvider} from "../context/AccountSettingContext";
-import {registerBackgroundTask, unregisterBackgroundTask} from "../utils/backgroundTimer";
 import * as Notifications from "expo-notifications";
 
 // Setup notification handler
@@ -91,7 +90,6 @@ const RootLayout = () => {
 
     useEffect(() => {
         requestNotificationPermissions();
-        registerBackgroundTask();
     }, []);
 
     if (!fontsLoaded && !error) return null;

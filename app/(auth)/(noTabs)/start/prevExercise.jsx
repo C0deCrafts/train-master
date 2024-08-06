@@ -1,7 +1,7 @@
-import {View, Text, ScrollView, StyleSheet, AppState} from "react-native";
+import {View, Text, ScrollView, StyleSheet} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {Video} from "expo-av";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
@@ -9,7 +9,6 @@ import Card from "../../../../components/Card";
 import CustomButton from "../../../../components/CustomButton";
 import elementStyles from "../../../../constants/elementStyles";
 import Animated, {FadeInDown} from "react-native-reanimated";
-import useTimer from "../../../../utils/useTimer";
 
 const PrevExercise = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
@@ -25,7 +24,23 @@ const PrevExercise = () => {
     const nextExercise = exercises[nextIndex];
     const videoUrl = exerciseVideos[nextExercise?.id] || ""
 
-    const timeLeft = useTimer(initialTimeLeft); // Verwende den Timer-Hook
+    //const timeLeft = useTimer(initialTimeLeft); // Verwende den Timer-Hook
+
+   /* useEffect(() => {
+        if (timeLeft <= 0) {
+            goBackTwice();
+        }
+    }, [timeLeft]);*/
+
+    //FIX PROBLEM with TIMERLEFT
+
+    useEffect(() => {
+        if (initialTimeLeft <= 0) {
+            console.log("Time left is 0, navigating back");
+            goBackTwice()
+        }
+    }, [initialTimeLeft]);
+
 
     const goBackTwice = () => {
         router.back();
