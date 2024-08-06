@@ -1,10 +1,11 @@
-import {Text, View, StyleSheet, Image, TouchableOpacity} from "react-native";
-import {useEffect, useState} from "react";
+import {Text, View, StyleSheet, Image, TouchableOpacity, AppState} from "react-native";
+import {useContext, useEffect, useState} from "react";
 import {useLocalSearchParams, router} from "expo-router";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {icons, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
 import Animated, {FadeInRight} from "react-native-reanimated";
+import useTimer from "../../../../utils/useTimer";
 
 //fix small screens - no responsive design jet
 //buttons müssen noch ersetzt werden
@@ -15,21 +16,19 @@ const Rest = () => {
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
-    const [timeLeft, setTimeLeft] = useState(rest);
     const exercises = exercise ? JSON.parse(exercise) : {};
 
-    useEffect( () => {
-        // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
-        if (timeLeft >= 0) {
-            const timerId = setTimeout(() => {
-                setTimeLeft(timeLeft - 1);
-            }, 1000);
-            // Cleanup-Funktion, um den Timer zu bereinigen
-            return () => clearTimeout(timerId);
-        } else {
+    const timeLeft = useTimer(rest);
+
+    useEffect(() => {
+        if (timeLeft === 0) {
             router.back();
         }
     }, [timeLeft]);
+
+    useEffect(() => {
+        console.log("REST: ", rest)
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -42,7 +41,7 @@ const Rest = () => {
 
             <View>
                 <Text style={styles.text}>Pause</Text>
-                <Text style={styles.timer}>{timeLeft}</Text>
+                <Text style={styles.timer}>{Math.round(timeLeft)}</Text>
                 <Text style={styles.textSets}>Satz: {currentSet} von {totalSets} fertig</Text>
             </View>
 

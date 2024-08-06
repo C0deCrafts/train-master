@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, StyleSheet} from "react-native";
+import {View, Text, ScrollView, StyleSheet, AppState} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useContext, useEffect, useState} from "react";
@@ -9,6 +9,7 @@ import Card from "../../../../components/Card";
 import CustomButton from "../../../../components/CustomButton";
 import elementStyles from "../../../../constants/elementStyles";
 import Animated, {FadeInDown} from "react-native-reanimated";
+import useTimer from "../../../../utils/useTimer";
 
 const PrevExercise = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
@@ -24,16 +25,7 @@ const PrevExercise = () => {
     const nextExercise = exercises[nextIndex];
     const videoUrl = exerciseVideos[nextExercise?.id] || ""
 
-    const [timeLeft, setTimeLeft] = useState(parseInt(initialTimeLeft));
-
-    useEffect(() => {
-        if (timeLeft > 0) {
-            const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-            return () => clearTimeout(timerId);
-        } else if (timeLeft <= 0){
-            goBackTwice();
-        }
-    }, [timeLeft]);
+    const timeLeft = useTimer(initialTimeLeft); // Verwende den Timer-Hook
 
     const goBackTwice = () => {
         router.back();

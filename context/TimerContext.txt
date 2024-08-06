@@ -1,0 +1,88 @@
+import React, { createContext, useState, useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
+
+const TimerContext = createContext();
+
+const TimerProvider = ({ children }) => {
+    const [timeLeft, setTimeLeft] = useState(0);
+    const appState = useRef(AppState.currentState);
+
+    const scheduleNotification = async (timeLeft) => {
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "Pause beendet",
+                body: "Es ist Zeit, zur App zurückzukehren!",
+            },
+            trigger: {
+                seconds: timeLeft,
+            },
+        });
+    };
+
+    const saveTimer = async (timeLeft, endTime) => {
+        try {
+            await AsyncStorage.setItem('timeLeft', JSON.stringify({ timeLeft, endTime }));
+        } catch (e) {
+            console.error('Failed to save timeLeft', e);
+        }
+    };
+
+    const loadTimer = async () => {
+        try {
+            const value = await AsyncStorage.getItem('timeLeft');
+            if (value !== null) {
+                return JSON.parse(value);
+            }
+        } catch (e) {
+            console.error('Failed to load timeLeft', e);
+        }
+        return null;
+    };
+
+    useEffect(() => {
+        const subscription = AppState.addEventListener('change', async (nextAppState) => {
+            if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+                const timerData = await loadTimer();
+                if (timerData) {
+                    const { timeLeft, endTime } = timerData;
+                    const currentTime = new Date().getTime();
+                    const calculatedTimeLeft = Math.max((endTime - currentTime) / 1000, 0);
+                    setTimeLeft(calculatedTimeLeft);
+                    console.log(`App resumed, calculated time left: ${calculatedTimeLeft}`);
+                }
+            } else if (nextAppState.match(/inactive|background/)) {
+                const currentTime = new Date().getTime();
+                const newEndTime = currentTime + timeLeft * 1000;
+                await saveTimer(timeLeft, newEndTime);
+                await scheduleNotification(timeLeft);
+                console.log(`App moved to background, time left: ${timeLeft}, end time: ${newEndTime}`);
+            }
+            appState.current = nextAppState;
+        });
+
+        return () => {
+            subscription.remove();
+        };
+    }, [timeLeft]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTimeLeft(prev => {
+                console.log(`Updating timer, time left: ${Math.max(prev - 1, 0)}`);
+                return Math.max(prev - 1, 0);
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <TimerContext.Provider value={{ timeLeft, setTimeLeft }}>
+            {children}
+        </TimerContext.Provider>
+    );
+};
+
+export { TimerContext, TimerProvider };
