@@ -13,7 +13,6 @@ const Calendar = () => {
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    //const date = new Date("2024-08-05T03:24:00");
     const [date, setDate] = useState(new Date());
     const [isNextDisabled, setIsNextDisabled] = useState(false);
     const formattedDate = format(date, 'EEEE, dd MMM yyyy', { locale: de });
@@ -37,10 +36,6 @@ const Calendar = () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Setze die Uhrzeit auf Mitternacht, um nur das Datum zu vergleichen
         setIsNextDisabled(date >= today);
-    }, [date]);
-
-    useEffect(() => {
-       // console.log("DATE: ", date)
     }, [date]);
 
     return (

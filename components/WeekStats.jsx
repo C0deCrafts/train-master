@@ -8,7 +8,7 @@ import {de} from "date-fns/locale";
 import Card from "./Card";
 import BigDonutChart from "./BigDonutChart";
 import useWorkoutStats from "../hook/useWorkoutStats";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo} from "react";
 
 const WeekStats = ({date}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -18,29 +18,42 @@ const WeekStats = ({date}) => {
 
     const {showStepsCount} = useAccountSetting();
     const {steps, getSteps} = useHealthData();
-    const {dailyStats, weeklyStats} = useWorkoutStats();
+    const {dailyStats} = useWorkoutStats();
 
-
-    //const selectedDate = format(date, 'yyyy-MM-dd'); eventuell reicht das ohne usestate und useeffekt! aber muss getestet werden
-    const [selectedDate, setSelectedDate] = useState(format(date, 'yyyy-MM-dd'));
+    const selectedDate = useMemo(() => format(date, 'yyyy-MM-dd'), [date]);
 
     useEffect(() => {
-        setSelectedDate(format(date, 'yyyy-MM-dd'));
+        //um die Steps für jeden Tag neu zu laden
         getSteps(date)
     }, [date]);
 
-    //const date = new Date();
-    const startDate = startOfWeek(date, { weekStartsOn: 1 });
-    const endDate = endOfWeek(date, { weekStartsOn: 1 });
-    const daysOfWeek = eachDayOfInterval({ start: startDate, end: endDate }).slice(0, 7);
+    const startDate = useMemo(() => startOfWeek(date, { weekStartsOn: 1 }), [date]);
+    const endDate = useMemo(() => endOfWeek(date, { weekStartsOn: 1 }), [date]);
+    const daysOfWeek = useMemo(() => eachDayOfInterval({ start: startDate, end: endDate }).slice(0, 7), [startDate, endDate]);
+    const markedDate = useMemo(() => format(date, 'EEEE', { locale: de }), [date]);
 
-    const markedDate = format(date, 'EEEE', { locale: de });
+    const weeklyStats = useMemo(() => {
+        const stats = {};
+        daysOfWeek.forEach(day => {
+            const dayKey = format(day, 'yyyy-MM-dd');
+            stats[dayKey] = dailyStats[dayKey] || {
+                exercisesCompleted: 0,
+                workouts: 0,
+                totalDuration: 0,
+                totalCalories: 0
+            };
+        });
+        console.log("STATS: ", stats)
+        return stats;
+    }, [dailyStats, daysOfWeek]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("Day", dailyStats)
-        console.log("WEEK", weeklyStats)
-        console.log("STEPS in WEEKSTATS", steps)
-    }, [dailyStats, weeklyStats]);
+        console.log("STEPS", steps)
+        //console.log("WEEKLY STATS", weeklyStats)
+    }, [dailyStats, steps]);*/
+
+    //fix rendering of 3 times
 
     return (
         <View>
@@ -48,6 +61,9 @@ const WeekStats = ({date}) => {
                 {showStepsCount && daysOfWeek.map(day => {
                     const dayName = format(day, 'EEEE', { locale: de });
                     const dayKey = format(day, 'yyyy-MM-dd');
+
+                    //console.log("================================RENDER WOCHE================================")
+                    //console.log(`Day ${dayName} (${dayKey}) - weeklyStats:`, weeklyStats[dayKey]);
 
                     return (
                         <View key={dayName} style={styles.boxStyle}>
