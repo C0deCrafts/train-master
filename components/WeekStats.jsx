@@ -8,30 +8,38 @@ import {de} from "date-fns/locale";
 import Card from "./Card";
 import BigDonutChart from "./BigDonutChart";
 import useWorkoutStats from "../hook/useWorkoutStats";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
-const WeekStats = () => {
+const WeekStats = ({date}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
 
     const {showStepsCount} = useAccountSetting();
-    const {steps} = useHealthData();
-    const { dailyStats, weeklyStats } = useWorkoutStats();
+    const {steps, getSteps} = useHealthData();
+    const {dailyStats, weeklyStats} = useWorkoutStats();
 
-    const date = new Date();
+
+    //const selectedDate = format(date, 'yyyy-MM-dd'); eventuell reicht das ohne usestate und useeffekt! aber muss getestet werden
+    const [selectedDate, setSelectedDate] = useState(format(date, 'yyyy-MM-dd'));
+
+    useEffect(() => {
+        setSelectedDate(format(date, 'yyyy-MM-dd'));
+        getSteps(date)
+    }, [date]);
+
+    //const date = new Date();
     const startDate = startOfWeek(date, { weekStartsOn: 1 });
     const endDate = endOfWeek(date, { weekStartsOn: 1 });
     const daysOfWeek = eachDayOfInterval({ start: startDate, end: endDate }).slice(0, 7);
 
-    const today = format(date, 'EEEE', { locale: de });
-
-    const actualDay = format(new Date(), 'yyyy-MM-dd');
+    const markedDate = format(date, 'EEEE', { locale: de });
 
     useEffect(() => {
         console.log("Day", dailyStats)
         console.log("WEEK", weeklyStats)
+        console.log("STEPS in WEEKSTATS", steps)
     }, [dailyStats, weeklyStats]);
 
     return (
@@ -45,7 +53,7 @@ const WeekStats = () => {
                         <View key={dayName} style={styles.boxStyle}>
                             <Text style={[
                                 styles.headerCounterLabel,
-                                dayName === today && styles.currentDayLabel
+                                dayName === markedDate && styles.currentDayLabel
                             ]}>
                                 {dayName.charAt(0)}
                             </Text>
@@ -66,41 +74,30 @@ const WeekStats = () => {
                 <View style={styles.bigChartContainer}>
                     <View>
                         <Text style={styles.maxText} numberOfLines={2} ellipsizeMode="tail">Abgeschlossene Workouts</Text>
-                        <Text style={styles.detailsLarge}>{dailyStats[actualDay]?.exercisesCompleted || 0}</Text>
+                        <Text style={styles.detailsLarge}>{dailyStats[selectedDate]?.exercisesCompleted || 0}</Text>
 
                     </View>
                     <BigDonutChart
-                        progress={dailyStats[actualDay]?.exercisesCompleted}
+                        progress={dailyStats[selectedDate]?.exercisesCompleted || 0}
                         max={15}
                     />
                 </View>
-                {steps ? (
                     <View style={styles.detailsContainer}>
-                        <View style={styles.container}>
-                            <Text style={styles.text}>Schritte</Text>
-                            <Text style={styles.details}>{steps}</Text>
-                        </View>
+                        {showStepsCount && (
+                            <View style={styles.container}>
+                                <Text style={styles.text}>Schritte</Text>
+                                <Text style={styles.details}>{steps[selectedDate] || 0}</Text>
+                            </View>
+                        )}
                         <View style={styles.container}>
                             <Text style={styles.text}>Minuten</Text>
-                            <Text style={styles.details}>{Math.floor((dailyStats[actualDay]?.totalDuration || 0) / 60)} Min</Text>
+                            <Text style={styles.details}>{Math.round((dailyStats[selectedDate]?.totalDuration || 0) / 60)} Min</Text>
                         </View>
                         <View style={styles.container}>
                             <Text style={styles.textRight}>Kalorien</Text>
-                            <Text style={styles.details}>{parseInt(dailyStats[actualDay]?.totalCalories) || 0} kcal</Text>
+                            <Text style={styles.details}>{Math.round(dailyStats[selectedDate]?.totalCalories) || 0} kcal</Text>
                         </View>
                     </View>
-                ):(
-                    <View style={styles.detailsContainer}>
-                        <View style={styles.container}>
-                            <Text style={styles.text}>Minuten</Text>
-                            <Text style={styles.details}>{Math.floor((dailyStats[actualDay]?.totalDuration || 0) / 60)} Min</Text>
-                        </View>
-                        <View style={styles.container}>
-                            <Text style={styles.textRight}>Kalorien</Text>
-                            <Text style={styles.details}>205 kcal</Text>
-                        </View>
-                    </View>
-                )}
             </Card>
         </View>
     );

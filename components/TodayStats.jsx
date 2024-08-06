@@ -1,7 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {WorkoutContext} from "../context/WorkoutContext";
-import {fetchDailyStats} from "../utils/trainingSession";
 import DonutChart from "./DonutChart";
 import {useAppStyle} from "../context/AppStyleContext";
 import {format} from "date-fns";
@@ -69,7 +66,7 @@ const TodayStats = () => {
                     <View style={styles.boxStyle}>
                         <DonutChart
                             key="minutes"
-                            percentage={steps}
+                            percentage={steps[today] || 0}
                             color={colors.baseColor}
                             delay={1000}
                             max={10000}

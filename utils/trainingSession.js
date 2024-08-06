@@ -76,7 +76,6 @@ const fetchDailyStats = async () => {
     return dailyStats;
 };
 
-
 const fetchWeeklyStats = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
