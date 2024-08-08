@@ -9,6 +9,7 @@ import Card from "../../../../components/Card";
 import CustomButton from "../../../../components/CustomButton";
 import elementStyles from "../../../../constants/elementStyles";
 import Animated, {FadeInDown} from "react-native-reanimated";
+import {useTimer} from "../../../../context/TimerContext";
 
 const PrevExercise = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
@@ -16,7 +17,7 @@ const PrevExercise = () => {
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const { exercise, currentIndex, timeLeft:initialTimeLeft } = useLocalSearchParams();
+    const { exercise, currentIndex } = useLocalSearchParams();
     const { exerciseVideos } = useContext(WorkoutContext);
 
     const exercises = exercise ? JSON.parse(exercise) : {};
@@ -24,26 +25,17 @@ const PrevExercise = () => {
     const nextExercise = exercises[nextIndex];
     const videoUrl = exerciseVideos[nextExercise?.id] || ""
 
-    //const timeLeft = useTimer(initialTimeLeft); // Verwende den Timer-Hook
-
-   /* useEffect(() => {
-        if (timeLeft <= 0) {
-            goBackTwice();
-        }
-    }, [timeLeft]);*/
-
-    //FIX PROBLEM with TIMERLEFT
+    const {timeLeft, stopTimer} = useTimer();
 
     useEffect(() => {
-        if (initialTimeLeft <= 0) {
+        if (timeLeft === 0) {
             console.log("Time left is 0, navigating back");
-            goBackTwice()
+            router.back();
         }
-    }, [initialTimeLeft]);
+    }, [timeLeft]);
 
-
-    const goBackTwice = () => {
-        router.back();
+    const goBack = () => {
+        stopTimer();
         router.back();
     }
 
@@ -92,7 +84,7 @@ const PrevExercise = () => {
             </ScrollView>
             <Text style={styles.timerText}>Verbleibende Zeit bis zur nächsten Übung:</Text>
             <Text style={styles.time}>{timeLeft}s</Text>
-            <CustomButton title={"Zur nächsten Übung"} handlePress={goBackTwice} containerStyles={styles.button}/>
+            <CustomButton title={"Zur nächsten Übung"} handlePress={goBack} containerStyles={styles.button}/>
         </SafeAreaView>
     );
 };
