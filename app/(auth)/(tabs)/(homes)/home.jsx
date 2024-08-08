@@ -1,8 +1,8 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Image} from 'expo-image';
 import {useAuth} from "../../../../context/AuthProvider";
 import {useContext, useEffect, useState} from "react";
-import {elements, icons, images} from "../../../../constants";
+import {elements, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
 import {format} from 'date-fns';
@@ -15,6 +15,7 @@ import ExerciseList from "../../../../components/ExerciseList";
 import {router} from "expo-router";
 import Animated, {FadeInRight} from "react-native-reanimated";
 import TodayStats from "../../../../components/TodayStats";
+import Avatar from "../../../../components/Avatar";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
@@ -34,23 +35,6 @@ const Home = () => {
     const getCurrentDate = () => {
         const today = new Date();
         return format(today, 'EEEE dd. MMMM', {locale: de});
-    };
-
-    //Function to handle selecting a profile image and safe it to asyncStorage
-    const handlePressImage = async () => {
-        /*let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setSelectedImage(result.assets[0].uri);
-            await saveProfileImage(result.assets[0].uri);
-        } else {
-            console.log('Es wurde kein Bild ausgewählt.');
-        }*/
-        console.log("Image PICKER selected")
     };
 
     const renderWorkout = ({item, index}) => {
@@ -98,26 +82,7 @@ const Home = () => {
                             </Text>
                         </View>
                         {/* ImageViewer with TouchableOpacity for the camera button */}
-                        <TouchableOpacity onPress={handlePressImage} style={{zIndex: 2}}>
-                            <View style={styles.imageContainer}>
-                                <Image
-                                    source={images.avatar}
-                                    style={{
-                                        width: 100,
-                                        height: 100,
-                                        borderRadius: 50,
-                                        contentFit: "contain",
-                                    }}
-                                />
-                                <View style={styles.cameraStyle}>
-                                    <Image source={icons.camera} style={{
-                                        width: 25,
-                                        height: 25,
-                                        tintColor: colors.label
-                                    }}/>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
+                        <Avatar />
                     </View>
 
                     <View style={styles.workoutInfoContainer}>

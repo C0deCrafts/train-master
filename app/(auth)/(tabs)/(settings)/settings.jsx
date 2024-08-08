@@ -20,6 +20,8 @@ import {StatusBar} from "expo-status-bar";
 import {router} from "expo-router";
 import CustomHeader from "../../../../components/CustomHeader";
 import CustomCard from "../../../../components/CustomCard";
+import Avatar from "../../../../components/Avatar";
+import {useAccountSetting} from "../../../../context/AccountSettingContext";
 
 const Settings = () => {
     const { user, username, setUsername, email, handleUpdateUsername } = useAuth();
@@ -33,6 +35,7 @@ const Settings = () => {
 
     // Fix this - this is used if firebase data base changes - now it don't automatic change values from database - now I need a custom button to clear the cache
     // const { clearStorage } = useContext(WorkoutContext);
+    const {handleProfileImageChange} = useAccountSetting();
 
     const radioButtons = useMemo(() => ([
         {
@@ -72,10 +75,6 @@ const Settings = () => {
         router.navigate("/userData")
     };
 
-    const handleProfileImageChange = () => {
-        console.log("Bild ändern")
-    }
-
     const handleTrainDataChange = () => {
         router.navigate("/trainingData")
     }
@@ -94,14 +93,9 @@ const Settings = () => {
                 <View style={styles.container}>
                     <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
                         <Card style={styles.userCard}>
-                            <Image
-                                source={images.avatar}
-                                style={{
-                                    width: 60,
-                                    height: 60,
-                                    borderRadius: "50%",
-                                    contentFit: "contain",
-                                }}
+                            <Avatar isPressableDisabled={true}
+                                    isCameraVisible={false}
+                                    imageRadius={60}
                             />
                             <View>
                                 <Text style={styles.userName} numberOfLines={1} ellipsizeMode={"tail"}>{username}</Text>
@@ -242,12 +236,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
             width: 300,
         },
         userCard: {
-            backgroundColor: "transparent",
+            //backgroundColor: "transparent",
             justifyContent: "flex-start",
             alignItems: "center",
             flexDirection: "row",
             gap: 20,
-            marginTop: 20
+            marginTop: 20,
         },
         card: {
             flexDirection: "row",
