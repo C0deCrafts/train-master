@@ -9,6 +9,7 @@ import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
 import {dark} from "../constants/colors";
 import {AccountSettingProvider} from "../context/AccountSettingContext";
 import * as Notifications from "expo-notifications";
+import {TimerProvider} from "../context/TimerContext";
 
 // Setup notification handler
 Notifications.setNotificationHandler({
@@ -99,9 +100,11 @@ const RootLayout = () => {
             <AuthProvider>
                 <WorkoutProvider>
                     <AccountSettingProvider>
-                        <InitialLayout/>
-                        <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
-                        {/*<StatusBar style="light"/>*/}
+                        <TimerProvider>
+                            <InitialLayout/>
+                            <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+                            {/*<StatusBar style="light"/>*/}
+                        </TimerProvider>
                     </AccountSettingProvider>
                 </WorkoutProvider>
             </AuthProvider>

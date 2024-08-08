@@ -1,11 +1,11 @@
 import {Text, View, StyleSheet, Image, TouchableOpacity} from "react-native";
-import {useEffect} from "react";
 import {useLocalSearchParams, router} from "expo-router";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {icons, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
 import Animated, {FadeInRight} from "react-native-reanimated";
-import useTimer from "../../../../utils/useTimer";
+import {useTimer} from "../../../../context/TimerContext";
+import {useEffect} from "react";
 
 //fix small screens - no responsive design jet
 //buttons müssen noch ersetzt werden
@@ -18,7 +18,7 @@ const Rest = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
     const exercises = exercise ? JSON.parse(exercise) : {};
 
-    const timeLeft = useTimer(rest);
+    const {timeLeft, stopTimer} = useTimer();
 
     useEffect(() => {
         if (timeLeft === 0) {
@@ -41,7 +41,7 @@ const Rest = () => {
 
             <View>
                 <Text style={styles.text}>Pause</Text>
-                <Text style={styles.timer}>{Math.round(timeLeft)}</Text>
+                <Text style={styles.timer}>{timeLeft}</Text>
                 <Text style={styles.textSets}>Satz: {currentSet} von {totalSets} fertig</Text>
             </View>
 
@@ -60,7 +60,11 @@ const Rest = () => {
 
             <View style={styles.buttonBox}>
                 <TouchableOpacity style={styles.button} onPress={
-                    () => router.back()}
+                    () => {
+                        stopTimer()
+                        router.back()
+                    }
+                }
                 >
                     <Text style={styles.buttonLabel}>Pause beenden</Text>
                 </TouchableOpacity>
@@ -72,7 +76,6 @@ const Rest = () => {
                         params: {
                             exercise: JSON.stringify(exercises),
                             currentIndex: currentIndex,
-                            timeLeft: timeLeft,
                         }
                     })}>
                         <Text style={styles.buttonLabel}>Vorschau der nächsten Übung</Text>

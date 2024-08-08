@@ -12,6 +12,7 @@ import {useContext, useState, useCallback} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseNavigation from "../../../../components/ExerciseNavigation";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {useTimer} from "../../../../context/TimerContext";
 
 const Exercises = () => {
     const { exercise } = useLocalSearchParams();
@@ -30,6 +31,8 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
+    const { startTimer } = useTimer();
+
     useFocusEffect(
         useCallback(() => {
             // Timer starten, wenn der Bildschirm in den Fokus kommt
@@ -44,6 +47,7 @@ const Exercises = () => {
 
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
+            startTimer(current.rest);
             router.navigate({
                 pathname: "(noTabs)/start/rest",
                 params: {
@@ -70,6 +74,7 @@ const Exercises = () => {
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
+                startTimer(current.rest);
 
                 // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die nächste Übung angezeigt wird.
                 router.navigate({
