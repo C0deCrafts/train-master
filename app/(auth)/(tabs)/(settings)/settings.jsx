@@ -5,7 +5,7 @@ import {
     View
 } from 'react-native';
 import { Image } from 'expo-image';
-import {useState, useMemo, useContext} from "react";
+import {useState, useMemo} from "react";
 import {useAuth} from "../../../../context/AuthProvider";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {images, icons} from "../../../../constants";
@@ -17,8 +17,6 @@ import Card from "../../../../components/Card";
 import RadioButton from "../../../../components/RadioButton";
 import CustomModal from "../../../../components/CustomModal";
 import {StatusBar} from "expo-status-bar";
-import CustomButton from "../../../../components/CustomButton";
-import {WorkoutContext} from "../../../../context/WorkoutContext";
 import {router} from "expo-router";
 import CustomHeader from "../../../../components/CustomHeader";
 import CustomCard from "../../../../components/CustomCard";
@@ -33,7 +31,8 @@ const Settings = () => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedId, setSelectedId] = useState(colorScheme === "dark" ? "1" : "2");
 
-    const { clearStorage } = useContext(WorkoutContext);
+    // Fix this - this is used if firebase data base changes - now it don't automatic change values from database - now I need a custom button to clear the cache
+    // const { clearStorage } = useContext(WorkoutContext);
 
     const radioButtons = useMemo(() => ([
         {
@@ -64,16 +63,12 @@ const Settings = () => {
         setModalVisible(!isModalVisible);
     };
 
-    const handlePickerChange = (itemValue) => {
+    const handleTextSizeChange = (itemValue) => {
         setTextSize(itemValue);
         toggleModal();
     };
 
     const handleUserdataChange = () => {
-        //handleUpdateUsername(newUsername);
-        //toggleUsernameModal();
-        //evtl username auf leer wenn aufgerufen - bzw wenn okay
-        console.log("Navigate zu Benutzerdaten ändern")
         router.navigate("/userData")
     };
 
@@ -82,7 +77,6 @@ const Settings = () => {
     }
 
     const handleTrainDataChange = () => {
-        console.log("Navigate zu TrainDATA")
         router.navigate("/trainingData")
     }
 
@@ -174,7 +168,7 @@ const Settings = () => {
                             <Picker selectedValue={textSize}
                                     style={styles.picker}
                                     itemStyle={styles.pickerItem}
-                                    onValueChange={handlePickerChange}
+                                    onValueChange={handleTextSizeChange}
                             >
                                 <Picker.Item label="xSmall" value="xSmall"/>
                                 <Picker.Item label="Small" value="small"/>
@@ -184,7 +178,11 @@ const Settings = () => {
                                 <Picker.Item label="xxLarge" value="xxLarge"/>
                             </Picker>
                         </CustomModal>
-                        <CustomButton title={"Cache löschen"} handlePress={clearStorage} containerStyles={{backgroundColor: colors.baseColor}}/>
+                        {/*
+                        // Fix this - this is used if firebase data base changes - now it don't automatic change values from database
+
+                         <CustomButton title={"Cache löschen"} handlePress={clearStorage} containerStyles={{backgroundColor: colors.baseColor}}/>
+                        */}
                     </ScrollView>
                 </View>
             </View>

@@ -29,7 +29,7 @@ const PrevExercise = () => {
 
     useEffect(() => {
         if (timeLeft === 0) {
-            console.log("Time left is 0, navigating back");
+            //console.log("Time left is 0, navigating back");
             router.back();
         }
     }, [timeLeft]);

@@ -18,7 +18,7 @@ const Calendar = () => {
     const formattedDate = format(date, 'EEEE, dd MMM yyyy', { locale: de });
 
     const goToPreviousDay = () => {
-        console.log("Hier gehts zum vorherigen Tag zum Testen")
+        //console.log("Hier gehts zum vorherigen Tag zum Testen")
         //später wird der Button gesperrt, wenn es keine wöchentlich abgeschlossenen Übungen mehr gibt
         let newDate = new Date(date);
         newDate.setDate(date.getDate() - 1);
@@ -26,7 +26,7 @@ const Calendar = () => {
     }
 
     const goToNextDay = () => {
-        console.log("Hier gehts zum nächsten Tag, außer er ist der heutige Tag, dann ist der Button gesperrt")
+        //console.log("Hier gehts zum nächsten Tag, außer er ist der heutige Tag, dann ist der Button gesperrt")
         let newDate = new Date(date);
         newDate.setDate(date.getDate() + 1);
         setDate(newDate);

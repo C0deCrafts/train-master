@@ -43,18 +43,11 @@ const WeekStats = ({date}) => {
                 totalCalories: 0
             };
         });
-        console.log("STATS: ", stats)
+        //console.log("STATS: ", stats)
         return stats;
     }, [dailyStats, daysOfWeek]);
 
-    /*useEffect(() => {
-        console.log("Day", dailyStats)
-        console.log("STEPS", steps)
-        //console.log("WEEKLY STATS", weeklyStats)
-    }, [dailyStats, steps]);*/
-
     //fix rendering of 3 times
-
     return (
         <View>
             <View style={styles.donutChartContainer}>

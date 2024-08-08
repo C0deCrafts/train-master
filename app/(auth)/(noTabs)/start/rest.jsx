@@ -11,7 +11,7 @@ import {useEffect} from "react";
 //buttons müssen noch ersetzt werden
 
 const Rest = () => {
-    const { exercise, currentIndex, rest, currentSet, totalSets } = useLocalSearchParams();
+    const { exercise, currentIndex, currentSet, totalSets } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -26,9 +26,9 @@ const Rest = () => {
         }
     }, [timeLeft]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("REST: ", rest)
-    }, []);
+    }, []);*/
 
     return (
         <SafeAreaView style={styles.container}>

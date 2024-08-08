@@ -8,7 +8,7 @@ import {Video} from "expo-av";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import Card from "../../../../components/Card";
-import {useContext, useState, useCallback, useEffect} from "react";
+import {useContext, useState, useCallback} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseNavigation from "../../../../components/ExerciseNavigation";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -34,21 +34,20 @@ const Exercises = () => {
 
     const { startTimer } = useTimer();
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("AppChange: ", isAppActive);
         console.log("AppChange: ", typeof isAppActive);
-    }, [isAppActive]);
+    }, [isAppActive]);*/
 
     useFocusEffect(
         useCallback(() => {
             // Timer starten, wenn der Bildschirm in den Fokus kommt
             if(isAppActive === "active"){
-                console.log('Bildschirm ist fokussiert, Timer wird gestartet (Exercise)');
+                //console.log('Bildschirm ist fokussiert, Timer wird gestartet (Exercise)');
                 startExerciseTimer();
             }else {
-                console.log('Bildschirm ist NICHT fokussiert, Timer wird NICHT gestartet (Exercise)');
+                //console.log('Bildschirm ist NICHT fokussiert, Timer wird NICHT gestartet (Exercise)');
             }
-            //console.log("Exercises Screen is focused and timer started");
         }, [isAppActive])
     );
 
@@ -63,7 +62,6 @@ const Exercises = () => {
                 params: {
                     exercise: JSON.stringify(exercises.exercises),
                     currentIndex: index,
-                    rest: current.rest,
                     currentSet: current.sets - currentSets + 1,
                     totalSets: current.sets, // Gesamtanzahl der Sätze
                 }
@@ -92,7 +90,6 @@ const Exercises = () => {
                     params: {
                         exercise: JSON.stringify(exercises.exercises),
                         currentIndex: index,
-                        rest: current.rest,
                         currentSet: current.sets - currentSets + 1,
                         totalSets: current.sets, // Gesamtanzahl der Sätze
                     }

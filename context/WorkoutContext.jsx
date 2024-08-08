@@ -45,7 +45,7 @@ export const WorkoutProvider = ({ children }) => {
     const startExerciseTimer = () => {
         const startTime = new Date();
         setExerciseStartTime(startTime);
-        console.log(`Exercise timer started at: ${startTime}`);
+        //console.log(`Exercise timer started at: ${startTime}`);
     };
 
     const stopExerciseTimer = ()  => {
@@ -54,8 +54,8 @@ export const WorkoutProvider = ({ children }) => {
             const durationInSeconds = (endTime - exerciseStartTime) / 1000; // Dauer in Sekunden
             setSetDurations(prevDurations => [...prevDurations, durationInSeconds]);
 
-            console.log(`Exercise timer stopped at: ${endTime}`);
-            console.log(`Exercise duration: ${durationInSeconds} seconds`);
+            //console.log(`Exercise timer stopped at: ${endTime}`);
+            //console.log(`Exercise duration: ${durationInSeconds} seconds`);
             setExerciseStartTime(null); // Timer zurücksetzen
         } else {
             console.log("No timer started")
@@ -92,7 +92,7 @@ export const WorkoutProvider = ({ children }) => {
 
             await completeExercise(currentSessionId, completedExercise).then(() => {
                 setSetDurations([]);
-                console.log("Exercise completed and durations reset");
+                //console.log("Exercise completed and durations reset");
             });
         });
     }
