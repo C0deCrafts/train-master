@@ -8,36 +8,42 @@ import {
     TextInput,
     View
 } from 'react-native';
-import { Image } from 'expo-image';
+import {Image} from 'expo-image';
 import {useLocalSearchParams} from "expo-router"
 import {useState, useLayoutEffect, useRef} from "react";
 import CustomHeader from "../../../../../components/CustomHeader";
 import {useAuth} from "../../../../../context/AuthProvider";
-import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
-import {FIRESTORE_DB} from "../../../../../utils/firebase";
+import {addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
+import {DEFAULT_PROFILE_IMAGE_URL, FIRESTORE_DB} from "../../../../../utils/firebase";
 import {images} from "../../../../../constants";
 import {useAppStyle} from "../../../../../context/AppStyleContext";
 
 const GroupPage = () => {
-    const { id, name } = useLocalSearchParams();
-    const { user } = useAuth();
+    const {id, name} = useLocalSearchParams();
+    const {user} = useAuth();
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const flatListRef = useRef(null);
-    const { getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
-
     const sendMessages = async () => {
-        if(message.trim().length > 0){
+        if (message.trim().length > 0) {
             const msg = message.trim();
-            addDoc(collection(FIRESTORE_DB, `friendGroups/${id}/groups`),{
+            const userDoc = await getDoc(doc(FIRESTORE_DB, "users", user.uid));
+            const userData = userDoc.data();
+            const currentProfileImage = userData.profileImageUrl || DEFAULT_PROFILE_IMAGE_URL;
+            const currentUsername = userData.username || "Unknown User";
+
+            await addDoc(collection(FIRESTORE_DB, `friendGroups/${id}/groups`), {
                 text: msg,
                 from: user.uid,
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                profileImage: currentProfileImage, // Save profile image
+                username: currentUsername // Save username
             })
             setMessage("");
         }
@@ -48,14 +54,14 @@ const GroupPage = () => {
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const messages = snapshot.docs.map((doc) => {
-                return { id: doc.id, ...doc.data() };
+                return {id: doc.id, ...doc.data()};
             });
             setMessages(messages);
         });
         return unsubscribe;
     }, []);
 
-    const renderMessage = ({item}) => {
+    /*const renderMessage = ({item}) => {
         const isMe = item.from === user.uid;
         return (
             <View style={[styles.messageContainer, isMe ? styles.userMessageContainer : styles.otherMessageContainer]}>
@@ -63,7 +69,25 @@ const GroupPage = () => {
                 <Text style={isMe ? styles.userTime : styles.time}>{item.createdAt?.toDate().toLocaleDateString()}</Text>
             </View>
         )
-    }
+    }*/
+    const renderMessage = ({item}) => {
+        const isMe = item.from === user.uid;
+        return (
+            <View style={[styles.messageWrapper, isMe ? styles.userMessageWrapper : styles.otherMessageWrapper]}>
+                {!isMe && (
+                    <Image
+                        source={item.profileImage ? { uri: item.profileImage } : DEFAULT_PROFILE_IMAGE_URL}
+                        style={styles.avatar}
+                    />
+                )}
+                <View style={[styles.messageContainer, isMe ? styles.userMessageContainer : styles.otherMessageContainer]}>
+                    {!isMe && <Text style={styles.username}>{item.username}</Text>}
+                    <Text style={isMe ? styles.userMessageText : styles.messageText}>{item.text}</Text>
+                    <Text style={isMe ? styles.userTime : styles.time}>{item.createdAt?.toDate().toLocaleTimeString()}</Text>
+                </View>
+            </View>
+        );
+    };
 
     return (
         <>
@@ -82,7 +106,7 @@ const GroupPage = () => {
                     data={messages}
                     renderItem={renderMessage}
                     keyExtractor={(item) => item.id}
-                    onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+                    onContentSizeChange={() => flatListRef.current?.scrollToEnd({animated: true})}
                 />
                 <View style={styles.textInputContainer}>
                     <TextInput value={message}
@@ -114,11 +138,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
             top: 50,
             width: "100%",
             height: "100%",
-            resizeMode: "contain",
+            contentFit: "contain",
             tintColor: colors.quaternaryLabel,
-            //damit der back button klickbar ist - mit pointerEvents empfängt das Bild keine Touch-Events und
-            //alles darunter ist wieder klickbar
-            pointerEvents: "none"
+            pointerEvents: "none" // verhindert, dass das Bild Touch-Events empfängt
         },
         textInputContainer: {
             flexDirection: "row",
@@ -136,55 +158,76 @@ const createStyles = (textStyles, colors, fontFamily) => {
             padding: 10,
             zIndex: 2
         },
+        messageWrapper: {
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+            marginHorizontal: 10,
+            marginTop: 10,
+        },
+        userMessageWrapper: {
+            justifyContent: 'flex-end',
+        },
+        otherMessageWrapper: {
+            justifyContent: 'flex-start',
+        },
         messageContainer: {
             padding: 10,
             borderRadius: 10,
-            marginHorizontal: 10,
-            marginTop: 10,
             maxWidth: "80%",
         },
         userMessageContainer: {
-            alignSelf: "flex-end",
-            backgroundColor: colors.baseColor
+            backgroundColor: colors.baseColor,
+            alignSelf: 'flex-end',
         },
         otherMessageContainer: {
-            alignSelf: "flex-start",
-            backgroundColor: colors.secondary
+            backgroundColor: colors.secondary,
+            alignSelf: 'flex-start',
+        },
+        avatar: {
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            marginRight: 10,
+        },
+        username: {
+            fontSize: textStyles.caption_2,
+            color: colors.label,
+            fontFamily: fontFamily.Poppins_SemiBold,
         },
         userMessageText: {
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.callout,
-            color: colors.colorButtonLabel
+            color: colors.colorButtonLabel,
         },
         messageText: {
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.callout,
-            color: colors.label
+            color: colors.label,
         },
         userTime: {
             alignSelf: "flex-end",
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.caption_2,
             color: colors.colorButtonLabel,
-            marginTop: 5
+            marginTop: 5,
         },
         time: {
             alignSelf: "flex-end",
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.caption_2,
             color: colors.label,
-            marginTop: 5
+            marginTop: 5,
         },
         button: {
             backgroundColor: colors.baseColor,
             borderRadius: 10,
             paddingHorizontal: 10,
-            justifyContent: "center"
+            justifyContent: "center",
         },
         buttonLabel: {
             fontFamily: "Poppins-SemiBold",
             fontSize: textStyles.subhead,
             color: colors.colorButtonLabel,
-        }
+        },
     })
 }
