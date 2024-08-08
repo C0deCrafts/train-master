@@ -1,35 +1,34 @@
 import {Text, View, StyleSheet, Image, TouchableOpacity} from "react-native";
-import {useEffect, useState} from "react";
 import {useLocalSearchParams, router} from "expo-router";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {icons, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
 import Animated, {FadeInRight} from "react-native-reanimated";
+import {useTimer} from "../../../../context/TimerContext";
+import {useEffect} from "react";
 
 //fix small screens - no responsive design jet
 //buttons müssen noch ersetzt werden
 
 const Rest = () => {
-    const { exercise, currentIndex, rest, currentSet, totalSets } = useLocalSearchParams();
+    const { exercise, currentIndex, currentSet, totalSets } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
-    const [timeLeft, setTimeLeft] = useState(rest);
     const exercises = exercise ? JSON.parse(exercise) : {};
 
-    useEffect( () => {
-        // Nur einen Timer starten, wenn timeLeft größer als 0 ist.
-        if (timeLeft >= 0) {
-            const timerId = setTimeout(() => {
-                setTimeLeft(timeLeft - 1);
-            }, 1000);
-            // Cleanup-Funktion, um den Timer zu bereinigen
-            return () => clearTimeout(timerId);
-        } else {
+    const {timeLeft, stopTimer} = useTimer();
+
+    useEffect(() => {
+        if (timeLeft === 0) {
             router.back();
         }
     }, [timeLeft]);
+
+    /*useEffect(() => {
+        console.log("REST: ", rest)
+    }, []);*/
 
     return (
         <SafeAreaView style={styles.container}>
@@ -61,7 +60,11 @@ const Rest = () => {
 
             <View style={styles.buttonBox}>
                 <TouchableOpacity style={styles.button} onPress={
-                    () => router.back()}
+                    () => {
+                        stopTimer()
+                        router.back()
+                    }
+                }
                 >
                     <Text style={styles.buttonLabel}>Pause beenden</Text>
                 </TouchableOpacity>
@@ -73,7 +76,6 @@ const Rest = () => {
                         params: {
                             exercise: JSON.stringify(exercises),
                             currentIndex: currentIndex,
-                            timeLeft: timeLeft,
                         }
                     })}>
                         <Text style={styles.buttonLabel}>Vorschau der nächsten Übung</Text>

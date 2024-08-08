@@ -1,13 +1,31 @@
 import {AuthProvider, useAuth} from "../context/AuthProvider";
-import {Slot, SplashScreen, useRouter, useSegments} from "expo-router";
+import {Slot, useRouter, useSegments} from "expo-router";
 import {useContext, useEffect, useState} from "react";
-import {ActivityIndicator, View} from "react-native";
+import {ActivityIndicator, Alert, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
 import {AppStyleProvider, useAppStyle} from "../context/AppStyleContext";
 import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
 import {dark} from "../constants/colors";
 import {AccountSettingProvider} from "../context/AccountSettingContext";
+import * as Notifications from "expo-notifications";
+import {TimerProvider} from "../context/TimerContext";
+
+// Setup notification handler
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+});
+
+const requestNotificationPermissions = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== 'granted') {
+        Alert.alert('Erlaubnis für Benachrichtigungen wurde nicht gewährt.');
+    }
+};
 
 const InitialLayout = () => {
     const {user, initialized, username} = useAuth();
@@ -55,7 +73,6 @@ const InitialLayout = () => {
     )
 };
 
-
 const RootLayout = () => {
     const {colorScheme} = useAppStyle();
 
@@ -73,9 +90,8 @@ const RootLayout = () => {
     });
 
     useEffect(() => {
-        if (error) throw error;
-        if (fontsLoaded) SplashScreen.hideAsync();
-    }, [fontsLoaded, error]);
+        requestNotificationPermissions();
+    }, []);
 
     if (!fontsLoaded && !error) return null;
 
@@ -84,9 +100,11 @@ const RootLayout = () => {
             <AuthProvider>
                 <WorkoutProvider>
                     <AccountSettingProvider>
-                        <InitialLayout/>
-                        <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
-                        {/*<StatusBar style="light"/>*/}
+                        <TimerProvider>
+                            <InitialLayout/>
+                            <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+                            {/*<StatusBar style="light"/>*/}
+                        </TimerProvider>
                     </AccountSettingProvider>
                 </WorkoutProvider>
             </AuthProvider>

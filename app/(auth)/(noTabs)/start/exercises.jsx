@@ -12,6 +12,7 @@ import {useContext, useState, useCallback} from "react";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseNavigation from "../../../../components/ExerciseNavigation";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {useTimer} from "../../../../context/TimerContext";
 
 const Exercises = () => {
     const { exercise } = useLocalSearchParams();
@@ -20,6 +21,7 @@ const Exercises = () => {
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
 
+    const { isAppActive } = useTimer();
     const { exerciseVideos, startExerciseTimer, stopExerciseTimer, completeCurrentExercise } = useContext(WorkoutContext);
 
     // Parse exercise JSON and initialize state
@@ -30,13 +32,23 @@ const Exercises = () => {
     const current = exercises.exercises[index];
     const videoUrl = exerciseVideos[current.id] || ""
 
-    // useFocusEffect wird ausgeführt, wenn der Bildschirm in den Fokus kommt
+    const { startTimer } = useTimer();
+
+    /*useEffect(() => {
+        console.log("AppChange: ", isAppActive);
+        console.log("AppChange: ", typeof isAppActive);
+    }, [isAppActive]);*/
+
     useFocusEffect(
         useCallback(() => {
             // Timer starten, wenn der Bildschirm in den Fokus kommt
-            startExerciseTimer();
-            //console.log("Exercises Screen is focused and timer started");
-        }, [])
+            if(isAppActive === "active"){
+                //console.log('Bildschirm ist fokussiert, Timer wird gestartet (Exercise)');
+                startExerciseTimer();
+            }else {
+                //console.log('Bildschirm ist NICHT fokussiert, Timer wird NICHT gestartet (Exercise)');
+            }
+        }, [isAppActive])
     );
 
     const handleCompleteSet = async () => {
@@ -44,12 +56,12 @@ const Exercises = () => {
 
         if (currentSets > 1) {
             setCurrentSets(currentSets - 1);
+            startTimer(current.rest);
             router.navigate({
                 pathname: "(noTabs)/start/rest",
                 params: {
                     exercise: JSON.stringify(exercises.exercises),
                     currentIndex: index,
-                    rest: current.rest,
                     currentSet: current.sets - currentSets + 1,
                     totalSets: current.sets, // Gesamtanzahl der Sätze
                 }
@@ -70,6 +82,7 @@ const Exercises = () => {
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
+                startTimer(current.rest);
 
                 // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die nächste Übung angezeigt wird.
                 router.navigate({
@@ -77,7 +90,6 @@ const Exercises = () => {
                     params: {
                         exercise: JSON.stringify(exercises.exercises),
                         currentIndex: index,
-                        rest: current.rest,
                         currentSet: current.sets - currentSets + 1,
                         totalSets: current.sets, // Gesamtanzahl der Sätze
                     }

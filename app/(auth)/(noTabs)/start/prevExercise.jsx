@@ -1,7 +1,7 @@
 import {View, Text, ScrollView, StyleSheet} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {Video} from "expo-av";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
@@ -9,6 +9,7 @@ import Card from "../../../../components/Card";
 import CustomButton from "../../../../components/CustomButton";
 import elementStyles from "../../../../constants/elementStyles";
 import Animated, {FadeInDown} from "react-native-reanimated";
+import {useTimer} from "../../../../context/TimerContext";
 
 const PrevExercise = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
@@ -16,7 +17,7 @@ const PrevExercise = () => {
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const { exercise, currentIndex, timeLeft:initialTimeLeft } = useLocalSearchParams();
+    const { exercise, currentIndex } = useLocalSearchParams();
     const { exerciseVideos } = useContext(WorkoutContext);
 
     const exercises = exercise ? JSON.parse(exercise) : {};
@@ -24,19 +25,17 @@ const PrevExercise = () => {
     const nextExercise = exercises[nextIndex];
     const videoUrl = exerciseVideos[nextExercise?.id] || ""
 
-    const [timeLeft, setTimeLeft] = useState(parseInt(initialTimeLeft));
+    const {timeLeft, stopTimer} = useTimer();
 
     useEffect(() => {
-        if (timeLeft > 0) {
-            const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-            return () => clearTimeout(timerId);
-        } else if (timeLeft <= 0){
-            goBackTwice();
+        if (timeLeft === 0) {
+            //console.log("Time left is 0, navigating back");
+            router.back();
         }
     }, [timeLeft]);
 
-    const goBackTwice = () => {
-        router.back();
+    const goBack = () => {
+        stopTimer();
         router.back();
     }
 
@@ -85,7 +84,7 @@ const PrevExercise = () => {
             </ScrollView>
             <Text style={styles.timerText}>Verbleibende Zeit bis zur nächsten Übung:</Text>
             <Text style={styles.time}>{timeLeft}s</Text>
-            <CustomButton title={"Zur nächsten Übung"} handlePress={goBackTwice} containerStyles={styles.button}/>
+            <CustomButton title={"Zur nächsten Übung"} handlePress={goBack} containerStyles={styles.button}/>
         </SafeAreaView>
     );
 };

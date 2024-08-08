@@ -13,8 +13,9 @@ const permissions = {
 
 const useHealthData = () => {
     const [hasPermission, setHasPermission] = useState(false);
-    const [steps, setSteps] = useState(null);
+    //const [steps, setSteps] = useState(null);
     const [weight, setWeight] = useState(null)
+    const [steps, setSteps] = useState({});
 
     const initAppleHealthKit = () => {
         AppleHealthKit.initHealthKit(permissions, (err) => {
@@ -26,7 +27,28 @@ const useHealthData = () => {
         });
     }
 
-    const getSteps = () => {
+    const getSteps = (date) => {
+        if (!hasPermission) {
+            return;
+        }
+
+        const options = {
+            date: date.toISOString(),
+            includesManuallyAdded: false,
+        };
+
+        AppleHealthKit.getStepCount(options, (err, results) => {
+            if (err) {
+                console.log('Error getting the steps: ', err);
+                return;
+            }
+            setSteps(prevSteps => ({
+                ...prevSteps,
+                [date.toISOString().split('T')[0]]: results.value
+            }));
+        });
+    }
+    /*const getSteps = () => {
         if (!hasPermission) {
             return;
         }
@@ -43,7 +65,7 @@ const useHealthData = () => {
             }
             setSteps(results.value);
         });
-    }
+    }*/
 
     const getWeight = () => {
         if (!hasPermission) {
@@ -80,11 +102,17 @@ const useHealthData = () => {
     }, []);
 
     useEffect(() => {
-        getSteps();
-        getWeight();
+        if(hasPermission) {
+            getSteps(new Date());
+            getWeight();
+        }
     }, [hasPermission]);
 
-    return { steps, weight };
+    useEffect(() => {
+        //console.log("STEPS: ", steps)
+    }, [steps]);
+
+    return { steps, getSteps, weight };
 };
 
 export default useHealthData;

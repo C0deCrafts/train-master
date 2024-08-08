@@ -1,7 +1,7 @@
 import {View, StyleSheet, FlatList} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
 import {elements} from "../../../constants";
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import {useAppStyle} from "../../../context/AppStyleContext";
 import ExerciseList from "../../../components/ExerciseList";
 import CustomHeader from "../../../components/CustomHeader";
@@ -19,16 +19,15 @@ const WorkoutId = () => {
 
     const { startSession } = useContext(WorkoutContext);
 
-
     const handleStartWorkout = async () => {
         await startSession(workout);
         router.dismissAll();
         router.replace({ pathname: '(noTabs)/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("WorkoutID: ", workout)
-    }, [workout]);
+    }, [workout]);*/
 
     const exercises = ({item, index}) => {
         const handleNavigation = () => {

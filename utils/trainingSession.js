@@ -1,6 +1,6 @@
 import {collection, addDoc, query, where, getDocs, updateDoc, doc, getDoc, deleteDoc} from 'firebase/firestore';
-import { FIRESTORE_DB } from './firebaseConfig';
-import { getAuth } from 'firebase/auth';
+import {FIRESTORE_DB} from './firebaseConfig';
+import {getAuth} from 'firebase/auth';
 import {format} from "date-fns";
 
 // Start a new training session
@@ -23,7 +23,6 @@ const startTrainingSession = async (workoutId) => {
             await deleteDoc(doc.ref);
         }
     });
-
 
     // Start a new session
     const trainingSession = {
@@ -52,7 +51,7 @@ const fetchDailyStats = async () => {
     const q = query(sessionsCollection, where('userId', '==', user.uid));
     const sessionsSnapshot = await getDocs(q);
 
-    const sessions = sessionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const sessions = sessionsSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
     const dailyStats = {};
 
     sessions.forEach(session => {
