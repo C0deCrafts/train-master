@@ -1,5 +1,5 @@
 import {collection, getDocs, query, where} from "firebase/firestore";
-import {FIRESTORE_DB} from "./firebaseConfig";
+import {FIRESTORE_DB} from "./firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const fetchWorkoutsWithExercises = async () => {

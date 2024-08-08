@@ -5,7 +5,7 @@ import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {StatusBar} from "expo-status-bar";
 import {signOut} from "firebase/auth";
-import {FIREBASE_AUTH} from "../utils/firebaseConfig";
+import {FIREBASE_AUTH} from "../utils/firebase";
 
 const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = false}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();

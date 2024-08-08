@@ -1,4 +1,4 @@
-import { FIRESTORE_DB } from '../utils/firebaseConfig';
+import { FIRESTORE_DB } from '../utils/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export const fetchExercises = async () => {

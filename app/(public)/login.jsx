@@ -16,7 +16,7 @@ import { Dimensions } from 'react-native';
 import {useEffect, useState, useRef} from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import {sendPasswordResetEmail, signInWithEmailAndPassword} from "firebase/auth";
-import {FIREBASE_AUTH} from "../../utils/firebaseConfig";
+import {FIREBASE_AUTH} from "../../utils/firebase";
 
 const Login = () => {
     const [isSmallDevice, setIsSmallDevice] = useState(false)
@@ -117,7 +117,6 @@ const Login = () => {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                     <SafeAreaView style={styles.content}>
                         <Spinner visible={loading}/>
-                        {/* FIX LOGO - don't visible ?? */}
                         <View style={styles.logoContainer}>
                             {isSmallDevice ? (
                                 <Image

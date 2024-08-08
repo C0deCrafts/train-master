@@ -1,4 +1,4 @@
-const { FIRESTORE_DB } = require('../utils/firebaseConfig');
+const { FIRESTORE_DB } = require('../utils/firebase');
 const { doc, setDoc } = require('firebase/firestore');
 const workouts = require('./workoutsWithExercises.json');
 

@@ -8,7 +8,7 @@ import {Link} from "expo-router";
 import {useEffect, useRef, useState} from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import {FIREBASE_AUTH, FIRESTORE_DB} from "../../utils/firebaseConfig";
+import {DEFAULT_PROFILE_IMAGE_URL, FIREBASE_AUTH, FIRESTORE_DB} from "../../utils/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
@@ -17,16 +17,16 @@ const Register = () => {
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+    //const [message, setMessage] = useState('');
     const emailInputRef = useRef(null);
     const passwordInputRef = useRef(null);
     const confirmPasswordInputRef = useRef(null);
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("PW:: ", password);
         console.log("CPW: ", confirmPassword)
         console.log("PW: ", message);
-    }, [password, message, confirmPassword]);
+    }, [password, message, confirmPassword]);*/
 
     const handleRegistration = async () => {
         try{
@@ -34,10 +34,10 @@ const Register = () => {
             if(!validationMessage) {
                 setLoading(true);
                 const user = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-                console.log("Register: ", user)
+                //console.log("Register: ", user)
                 await createUserInformation(user)
             } else {
-                Alert.alert('‼️Achtung‼️', validationMessage)
+                Alert.alert('‼️Achtung‼️Fehler bei der Registrierung aufgetreten, melde es an den App Betreiber', validationMessage)
             }
         } catch (err) {
             if(err.code === "auth/email-already-in-use"){
@@ -49,12 +49,13 @@ const Register = () => {
         }
     }
 
-    const createUserInformation = async(user) => {
+    const createUserInformation = async(user, profileImageUri) => {
         try {
             const docRef = doc(FIRESTORE_DB, `users/${user.user.uid}`)
             await setDoc(docRef, {
                 username,
-                email
+                email,
+                profileImage: DEFAULT_PROFILE_IMAGE_URL
             });
         } catch (err) {
             console.log("Error DB: ", err)

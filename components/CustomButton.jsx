@@ -14,7 +14,7 @@ const CustomButton = ({title, handlePress, containerStyles, textStyle, isLoading
             activeOpacity={0.7}
             style={[styles.container, containerStyles, isLoading && styles.loading]}
         >
-            <Text style={[styles.text, textStyles]}>{title}</Text>
+            <Text style={[styles.text, textStyle]}>{title}</Text>
         </TouchableOpacity>
     );
 };

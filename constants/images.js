@@ -1,4 +1,3 @@
-import avatar from "../assets/images/user.png"
 import backgroundMale from "../assets/images/background_male.png"
 import backgroundSymbol from "../assets/images/background_symbol.png"
 import lightmode from "../assets/images/appimages/lightmode.png"
@@ -10,7 +9,6 @@ import sportImage from "../assets/images/appimages/sportimage.png"
 import test from "../assets/images/1.png"
 
 export default {
-    avatar,
     backgroundMale,
     backgroundSymbol,
     darkmode,

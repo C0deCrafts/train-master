@@ -1,5 +1,5 @@
 import {collection, addDoc, query, where, getDocs, updateDoc, doc, getDoc, deleteDoc} from 'firebase/firestore';
-import {FIRESTORE_DB} from './firebaseConfig';
+import {FIRESTORE_DB} from './firebase';
 import {getAuth} from 'firebase/auth';
 import {format} from "date-fns";
 
