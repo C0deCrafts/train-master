@@ -1,7 +1,7 @@
 import {Tabs} from "expo-router";
 import TabIcon from "../../../components/TabIcon";
 import {icons} from "../../../constants";
-import {useAuth} from "../../../context/AuthProvider";
+import {useAuth} from "../../../context/AuthContext";
 import {useAppStyle} from "../../../context/AppStyleContext";
 
 const TabsLayout = () => {

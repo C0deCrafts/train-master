@@ -6,43 +6,43 @@ import {
     Text, TouchableWithoutFeedback,
     View
 } from 'react-native'
-import { Image } from 'expo-image';
+import {Image} from 'expo-image';
 import {SafeAreaView} from "react-native-safe-area-context";
 import {colors, icons, images} from "../../constants";
-import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import {Link} from "expo-router";
-import { Dimensions } from 'react-native';
+import {Dimensions} from 'react-native';
 import {useEffect, useState, useRef} from "react";
-import Spinner from "react-native-loading-spinner-overlay";
-import {sendPasswordResetEmail, signInWithEmailAndPassword} from "firebase/auth";
+import {sendPasswordResetEmail} from "firebase/auth";
 import {FIREBASE_AUTH} from "../../utils/firebase";
+import Loading from "../../components/Loading";
+import {useAuth} from "../../context/AuthContext";
+import FormField from "../../components/FormField";
 
 const Login = () => {
     const [isSmallDevice, setIsSmallDevice] = useState(false)
     const screenHeight = Dimensions.get('window').height;
-    const passwordInputRef = useRef(null);
 
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const {login} = useAuth();
+
+    //to mark the field if press enter on the keyboard
+    const passwordRef = useRef(null);
+
     const handleLogin = async () => {
-        try{
-            setLoading(true);
-            const user = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
-            //console.log("Login: ", user)
-        } catch (err) {
-            if(err.code === "auth/invalid-credential") {
-                Alert.alert("Hoppla!", "Dein Passwort scheint falsch zu sein. Versuch's nochmal!");
-            } else if(err.code === "auth/invalid-email" || "auth/missing-email") {
-                Alert.alert("Hoppla!", "Deine Email ist ungültig. Versuch's nochmal!");
-            } else {
-                Alert.alert("Uups!", `Irgendwas lief schief: ${err.message}. Keine Panik, wir kriegen das hin!`);
-                //melde den Fehler
-            }
-        } finally {
-            setLoading(false)
+        if(!email || !password) {
+            Alert.alert("Login", "Bitte fülle alle Felder aus!");
+            return;
+        }
+        setLoading(true);
+        const response = await login(email, password);
+        setLoading(false);
+        //console.log("sign in response: ", response)
+        if(!response.success){
+            Alert.alert(response.message[0], response.message[1])
         }
     }
 
@@ -99,67 +99,76 @@ const Login = () => {
     };
 
     useEffect(() => {
-        console.log(screenHeight);
-        if(screenHeight < 700){
+        //console.log(screenHeight);
+        if (screenHeight < 700) {
             setIsSmallDevice(true);
         }
     }, [screenHeight]);
 
     return (
-            <ImageBackground
-                source={images.backgroundMale}
-                style={styles.container}
-            >
-                <Image
-                    source={images.backgroundSymbol}
-                    style={styles.symbol}
-                />
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                    <SafeAreaView style={styles.content}>
-                        <Spinner visible={loading}/>
-                        <View style={styles.logoContainer}>
-                            {isSmallDevice ? (
-                                <Image
-                                    source={images.logo}
-                                    style={styles.logoSmallDevices}
-                                />
-                            ) : (
-                                <Image
-                                    source={images.logo}
-                                    style={styles.logo}
-                                />
-                            )}
-                        </View>
-                            <FormField placeholder="E-Mail"
-                                       otherStyles={{marginBottom: 16}}
-                                       value={email}
-                                       handleChangeText={setEmail}
-                                       onSubmitEditing={()=> passwordInputRef.current.focus()}
-                                       returnKeyType="next"
-                            />
-                            <FormField placeholder="Passwort" isPassword={true} value={password}
-                                       handleChangeText={setPassword}
-                                       ref={passwordInputRef}
-                                       onSubmitEditing={()=> handleLogin()}
-                                       returnKeyType="done"
-                            />
-                            <Pressable onPress={handleForgotPassword}>
-                                <Text style={styles.forgotPasswordText}>Passwort vergessen?</Text>
-                            </Pressable>
-                            <CustomButton title="Login" containerStyles={{marginTop: 40}} handlePress={handleLogin} textStyle={{color: colors.white}}/>
-                            <Text style={styles.text}>oder</Text>
-                            <View style={styles.loginIconContainer}>
-                                <Image source={icons.apple} style={styles.loginIcons}/>
-                                <Image source={icons.facebook} style={styles.loginIcons}/>
-                                <Image source={icons.google} style={styles.loginIcons}/>
-                            </View>
-                        <View style={styles.footer}>
-                            <Text style={styles.footerText}>Kein Account?</Text>
-                            <Link replace href={"/register"} style={styles.footerLink}>{" "}Registriere dich jetzt!</Link>
-                        </View>
-                    </SafeAreaView>
-                </TouchableWithoutFeedback>
-            </ImageBackground>
+        <ImageBackground
+            source={images.backgroundMale}
+            style={styles.container}
+        >
+            <Image
+                source={images.backgroundSymbol}
+                style={styles.symbol}
+            />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                   <SafeAreaView style={styles.content}>
+                       <Loading visible={loading} color={colors.white} />
+                       {/*Logo*/}
+                       <View style={styles.logoContainer}>
+                           {isSmallDevice ? (
+                               <Image
+                                   source={images.logo}
+                                   style={styles.logoSmallDevices}
+                               />
+                           ) : (
+                               <Image
+                                   source={images.logo}
+                                   style={styles.logo}
+                               />
+                           )}
+                       </View>
+
+                       {/*Input email and password fields*/}
+                       <FormField placeholder="E-Mail"
+                                  otherStyles={{marginBottom: 16}}
+                                  value={email}
+                                  handleChangeText={setEmail}
+                                  onSubmitEditing={()=> passwordRef.current.focus()}
+                                  returnKeyType="next"
+                       />
+                       <FormField placeholder="Passwort" isPassword={true} value={password}
+                                  handleChangeText={setPassword}
+                                  ref={passwordRef}
+                                  onSubmitEditing={()=> handleLogin()}
+                                  returnKeyType="done"
+                       />
+                       {/*Forgot password text*/}
+                       <Pressable onPress={handleForgotPassword}>
+                           <Text style={styles.forgotPasswordText}>Passwort vergessen?</Text>
+                       </Pressable>
+
+                       {/*Login Button*/}
+                       <CustomButton title="Login" containerStyles={{marginTop: 40}} handlePress={handleLogin}
+                                     textStyle={{color: colors.white}}/>
+                       <Text style={styles.text}>oder</Text>
+                       {/*Login with apple, facebook or google*/}
+                       <View style={styles.loginIconContainer}>
+                           <Image source={icons.apple} style={styles.loginIcons}/>
+                           <Image source={icons.facebook} style={styles.loginIcons}/>
+                           <Image source={icons.google} style={styles.loginIcons}/>
+                       </View>
+                       {/*Footer - Register text*/}
+                       <View style={styles.footer}>
+                           <Text style={styles.footerText}>Kein Account?</Text>
+                           <Link replace href={"/register"} style={styles.footerLink}>{" "}Registriere dich jetzt!</Link>
+                       </View>
+                   </SafeAreaView>
+            </TouchableWithoutFeedback>
+        </ImageBackground>
     );
 };
 
@@ -206,7 +215,7 @@ const styles = StyleSheet.create({
         height: 150,
         contentFit: "contain",
         alignSelf: "center",
-        marginBottom: -40
+        marginBottom: -70
     },
     symbol: {
         position: "absolute",

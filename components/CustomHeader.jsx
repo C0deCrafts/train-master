@@ -4,8 +4,7 @@ import {router} from 'expo-router';
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {StatusBar} from "expo-status-bar";
-import {signOut} from "firebase/auth";
-import {FIREBASE_AUTH} from "../utils/firebase";
+import {useAuth} from "../context/AuthContext";
 
 const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = false}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -14,14 +13,16 @@ const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = f
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
+    const {logout} = useAuth();
+
     const handleGoBack = () => {
         router.back();
     };
 
-    const logout = () => {
-        signOut(FIREBASE_AUTH)
+    const handleLogout = async () => {
+        //console.log("Logout")
+        await logout();
     };
-
 
     return (
         <>
@@ -32,7 +33,7 @@ const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = f
                     </TouchableOpacity>
                 )}
                 {logOutButtonVisible && (
-                    <TouchableOpacity onPress={logout} style={styles.logoutButtonContainer}>
+                    <TouchableOpacity onPress={handleLogout} style={styles.logoutButtonContainer}>
                         <Image source={icons.logout} style={styles.icon} />
                     </TouchableOpacity>
                 )}

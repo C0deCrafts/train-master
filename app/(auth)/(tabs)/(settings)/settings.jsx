@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import {useState, useMemo} from "react";
-import {useAuth} from "../../../../context/AuthProvider";
+import {useAuth} from "../../../../context/AuthContext";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {images, icons} from "../../../../constants";
 import {Picker} from "@react-native-picker/picker";
@@ -24,7 +24,7 @@ import Avatar from "../../../../components/Avatar";
 import {useAccountSetting} from "../../../../context/AccountSettingContext";
 
 const Settings = () => {
-    const { user, username, setUsername, email, handleUpdateUsername } = useAuth();
+    const { user } = useAuth();
     const { textSize, setTextSize, getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -98,8 +98,8 @@ const Settings = () => {
                                     imageRadius={60}
                             />
                             <View>
-                                <Text style={styles.userName} numberOfLines={1} ellipsizeMode={"tail"}>{username}</Text>
-                                <Text style={styles.email} numberOfLines={1} ellipsizeMode={"tail"}>{email.toLowerCase()}</Text>
+                                <Text style={styles.userName} numberOfLines={1} ellipsizeMode={"tail"}>{user.username}</Text>
+                                <Text style={styles.email} numberOfLines={1} ellipsizeMode={"tail"}>{user.email.toLowerCase()}</Text>
                             </View>
                         </Card>
                         <Text style={styles.title}>Account Einstellungen</Text>

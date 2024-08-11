@@ -1,4 +1,4 @@
-import {createContext, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {cacheWorkouts, fetchWorkoutsWithExercises, loadCachedWorkouts} from "../utils/workoutUtils";
 import {
@@ -19,46 +19,51 @@ export const WorkoutProvider = ({ children }) => {
     const [setDurations, setSetDurations] = useState([]);
     const {weight} = useHealthData();
 
+
     // Gewicht des Benutzers (dies sollte später aus den Benutzerdaten kommen)
-    const userWeight = weight || 70; // Beispielgewicht in kg
+    const userWeight = weight
+
+    useEffect(() => {
+        console.log("Weight: ", weight)
+    }, [weight]);
 
     const loadWorkouts = async () => {
-        const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
-        if (cachedWorkouts && cachedImages && cachedVideos) {
-            setWorkouts(cachedWorkouts);
-            setExerciseImages(cachedImages);
-            setExerciseVideos(cachedVideos);
-        } else {
-            const { workouts, images, videos } = await fetchWorkoutsWithExercises();
-            setWorkouts(workouts);
-            setExerciseImages(images);
-            setExerciseVideos(videos);
-            await cacheWorkouts(workouts, images, videos);
+        try {
+            const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
+            if (cachedWorkouts && cachedImages && cachedVideos) {
+                setWorkouts(cachedWorkouts);
+                setExerciseImages(cachedImages);
+                setExerciseVideos(cachedVideos);
+            } else {
+                const { workouts, images, videos } = await fetchWorkoutsWithExercises();
+                setWorkouts(workouts);
+                setExerciseImages(images);
+                setExerciseVideos(videos);
+                await cacheWorkouts(workouts, images, videos);
+            }
+        } catch (error) {
+            console.error('Error loading workouts:', error);
         }
     };
 
     const startSession = async (workoutId) => {
-        const sessionId = await startTrainingSession(workoutId);
-        setCurrentSessionId(sessionId);
-    }
+        try {
+            const sessionId = await startTrainingSession(workoutId);
+            setCurrentSessionId(sessionId);
+        } catch (error) {
+            console.error('Error starting session:', error);
+        }
+    };
 
     const startExerciseTimer = () => {
-        const startTime = new Date();
-        setExerciseStartTime(startTime);
-        //console.log(`Exercise timer started at: ${startTime}`);
+        setExerciseStartTime(new Date());
     };
 
     const stopExerciseTimer = ()  => {
         if(exerciseStartTime){
-            const endTime = new Date();
-            const durationInSeconds = (endTime - exerciseStartTime) / 1000; // Dauer in Sekunden
+            const durationInSeconds = (new Date() - exerciseStartTime) / 1000;
             setSetDurations(prevDurations => [...prevDurations, durationInSeconds]);
-
-            //console.log(`Exercise timer stopped at: ${endTime}`);
-            //console.log(`Exercise duration: ${durationInSeconds} seconds`);
-            setExerciseStartTime(null); // Timer zurücksetzen
-        } else {
-            console.log("No timer started")
+            setExerciseStartTime(null);
         }
     };
 
@@ -113,3 +118,12 @@ export const WorkoutProvider = ({ children }) => {
         </WorkoutContext.Provider>
     );
 };
+
+export function useWorkout() {
+    const value = useContext(WorkoutContext);
+
+    if (!value) {
+        throw new Error("useAuth must be wrapped inside AuthContextProvider");
+    }
+    return value;
+}

@@ -1,6 +1,6 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Image} from 'expo-image';
-import {useAuth} from "../../../../context/AuthProvider";
+import {useAuth} from "../../../../context/AuthContext";
 import {useContext, useEffect, useState} from "react";
 import {elements, images} from "../../../../constants";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -23,7 +23,7 @@ const Home = () => {
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
 
-    const {username} = useAuth();
+    const {user} = useAuth();
     const {workouts} = useContext(WorkoutContext);
     const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
 
@@ -78,7 +78,7 @@ const Home = () => {
                         <View>
                             <Text style={styles.dateText}>{currentDate}</Text>
                             <Text style={styles.greetingText}>Hallo
-                                <Text style={styles.usernameText}>{" "}{username}!</Text>
+                                    <Text style={styles.usernameText}>{" "}{user.username}!</Text>
                             </Text>
                         </View>
                         {/* ImageViewer with TouchableOpacity for the camera button */}

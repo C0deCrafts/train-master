@@ -2,85 +2,47 @@ import {Alert, ImageBackground, Keyboard, StyleSheet, Text, TouchableWithoutFeed
 import { Image } from 'expo-image';
 import {SafeAreaView} from "react-native-safe-area-context";
 import {colors, icons, images} from "../../constants";
-import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import {Link} from "expo-router";
-import {useEffect, useRef, useState} from "react";
-import Spinner from "react-native-loading-spinner-overlay";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import {DEFAULT_PROFILE_IMAGE_URL, FIREBASE_AUTH, FIRESTORE_DB} from "../../utils/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import {useRef, useState} from "react";
+import Loading from "../../components/Loading";
+import {useAuth} from "../../context/AuthContext";
+import FormField from "../../components/FormField";
 
 const Register = () => {
-    const [username, setUsername] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
     const [loading, setLoading] = useState(false);
-    //const [message, setMessage] = useState('');
-    const emailInputRef = useRef(null);
-    const passwordInputRef = useRef(null);
-    const confirmPasswordInputRef = useRef(null);
+    const {register} = useAuth();
 
-    /*useEffect(() => {
-        console.log("PW:: ", password);
-        console.log("CPW: ", confirmPassword)
-        console.log("PW: ", message);
-    }, [password, message, confirmPassword]);*/
+    //to mark the fields if press enter on the keyboard
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
+    const confirmPasswordRef = useRef(null)
 
-    const handleRegistration = async () => {
-        try{
-            const validationMessage = validatePassword(password,confirmPassword);
-            if(!validationMessage) {
-                setLoading(true);
-                const user = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-                //console.log("Register: ", user)
-                await createUserInformation(user)
-            } else {
-                Alert.alert('‼️Achtung‼️Fehler bei der Registrierung aufgetreten, melde es an den App Betreiber', validationMessage)
-            }
-        } catch (err) {
-            if(err.code === "auth/email-already-in-use"){
-                Alert.alert('Bereits registiert!', "Diese E-Mailadresse ist bereits bei uns registiert, bitte logge dich ein!")
-            }
-            console.log("Register Error: ", err)
-        } finally {
-            setLoading(false)
+    const handleRegister = async () => {
+        if(!email || !password || !username) {
+            Alert.alert("Registrieren", "Bitte fülle alle Felder aus!")
+            return;
+        }
+        if(password !== confirmPassword) {
+            Alert.alert("Passwort", "Die Passwörter stimmen nicht überein. Bitte gib sie erneut ein!")
+            return;
+        }
+        setLoading(true);
+
+        let response = await register(email, password, username);
+        setLoading(false);
+
+        console.log("Response from Firebase: ", response);
+
+        if(!response.success){
+            Alert.alert(response.message[0], response.message[1])
         }
     }
-
-    const createUserInformation = async(user, profileImageUri) => {
-        try {
-            const docRef = doc(FIRESTORE_DB, `users/${user.user.uid}`)
-            await setDoc(docRef, {
-                username,
-                email,
-                profileImage: DEFAULT_PROFILE_IMAGE_URL
-            });
-        } catch (err) {
-            console.log("Error DB: ", err)
-        }
-    }
-
-    const validatePassword = (password, confirmPassword) => {
-        let messages = [];
-
-        if (password.length < 8) {
-            messages.push("➡️️Dein Passwort muss mindestens 8 Zeichen haben.");
-        }
-        if (!/[a-zA-Z]/.test(password)) {
-            messages.push("➡️️Füge mindestens einen Buchstaben hinzu.");
-        }
-
-        if (messages.length > 0) {
-            return messages.join(' ');
-        } else {
-            if (password !== confirmPassword) {
-                return("️Die Passwörter stimmen nicht überein. Bitte gib sie erneut ein.");
-            }
-            return null;
-        }
-    };
 
     return (
         <ImageBackground
@@ -93,21 +55,22 @@ const Register = () => {
             />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <SafeAreaView style={styles.content}>
-                    <Spinner visible={loading}/>
+                    {/* <Spinner visible={loading}/>*/}
+                    <Loading visible={loading} color={colors.white} />
                     <View style={styles.formContainer}>
                         <FormField placeholder="Benutzername"
                                    otherStyles={{marginBottom: 16}}
                                    value={username}
                                    handleChangeText={setUsername}
-                                   onSubmitEditing={()=> emailInputRef.current.focus()}
+                                   onSubmitEditing={()=> emailRef.current.focus()}
                                    returnKeyType="next"
                         />
                         <FormField placeholder="E-Mail"
                                    otherStyles={{marginBottom: 16}}
                                    value={email}
                                    handleChangeText={setEmail}
-                                   ref={emailInputRef}
-                                   onSubmitEditing={()=> passwordInputRef.current.focus()}
+                                   ref={emailRef}
+                                   onSubmitEditing={()=> passwordRef.current.focus()}
                                    returnKeyType="next"
                         />
                         <FormField placeholder="Passwort"
@@ -115,19 +78,19 @@ const Register = () => {
                                    otherStyles={{marginBottom: 16}}
                                    value={password}
                                    handleChangeText={setPassword}
-                                   ref={passwordInputRef}
-                                   onSubmitEditing={()=> confirmPasswordInputRef.current.focus()}
+                                   ref={passwordRef}
+                                   onSubmitEditing={()=> confirmPasswordRef.current.focus()}
                                    returnKeyType="next"
                         />
                         <FormField placeholder="Bestätige Passwort"
                                    isPassword={true}
                                    value={confirmPassword}
                                    handleChangeText={setConfirmPassword}
-                                   ref={confirmPasswordInputRef}
-                                   onSubmitEditing={()=> handleRegistration()}
+                                   ref={confirmPasswordRef}
+                                   onSubmitEditing={()=> handleRegister()}
                                    returnKeyType="done"
                         />
-                        <CustomButton title="Registrieren" containerStyles={{marginTop: 40}} handlePress={handleRegistration} textStyle={{color: colors.white}}/>
+                        <CustomButton title="Registrieren" containerStyles={{marginTop: 40}} handlePress={handleRegister} textStyle={{color: colors.white}}/>
                         <Text style={styles.text}>oder</Text>
                         <View style={styles.loginIconContainer}>
                             <Image source={icons.apple} style={styles.loginIcons}/>
@@ -154,7 +117,10 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
+        //justifyContent: "center",
         paddingHorizontal: 20,
+        //paddingTop: 20,
+        //backgroundColor: "red"
     },
     formContainer: {
         flex: 1,

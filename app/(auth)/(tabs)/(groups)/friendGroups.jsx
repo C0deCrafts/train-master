@@ -5,14 +5,12 @@ import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp
 import {FIRESTORE_DB} from "../../../../utils/firebase";
 import {icons, images} from "../../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
-import {useAuth} from "../../../../context/AuthProvider";
-import {Link} from "expo-router";
+import {useAuth} from "../../../../context/AuthContext";
 import CustomHeader from "../../../../components/CustomHeader";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import Card from "../../../../components/Card";
 import elementStyles from "../../../../constants/elementStyles";
-import Animated, {FadeInDown, FadeInRight, FadeInUp} from "react-native-reanimated";
-import index from "../../../index";
+import Animated, {FadeInDown} from "react-native-reanimated";
 
 const FriendGroups = () => {
     const { user } = useAuth();

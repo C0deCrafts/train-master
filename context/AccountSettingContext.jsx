@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from "expo-image-picker";
-import {useAuth} from "./AuthProvider";
+import {useAuth} from "./AuthContext";
 import {Alert} from "react-native";
 
 const AccountSettingContext = createContext({});
@@ -46,7 +46,7 @@ export const AccountSettingProvider = ({ children }) => {
 
         if (!result.canceled) {
             try {
-                handleUpdateProfileImage(result.assets[0].uri, user.uid);
+                handleUpdateProfileImage(result.assets[0].uri);
                 console.log("Profilbild erfolgreich aktualisiert.")
             } catch (error) {
                 console.log('Error updating profile image:', error);

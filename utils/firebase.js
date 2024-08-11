@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import {collection, getFirestore} from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,10 +9,14 @@ import * as ImageManipulator from "expo-image-manipulator";
 const app = initializeApp(firebaseConfig);
 export const FIRESTORE_DB = getFirestore(app);
 export const FIREBASE_STORAGE = getStorage(app);
+//if we close the app we don't lose the user auth from firebase
 export const FIREBASE_AUTH = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage),
 });
 export const DEFAULT_PROFILE_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/train-master-39445.appspot.com/o/images%2Favatars%2Fuser.png?alt=media&token=140027b0-d067-47e5-b488-8e10dcce609f";
+
+export const roomRef = collection(FIRESTORE_DB, "rooms");
+export const userRef = collection(FIRESTORE_DB, "users");
 
 const resizeImage = async (uri) => {
     const manipulatedImage = await ImageManipulator.manipulateAsync(

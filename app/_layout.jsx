@@ -1,15 +1,15 @@
-import {AuthProvider, useAuth} from "../context/AuthProvider";
+import {AuthContextProvider, useAuth} from "../context/AuthContext";
 import {Slot, useRouter, useSegments} from "expo-router";
-import {useContext, useEffect, useState} from "react";
-import {ActivityIndicator, Alert, View} from "react-native";
+import {useEffect} from "react";
+import {Alert} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
 import {AppStyleProvider, useAppStyle} from "../context/AppStyleContext";
-import {WorkoutContext, WorkoutProvider} from "../context/WorkoutContext";
-import {dark} from "../constants/colors";
+import {useWorkout, WorkoutProvider} from "../context/WorkoutContext";
 import {AccountSettingProvider} from "../context/AccountSettingContext";
 import * as Notifications from "expo-notifications";
 import {TimerProvider} from "../context/TimerContext";
+import {dark} from "../constants/colors";
 
 // Setup notification handler
 Notifications.setNotificationHandler({
@@ -21,58 +21,48 @@ Notifications.setNotificationHandler({
 });
 
 const requestNotificationPermissions = async () => {
-    const { status } = await Notifications.requestPermissionsAsync();
+    const {status} = await Notifications.requestPermissionsAsync();
     if (status !== 'granted') {
         Alert.alert('Erlaubnis für Benachrichtigungen wurde nicht gewährt.');
     }
 };
 
-const InitialLayout = () => {
-    const {user, initialized, username} = useAuth();
-    const { loadWorkouts } = useContext(WorkoutContext);
-    const router = useRouter();
+const MainLayout = () => {
+    const {isAuthenticated, isAppReady} = useAuth();
+    const {loadWorkouts} = useWorkout();
     const segments = useSegments();
-    const [loadingWorkouts, setLoadingWorkouts] = useState(false);
+    const router = useRouter();
+
+    /*useEffect(() => {
+        console.log("App ready? ", isAppReady)
+    }, [isAppReady]);*/
 
     useEffect(() => {
-        const handleLoadingData = async () => {
-            if (!initialized) return;
-            const inAuthGroup = segments[0] === "(auth)";
+        // check if app is ready or not
+        if (!isAppReady) return;
 
-            if (user && !inAuthGroup) {
-                setLoadingWorkouts(true)
-                await loadWorkouts(); // Warten bis loadWorkouts abgeschlossen ist
-                setLoadingWorkouts(false);
-                //router.replace("/home");
-            } else if (!user) {
-                router.navigate("/login");
-            }
-        };
-        handleLoadingData();
-    }, [initialized, user]);
+        //console.log("Segments: ", segments[0])
+        const inAuthGroup = segments[0] === "(auth)";
 
-    useEffect(() => {
-        if (initialized && !loadingWorkouts && user && username) {
-            router.replace("/(tabs)/(homes)/home");
-            //console.log("CanGoBack? ", router.canGoBack)
+        console.log(inAuthGroup)
+        if (isAuthenticated && !inAuthGroup) {
+            //redirect to home
+            loadWorkouts();
+            router.replace("/home");
+            //console.log("CanGoBack? ", router.canGoBack())
+
+        } else if (isAuthenticated === false) {
+            //redirect to sign in
+            router.replace("/login");
+            //console.log("CanGoBack? ", router.canGoBack())
         }
-    }, [initialized, loadingWorkouts, user, username]);
+    }, [isAuthenticated, isAppReady]);
 
-    if (!initialized || loadingWorkouts || (!username && user)) {
-        return (
-            <View style={{flex: 1, justifyContent: 'center'}}>
-                <ActivityIndicator size="large" color="#185360"/>
-            </View>
-        );
-    }
+    if (!isAppReady) return;
 
-    return (
-        <>
-            {initialized && <Slot/>}
-        </>
-    )
+    return <Slot/>;
+
 };
-
 const RootLayout = () => {
     const {colorScheme} = useAppStyle();
 
@@ -97,17 +87,17 @@ const RootLayout = () => {
 
     return (
         <AppStyleProvider>
-            <AuthProvider>
+            <AuthContextProvider>
                 <WorkoutProvider>
                     <AccountSettingProvider>
                         <TimerProvider>
-                            <InitialLayout/>
+                            <MainLayout/>
                             <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
                             {/*<StatusBar style="light"/>*/}
                         </TimerProvider>
                     </AccountSettingProvider>
                 </WorkoutProvider>
-            </AuthProvider>
+            </AuthContextProvider>
         </AppStyleProvider>
     )
 }

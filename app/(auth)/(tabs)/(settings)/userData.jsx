@@ -5,8 +5,7 @@ import useHealthData from "../../../../hook/useHealthData";
 import CustomCard from "../../../../components/CustomCard";
 import {icons} from "../../../../constants";
 import Card from "../../../../components/Card";
-import {useContext} from "react";
-import {useAuth} from "../../../../context/AuthProvider";
+import {useAuth} from "../../../../context/AuthContext";
 
 const UserData = () => {
     const {getColors, getTextStyles,fontFamily} = useAppStyle();
@@ -14,7 +13,9 @@ const UserData = () => {
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily);
     const {weight} = useHealthData();
-    const {username} = useAuth();
+    const {user} = useAuth();
+
+    //fix problem, if no weight
 
     const handleUserNameChange = () => {
         console.log("Usernamen ändern")
@@ -32,7 +33,7 @@ const UserData = () => {
                 <Card>
                     <View style={styles.cardContainer}>
                         <Text style={styles.titleSmall}>Benutzername:</Text>
-                        <Text style={styles.text}>{username}</Text>
+                        <Text style={styles.text}>{user.username}</Text>
                     </View>
                     {weight ? (
                         <View style={styles.cardContainer}>

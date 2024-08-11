@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import {Image} from 'expo-image';
 import {useLocalSearchParams} from "expo-router"
-import {useState, useLayoutEffect, useRef} from "react";
+import {useState, useLayoutEffect, useRef, useEffect} from "react";
 import CustomHeader from "../../../../../components/CustomHeader";
-import {useAuth} from "../../../../../context/AuthProvider";
+import {useAuth} from "../../../../../context/AuthContext";
 import {addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
 import {DEFAULT_PROFILE_IMAGE_URL, FIRESTORE_DB} from "../../../../../utils/firebase";
 import {images} from "../../../../../constants";
@@ -30,17 +30,21 @@ const GroupPage = () => {
 
     const styles = createStyles(textStyles, colors, fontFamily);
 
+    useEffect(() => {
+        console.log("Messages: ",messages)
+    }, [messages]);
+
     const sendMessages = async () => {
         if (message.trim().length > 0) {
             const msg = message.trim();
-            const userDoc = await getDoc(doc(FIRESTORE_DB, "users", user.uid));
+            const userDoc = await getDoc(doc(FIRESTORE_DB, "users", user.userId));
             const userData = userDoc.data();
-            const currentProfileImage = userData.profileImageUrl || DEFAULT_PROFILE_IMAGE_URL;
+            const currentProfileImage = userData.profileImage || DEFAULT_PROFILE_IMAGE_URL;
             const currentUsername = userData.username || "Unknown User";
 
             await addDoc(collection(FIRESTORE_DB, `friendGroups/${id}/groups`), {
                 text: msg,
-                from: user.uid,
+                from: user.userId,
                 createdAt: serverTimestamp(),
                 profileImage: currentProfileImage, // Save profile image
                 username: currentUsername // Save username
@@ -57,21 +61,16 @@ const GroupPage = () => {
                 return {id: doc.id, ...doc.data()};
             });
             setMessages(messages);
+
+            //relativ langsam... fix??
+            //flatListRef?.current?.scrollToEnd({animated: true})
+            //in combination mit [messages]
         });
         return unsubscribe;
     }, []);
 
-    /*const renderMessage = ({item}) => {
-        const isMe = item.from === user.uid;
-        return (
-            <View style={[styles.messageContainer, isMe ? styles.userMessageContainer : styles.otherMessageContainer]}>
-                <Text style={isMe ? styles.userMessageText : styles.messageText}>{item.text}</Text>
-                <Text style={isMe ? styles.userTime : styles.time}>{item.createdAt?.toDate().toLocaleDateString()}</Text>
-            </View>
-        )
-    }*/
     const renderMessage = ({item}) => {
-        const isMe = item.from === user.uid;
+        const isMe = item.from === user.userId;
         return (
             <View style={[styles.messageWrapper, isMe ? styles.userMessageWrapper : styles.otherMessageWrapper]}>
                 {!isMe && (
@@ -92,35 +91,37 @@ const GroupPage = () => {
     return (
         <>
             <CustomHeader title={name} backButtonVisible={true}/>
-            <Image
-                source={images.backgroundSymbol}
-                style={styles.image}
-                //das ist schuld dass der button nicht klickbar ist!!
-            />
-            <KeyboardAvoidingView behavior={
-                Platform.OS === "ios" ? "padding" : "height"
-            } style={styles.container}>
-
-                <FlatList
-                    ref={flatListRef}
-                    data={messages}
-                    renderItem={renderMessage}
-                    keyExtractor={(item) => item.id}
-                    onContentSizeChange={() => flatListRef.current?.scrollToEnd({animated: true})}
+            <View style={styles.container}>
+                <Image
+                    source={images.backgroundSymbol}
+                    style={styles.image}
+                    //das ist schuld dass der button nicht klickbar ist!!
                 />
-                <View style={styles.textInputContainer}>
-                    <TextInput value={message}
-                               onChangeText={setMessage}
-                               multiline={true}
-                               style={styles.textInput}
-                               scrollEnabled={true}
-                               maxHeight={120}
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
+                                      style={styles.keyboardContainer}
+                                      keyboardVerticalOffset={110}
+                >
+                    <FlatList
+                        ref={flatListRef}
+                        data={messages}
+                        renderItem={renderMessage}
+                        keyExtractor={(item) => item.id}
+                        contentContainerStyle={styles.flatListContent}
                     />
-                    <Pressable onPress={sendMessages} style={styles.button}>
-                        <Text style={styles.buttonLabel}>Senden</Text>
-                    </Pressable>
-                </View>
-            </KeyboardAvoidingView>
+                    <View style={styles.textInputContainer}>
+                        <TextInput value={message}
+                                   onChangeText={setMessage}
+                                   multiline={true}
+                                   style={styles.textInput}
+                                   scrollEnabled={true}
+                                   maxHeight={120}
+                        />
+                        <Pressable onPress={sendMessages} style={styles.button}>
+                            <Text style={styles.buttonLabel}>Senden</Text>
+                        </Pressable>
+                    </View>
+                </KeyboardAvoidingView>
+            </View>
         </>
     );
 };
@@ -129,9 +130,12 @@ export default GroupPage;
 
 const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
-        //kein logo wenn hintergrund - fix darkmode
         container: {
             flex: 1,
+            backgroundColor: colors.primary,
+        },
+        keyboardContainer: {
+            flex: 1
         },
         image: {
             position: "absolute",
@@ -140,13 +144,19 @@ const createStyles = (textStyles, colors, fontFamily) => {
             height: "100%",
             contentFit: "contain",
             tintColor: colors.quaternaryLabel,
-            pointerEvents: "none" // verhindert, dass das Bild Touch-Events empfängt
+            //pointerEvents: "none", // verhindert, dass das Bild Touch-Events empfängt (in dem fall brauch ich das nicht mehr)
+            zIndex: 0
+        },
+        flatListContent: {
+            //paddingBottom: 80, // Ensure there's space for the input field
         },
         textInputContainer: {
             flexDirection: "row",
             gap: 10,
             paddingVertical: 10,
             paddingHorizontal: 10,
+            backgroundColor: colors.primary, // Ensure input container has the correct background color
+            zIndex: 1, // Ensure input container is above the background image
         },
         textInput: {
             flex: 1,
@@ -156,7 +166,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
             padding: 10,
-            zIndex: 2
         },
         messageWrapper: {
             flexDirection: 'row',

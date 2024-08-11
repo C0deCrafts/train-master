@@ -13,9 +13,10 @@ const permissions = {
 
 const useHealthData = () => {
     const [hasPermission, setHasPermission] = useState(false);
-    //const [steps, setSteps] = useState(null);
     const [weight, setWeight] = useState(null)
     const [steps, setSteps] = useState({});
+
+    //fix error if user has no apple healh kit
 
     const initAppleHealthKit = () => {
         AppleHealthKit.initHealthKit(permissions, (err) => {
@@ -48,24 +49,6 @@ const useHealthData = () => {
             }));
         });
     }
-    /*const getSteps = () => {
-        if (!hasPermission) {
-            return;
-        }
-
-        const options = {
-            date: new Date().toISOString(),
-            includesManuallyAdded: false,
-        };
-
-        AppleHealthKit.getStepCount(options, (err, results) => {
-            if (err) {
-                console.log('Error getting the steps: ', err);
-                return;
-            }
-            setSteps(results.value);
-        });
-    }*/
 
     const getWeight = () => {
         if (!hasPermission) {
