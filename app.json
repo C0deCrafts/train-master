@@ -3,7 +3,7 @@
     "name": "TrainMaster",
     "slug": "train-master",
     "scheme": "train-master",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,8 +18,11 @@
       "infoPlist": {
         "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.",
         "NSHealthShareUpdateDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.",
-        "UIBackgroundModes": ["fetch", "background-fetch"]
-      }
+        "UIBackgroundModes": [
+          "fetch"
+        ]
+      },
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {

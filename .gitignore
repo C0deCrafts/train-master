@@ -2,7 +2,6 @@
 
 # dependencies
 node_modules/
-config/
 
 # Expo
 .expo/
@@ -34,3 +33,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Ignore iOS directories
+ios/
