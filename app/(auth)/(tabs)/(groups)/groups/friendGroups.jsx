@@ -1,22 +1,22 @@
 import {Alert, FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
-import { Image } from 'expo-image';
+import {Image} from 'expo-image';
 import {useEffect, useState} from "react";
-import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
-import {FIRESTORE_DB} from "../../../../utils/firebase";
-import {icons, images} from "../../../../constants";
+import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from 'firebase/firestore';
+import {FIRESTORE_DB} from "../../../../../utils/firebase";
+import {icons, images} from "../../../../../constants";
 import Spinner from "react-native-loading-spinner-overlay";
-import {useAuth} from "../../../../context/AuthContext";
-import CustomHeader from "../../../../components/CustomHeader";
-import {useAppStyle} from "../../../../context/AppStyleContext";
-import Card from "../../../../components/Card";
-import elementStyles from "../../../../constants/elementStyles";
+import {useAuth} from "../../../../../context/AuthContext";
+import CustomHeader from "../../../../../components/CustomHeader";
+import {useAppStyle} from "../../../../../context/AppStyleContext";
+import Card from "../../../../../components/Card";
+import elementStyles from "../../../../../constants/elementStyles";
 import Animated, {FadeInDown} from "react-native-reanimated";
 
 const FriendGroups = () => {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [groups, setGroups] = useState([]);
-    const { getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const { getTextStyles, getColors, fontFamily, } = useAppStyle();
 
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -28,20 +28,19 @@ const FriendGroups = () => {
         const groupsCollection = collection(FIRESTORE_DB, "friendGroups");
         const q = query(groupsCollection, orderBy('createdAt', 'desc'));
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        return onSnapshot(q, (snapshot) => {
             const groups = snapshot.docs.map((doc) => {
-                return { id: doc.id, ...doc.data() };
+                return {id: doc.id, ...doc.data()};
             });
             setGroups(groups);
         });
-        return unsubscribe;
     }, []);
 
 
     const handleCreateGroups = async (groupName) => {
         setLoading(true);
         try {
-            const doc = await addDoc(collection(FIRESTORE_DB, "friendGroups"), {
+            await addDoc(collection(FIRESTORE_DB, "friendGroups"), {
                 name: groupName,
                 description: `Diese Gruppe wurde von "${user.email}" erstellt`,
                 createdAt: serverTimestamp(),

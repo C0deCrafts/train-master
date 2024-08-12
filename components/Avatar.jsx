@@ -3,6 +3,7 @@ import {Image} from "expo-image";
 import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {useAccountSetting} from "../context/AccountSettingContext";
+import {blurhash} from "../utils/common";
 
 const Avatar = ({isPressableDisabled = false, isCameraVisible = true, imageRadius = 100}) => {
     const {getColors} = useAppStyle();
@@ -23,6 +24,8 @@ const Avatar = ({isPressableDisabled = false, isCameraVisible = true, imageRadiu
                         borderRadius: imageRadius / 2,
                         contentFit: "contain",
                     }}
+                    placeholder={blurhash}
+                    transition={500}
                 />
                 {isCameraVisible && (
                     <View style={styles.cameraStyle}>

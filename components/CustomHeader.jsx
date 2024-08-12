@@ -5,8 +5,9 @@ import {icons} from "../constants";
 import {useAppStyle} from "../context/AppStyleContext";
 import {StatusBar} from "expo-status-bar";
 import {useAuth} from "../context/AuthContext";
+import ChatAvatar from "./ChatAvatar";
 
-const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = false}) => {
+const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = false, chatAvatarVisible = false, imageUrl}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -24,6 +25,10 @@ const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = f
         await logout();
     };
 
+    const handleShowAvatar = () => {
+        console.log("Show Avatar")
+    }
+
     return (
         <>
             <View style={styles.headerContainer}>
@@ -31,6 +36,13 @@ const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = f
                     <TouchableOpacity onPress={handleGoBack} style={styles.backButtonContainer}>
                         <Image source={icons.back} style={styles.backButton}/>
                     </TouchableOpacity>
+                )}
+                {chatAvatarVisible && (
+                    <>
+                        <TouchableOpacity onPress={handleShowAvatar} style={styles.avatarButtonContainer}>
+                            <ChatAvatar imageRadius={40} imageUrl={imageUrl}/>
+                        </TouchableOpacity>
+                    </>
                 )}
                 {logOutButtonVisible && (
                     <TouchableOpacity onPress={handleLogout} style={styles.logoutButtonContainer}>
@@ -62,6 +74,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
             position: "absolute",
             top: 73,
             left: 10,
+            zIndex: 1,
+        },
+        avatarButtonContainer: {
+            position: "absolute",
+            right: 10,
+            bottom: 10,
             zIndex: 1,
         },
         backButton: {
