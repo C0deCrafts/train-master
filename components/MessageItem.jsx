@@ -1,7 +1,9 @@
 import {StyleSheet, View, Text} from "react-native";
 import {useAppStyle} from "../context/AppStyleContext";
 import {Image} from "expo-image";
-import {DEFAULT_PROFILE_IMAGE_URL} from "../utils/firebase";
+import {DEFAULT_PROFILE_IMAGE_URL, FIRESTORE_DB} from "../utils/firebase";
+import {useEffect, useState} from "react";
+import {doc, getDoc} from "firebase/firestore";
 //fix username to sendername
 
 const MessageItem = ({message, currentUser}) => {
@@ -11,17 +13,37 @@ const MessageItem = ({message, currentUser}) => {
     const styles = createStyles(textStyles, colors, fontFamily);
 
     const isMe = currentUser?.userId === message?.userId;
+    const [profileImage, setProfileImage] = useState(DEFAULT_PROFILE_IMAGE_URL);
+    const [senderName, setSenderName] = useState("");
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const userDoc = await getDoc(doc(FIRESTORE_DB, "users", message.userId));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                setProfileImage(userData.profileImage);
+                setSenderName(userData.username);
+            }
+        };
+
+        fetchUserProfile();
+    }, [message.userId]);
+
+
+    useEffect(() => {
+        console.log("Message: ITEM: ", message)
+    }, [message]);
 
     return (
         <View style={[styles.messageWrapper, isMe ? styles.userMessageWrapper : styles.otherMessageWrapper]}>
             {!isMe && (
                 <Image
-                    source={message?.profileImage ? { uri: message?.profileImage } : DEFAULT_PROFILE_IMAGE_URL}
+                    source={profileImage ? { uri: profileImage } : DEFAULT_PROFILE_IMAGE_URL}
                     style={styles.avatar}
                 />
             )}
             <View style={[styles.messageContainer, isMe ? styles.userMessageContainer : styles.otherMessageContainer]}>
-                {!isMe && <Text style={styles.username}>{message.senderName}</Text>}
+                {!isMe && <Text style={styles.username}>{senderName}</Text>}
                 <Text style={isMe ? styles.userMessageText : styles.messageText}>{message.text}</Text>
                 <Text style={isMe ? styles.userTime : styles.time}>{message.createdAt?.toDate().toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}</Text>
             </View>

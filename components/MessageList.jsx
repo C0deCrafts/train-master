@@ -1,12 +1,17 @@
 import {StyleSheet, ScrollView} from "react-native";
 import {useAppStyle} from "../context/AppStyleContext";
 import MessageItem from "./MessageItem";
+import {useEffect} from "react";
 
 const MessageList = ({messages, currentUser, scrollViewRef}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily);
+
+    useEffect(() => {
+        console.log("MESSAGES: LIST: ", messages)
+    }, [messages]);
 
     return (
         <ScrollView style={styles.container}

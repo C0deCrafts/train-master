@@ -78,8 +78,8 @@ const PrivateChatRoom = () => {
             const newDoc = await addDoc(messagesRef, {
                 userId: user?.userId,
                 text: message,
-                profileImage: user?.profileImage,
-                senderName: user?.username,
+                //profileImage: user?.profileImage,
+                //senderName: user?.username,
                 createdAt: serverTimestamp(),
             });
             //console.log("new message id: ", newDoc.id)
@@ -87,7 +87,6 @@ const PrivateChatRoom = () => {
             console.error("Error sending message: ",err);
         }
     }
-
     //console.log("Messages: ", privateMessages)
 
     return (

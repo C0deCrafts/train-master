@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList} from "react-native";
 import ChatItem from "./ChatItem";
 import {useRouter} from "expo-router";
 
 const ChatList = ({users, currentUser, isChatGroup = false, chatGroups}) => {
     const router = useRouter();
+
+    useEffect(() => {
+        console.log("CurrentUSER: ", currentUser)
+        console.log("Users: ", users)
+    }, [currentUser, users]);
 
     return (
        <>
@@ -19,6 +24,7 @@ const ChatList = ({users, currentUser, isChatGroup = false, chatGroups}) => {
                                            isGroup={true}
                                            router={router}
                                            key={index}
+                                           currentUser={currentUser}
                                  />
                              )}
                    />

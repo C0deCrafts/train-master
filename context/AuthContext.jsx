@@ -65,9 +65,11 @@ export const AuthContextProvider = ({children}) => {
             let message;
             switch (err.code) {
                 case "auth/invalid-credential":
-                    message = ["Hoppla!", "Dein Passwort scheint falsch zu sein. Versuch's nochmal!"];
+                    message = ["Hoppla!", "Bist du schon registriert? Wenn ja, dann scheint dein Passwort falsch zu sein. Versuch's nochmal!"];
                     break;
                 case "auth/invalid-email":
+                    message = ["Hoppla!", "Deine Email ist ungültig. Versuch's nochmal!"];
+                    break;
                 case "auth/missing-email":
                     message = ["Hoppla!", "Deine Email ist ungültig. Versuch's nochmal!"];
                     break;
@@ -129,6 +131,7 @@ export const AuthContextProvider = ({children}) => {
             await updateDoc(doc(FIRESTORE_DB, 'users', user?.userId), {
                 profileImage: imageUrl
             });
+
             await AsyncStorage.setItem('profileImage', imageUrl);
         } catch (err) {
             console.error("Error beim Ändern des Profilbildes: ", err);

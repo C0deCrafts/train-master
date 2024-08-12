@@ -53,7 +53,7 @@ const ChatItem = ({item, router, currentUser, isGroup = false, index}) => {
     const renderLastMessage = (user) => {
         if (typeof lastMessage === "undefined") return "Loading...";
         if (lastMessage) {
-            if (isMe) return "You: " + lastMessage?.text;
+            if (isMe) return "Du: " + lastMessage?.text;
             return lastMessage?.text;
         } else {
             return `Begrüße ${user} 👋`

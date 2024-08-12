@@ -34,10 +34,9 @@ const PublicChatRoom = () => {
     //const [messages, setMessages] = useState([]);
     //const flatListRef = useRef(null);
 
-    /*useEffect(() => {
+    useEffect(() => {
         console.log("ITEM pubic: ", item)
-        console.log("ITEM pubic ID: ", item.id)
-    }, [item]);*/
+    }, [item]);
 
     useEffect(() => {
         const docRef = collection(FIRESTORE_DB, `publicRooms/${item?.id}/messages`);
@@ -84,8 +83,8 @@ const PublicChatRoom = () => {
             const newDoc = await addDoc(collectionRef, {
                 userId: user?.userId,
                 text: message,
-                profileImage: user?.profileImage,
-                senderName: user?.username,
+                //profileImage: user?.profileImage,
+                //senderName: user?.username,
                 createdAt: serverTimestamp(),
             })
             //console.log("new message id: ", newDoc.id)
