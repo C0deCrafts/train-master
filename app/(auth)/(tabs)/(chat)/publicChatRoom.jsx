@@ -1,40 +1,51 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, KeyboardAvoidingView, Platform, Keyboard} from "react-native";
-import CustomHeader from "../../../../components/CustomHeader";
-import {useLocalSearchParams} from "expo-router";
-import SendMessages from "../../../../components/SendMessages";
-import {useAppStyle} from "../../../../context/AppStyleContext";
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    View
+} from 'react-native';
+import {useLocalSearchParams} from "expo-router"
+import React, {useState, useRef, useEffect} from "react";
+import {addDoc, collection, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
 import {useAuth} from "../../../../context/AuthContext";
-import {getRoomId} from "../../../../utils/common";
-import {addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
+import {useAppStyle} from "../../../../context/AppStyleContext";
 import {FIRESTORE_DB} from "../../../../utils/firebase";
+import CustomHeader from "../../../../components/CustomHeader";
 import MessageList from "../../../../components/MessageList";
+import SendMessages from "../../../../components/SendMessages";
 
-const PrivateChatRoom = () => {
-    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+const PublicChatRoom = () => {
+    const {getTextStyles, getColors} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
-    const styles = createStyles(textStyles, colors, fontFamily);
+    const styles = createStyles(textStyles, colors);
 
-    const {user} = useAuth() // logged in user
+    const {user} = useAuth();
     const item = useLocalSearchParams(); // second user
-    const [privateMessages, setPrivateMessages] = useState([])
+    const [publicMessages, setPublicMessages] = useState([])
     const textRef = useRef("");
     const inputRef = useRef(null);
     const scrollViewRef = useRef(null)
 
-    useEffect(() => {
-        let roomId = getRoomId(user?.userId, item?.userId);
-        const docRef = doc(FIRESTORE_DB,"privateRooms", roomId);
-        const messageRef = collection(docRef, "messages");
+    //const [message, setMessage] = useState("");
+    //const [messages, setMessages] = useState([]);
+    //const flatListRef = useRef(null);
 
-        const q = query(messageRef, orderBy("createdAt", "asc"));
+    /*useEffect(() => {
+        console.log("ITEM pubic: ", item)
+        console.log("ITEM pubic ID: ", item.id)
+    }, [item]);*/
+
+    useEffect(() => {
+        const docRef = collection(FIRESTORE_DB, `publicRooms/${item?.id}/messages`);
+        const q = query(docRef, orderBy('createdAt', 'asc'));
 
         let unsubscribe = onSnapshot(q, (snapshot) => {
             let allMessages = snapshot.docs.map((doc) => {
-                return doc.data();
+                return {id: doc.id, ...doc.data()};
             });
-            setPrivateMessages([...allMessages]);
+            setPublicMessages(allMessages);
         });
 
         const KeyboardDidShowListener = Keyboard.addListener(
@@ -49,7 +60,7 @@ const PrivateChatRoom = () => {
 
     useEffect(() => {
         updateScrollView();
-    }, [privateMessages]);
+    }, [publicMessages]);
 
     const updateScrollView = () => {
         setTimeout(()=> {
@@ -57,49 +68,37 @@ const PrivateChatRoom = () => {
         },100)
     }
 
-    // Nutze decodedItem im Component
-    console.log("Item privateChatRoom: ", item)
-    console.log("URL privateChatRoom: ", item.profileImage)
+    /*useEffect(() => {
+        console.log("Messages: ",publicMessages)
+    }, [publicMessages]);*/
 
     const sendMessages = async () => {
-        console.log("Sending messages");
         let message = textRef.current.trim();
         if(!message) return;
-        try {
-            let roomId = getRoomId(user?.userId, item?.userId);
-            const docRef = doc(FIRESTORE_DB, "privateRooms", roomId);
-            const messagesRef = collection(docRef, "messages");
+        try{
+            const collectionRef = collection(FIRESTORE_DB, `publicRooms/${item?.id}/messages`);
             textRef.current = "";
             if(inputRef) inputRef?.current?.clear();
-
-            //maybe some more data like user has read the message
-            const newDoc = await addDoc(messagesRef, {
+            const newDoc = await addDoc(collectionRef, {
                 userId: user?.userId,
                 text: message,
                 profileImage: user?.profileImage,
                 senderName: user?.username,
                 createdAt: serverTimestamp(),
-            });
-
-            console.log("new message id: ", newDoc.id)
+            })
+            //console.log("new message id: ", newDoc.id)
         } catch (err) {
             console.error("Error sending message: ",err);
         }
     }
 
-    //console.log("Messages: ", privateMessages)
-
     return (
         <>
-            <CustomHeader title={item?.username}
-                          backButtonVisible={true}
-                          chatAvatarVisible={true}
-                          imageUrl={item.profileImage}
-            />
+            <CustomHeader title={item?.name} backButtonVisible={true}/>
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
                                   style={styles.keyboardContainer}>
                 <View style={styles.messageContainer}>
-                    <MessageList messages={privateMessages} currentUser={user} scrollViewRef={scrollViewRef} />
+                    <MessageList messages={publicMessages} currentUser={user} scrollViewRef={scrollViewRef} />
                     <SendMessages handleSendMessage={sendMessages}
                                   onChangeText={value => textRef.current = value}
                                   ref={inputRef}
@@ -110,7 +109,7 @@ const PrivateChatRoom = () => {
     );
 };
 
-export default PrivateChatRoom;
+export default PublicChatRoom;
 
 const createStyles = (textStyles, colors) => {
     return StyleSheet.create({

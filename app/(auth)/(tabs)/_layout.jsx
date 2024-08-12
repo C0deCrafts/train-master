@@ -35,7 +35,7 @@ const TabsLayout = () => {
                 fontSize: textStyles.title_2,
             }
         }}>
-            <Tabs.Screen name="(groups)" options={{
+            <Tabs.Screen name="(chat)" options={{
                 headerShown: false,
                 title: "Gruppen",
                 tabBarIcon: ({color, focused}) => (

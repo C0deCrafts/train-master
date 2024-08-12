@@ -7,9 +7,8 @@ const StackLayout = () => {
             headerShown: false
         }}>
             <Stack.Screen name="chats"/>
-            <Stack.Screen name="groups/friendGroups"/>
-            <Stack.Screen name="chat/[id]"/>
             <Stack.Screen name="privateChatRoom"/>
+            <Stack.Screen name="publicChatRoom"/>
         </Stack>
     );
 };

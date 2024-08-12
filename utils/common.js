@@ -5,3 +5,10 @@ export const getRoomId = (userId1, userId2) => {
     const sortedIds = [userId1, userId2].sort();
     return sortedIds.join("-");
 }
+
+export const formatDate = date=>{
+    let day = date.getDate();
+    let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let month = monthNames[date.getMonth()];
+    return day + ' ' + month;
+}

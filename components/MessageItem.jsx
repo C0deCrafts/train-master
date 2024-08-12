@@ -2,6 +2,7 @@ import {StyleSheet, View, Text} from "react-native";
 import {useAppStyle} from "../context/AppStyleContext";
 import {Image} from "expo-image";
 import {DEFAULT_PROFILE_IMAGE_URL} from "../utils/firebase";
+//fix username to sendername
 
 const MessageItem = ({message, currentUser}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -85,8 +86,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
             marginTop: 5,
         },
         username: {
-            fontSize: textStyles.caption_2,
-            color: colors.label,
+            fontSize: textStyles.footnote,
+            color: colors.baseColor,
             fontFamily: fontFamily.Poppins_SemiBold,
         },
         userMessageText: {

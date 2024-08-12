@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from "react-native";
+import {Alert, Pressable, StyleSheet, Text, View} from "react-native";
 import CustomHeader from "../../../../components/CustomHeader";
 import {Image} from "expo-image";
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {elements, images} from "../../../../constants";
+import {elements, icons, images} from "../../../../constants";
 import Animated, {FadeInRight} from "react-native-reanimated";
 import Card from "../../../../components/Card";
 import elementStyles from "../../../../constants/elementStyles";
 import {useAuth} from "../../../../context/AuthContext";
 import ChatList from "../../../../components/ChatList";
-import {usersRef} from "../../../../utils/firebase";
-import {getDocs, query, where} from "firebase/firestore";
+import {FIRESTORE_DB, usersRef} from "../../../../utils/firebase";
+import {addDoc, collection, getDocs, onSnapshot, orderBy, query, serverTimestamp, where} from "firebase/firestore";
 
 const Chats = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -19,8 +19,8 @@ const Chats = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
     const {user} = useAuth();
 
-    const [users, setUsers] = useState([])
-
+    const [users, setUsers] = useState([]);
+    const [groups, setGroups] = useState([]);
     const [selectedChatId, setSelectedChatId] = useState(0);
 
     const chats = [
@@ -33,22 +33,72 @@ const Chats = () => {
     useEffect(() => {
         if(user.userId) {
             getUsers();
+            getChatGroups();
         }
     }, []);
 
     const getUsers = async () => {
-        //fetch user
         const q = query(usersRef, where("userId", "!=", user?.userId));
         const querySnapshot = await getDocs(q);
         let data = [];
-
         querySnapshot.forEach(doc=>{
             data.push({...doc.data()});
         })
-
-        console.log("Got users: ", data);
+        //console.log("Got users: ", data);
         setUsers(data);
     }
+
+    const getChatGroups = async () => {
+        const groupsCollection = collection(FIRESTORE_DB, "publicRooms");
+        const q = query(groupsCollection, orderBy('createdAt', 'desc'));
+
+        return onSnapshot(q, (snapshot) => {
+            const groups = snapshot.docs.map((doc) => {
+                return {id: doc.id, ...doc.data()};
+            });
+            setGroups(groups);
+        });
+    }
+
+    const handleCreateGroups = async (groupName) => {
+        //setLoading(true);
+        try {
+            await addDoc(collection(FIRESTORE_DB, "publicRooms"), {
+                name: groupName,
+                description: `Diese Gruppe wurde von "${user?.email}" erstellt`,
+                createdAt: serverTimestamp(),
+            })
+        } catch (err) {
+            console.log(err)
+        } finally {
+            //setLoading(false)
+        }
+    }
+
+    const handleAddGroup = () => {
+        Alert.prompt(
+            'Neue Gruppe erstellen',
+            'Wie soll deine superduper Gruppe heißen?',
+            [
+                {
+                    text: 'Abbrechen',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Erstellen',
+                    onPress: (groupName) => {
+                        if (groupName) {
+                            handleCreateGroups(groupName);
+                        } else {
+                            Alert.alert('Ups!', 'Du hast keinen Namen eingegeben. Versuch es nochmal!');
+                        }
+                    },
+                },
+            ],
+            'plain-text'
+        );
+    };
+    //console.log("Chatgroups: ", groups)
 
     return (
         <View style={styles.container}>
@@ -72,7 +122,16 @@ const Chats = () => {
                         </Animated.View>
                     ))}
                 </View>
-                    {selectedChatId === 3 && (
+                    {selectedChatId === 1 && (
+                        <>
+                            {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
+                            <ChatList currentUser={user} users={users} isChatGroup={true} chatGroups={groups}/>
+                            <Pressable style={styles.fab} onPress={handleAddGroup}>
+                                <Image source={icons.add} style={styles.icon}/>
+                            </Pressable>
+                        </>
+                    )}
+                    {selectedChatId === 2 && (
                         <>
                             {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
                             <ChatList currentUser={user} users={users}/>
@@ -92,7 +151,9 @@ const createStyles = (textStyles, colors, fontFamily) => {
             backgroundColor: colors.primary,
         },
         content: {
+            flex: 1,
             paddingHorizontal: elementStyles.spacingHorizontalDefault,
+            backgroundColor: "transparent",
         },
         image: {
             position: "absolute",
@@ -105,6 +166,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         chatsContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
+            marginBottom: 20
         },
         chatContainer: {
             //width: 110,
@@ -113,7 +175,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             backgroundColor: colors.secondary,
             borderRadius: elements.roundRadius,
             alignItems: "center",
-            marginVertical: 10
+            marginTop: 20
         },
         chatContainerSelected: {
            // width: 110,
@@ -122,7 +184,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             backgroundColor: colors.baseColor,
             borderRadius: elements.roundRadius,
             alignItems: "center",
-            marginVertical: 10
+            marginTop: 20
         },
         chatName: {
             fontFamily: fontFamily.Poppins_Regular,
@@ -139,6 +201,23 @@ const createStyles = (textStyles, colors, fontFamily) => {
         exerciseListContainer: {
             flex: 1,
             marginTop: 5,
+        },
+        fab: {
+            position: "absolute",
+            width: 56,
+            height: 56,
+            alignItems: "center",
+            justifyContent: "center",
+            right: 20,
+            bottom: 20,
+            backgroundColor: colors.baseColor,
+            borderRadius: 30,
+            elevation: 8
+        },
+        icon: {
+            width: 25,
+            height: 24,
+            tintColor: colors.colorButtonLabel
         },
     })
 }
