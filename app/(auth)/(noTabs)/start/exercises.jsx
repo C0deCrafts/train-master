@@ -53,8 +53,10 @@ const Exercises = () => {
 
     const handleCompleteSet = async () => {
         stopExerciseTimer();
+        //console.log("current set: ", currentSets)
 
         if (currentSets > 1) {
+            //console.log("Currentset < 1")
             setCurrentSets(currentSets - 1);
             startTimer(current.rest);
             router.navigate({
@@ -67,6 +69,7 @@ const Exercises = () => {
                 }
             });
         } else {
+            //console.log("Currentset ??")
             //Letzter Satz - hier komme ich zum rest screen und die duration wurde schon gestoppt
             const completedExercise = {
                 exerciseId: exercises.exercises[index].id,
@@ -82,18 +85,21 @@ const Exercises = () => {
                 const nextIndex = index + 1;
                 setIndex(nextIndex);
                 setCurrentSets(exercises.exercises[nextIndex].sets); // Setzt die Sätze für die nächste Übung
-                startTimer(current.rest);
+                if(current.rest){
+                    //console.log("CurrentREST: ", current.rest);
+                    startTimer(current.rest);
 
-                // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die nächste Übung angezeigt wird.
-                router.navigate({
-                    pathname: "(noTabs)/start/rest",
-                    params: {
-                        exercise: JSON.stringify(exercises.exercises),
-                        currentIndex: index,
-                        currentSet: current.sets - currentSets + 1,
-                        totalSets: current.sets, // Gesamtanzahl der Sätze
-                    }
-                });
+                    // Hier zusätzlich navigieren, damit man ein letztes Mal auf den Rest Screen kommt, wo die nächste Übung angezeigt wird.
+                    router.navigate({
+                        pathname: "(noTabs)/start/rest",
+                        params: {
+                            exercise: JSON.stringify(exercises.exercises),
+                            currentIndex: index,
+                            currentSet: current.sets - currentSets + 1,
+                            totalSets: current.sets, // Gesamtanzahl der Sätze
+                        }
+                    });
+                }
             } else {
                 // ALLERLETZTE Übung und ALLERLETZTER Satz
                 router.replace("(tabs)/(training)/training")
