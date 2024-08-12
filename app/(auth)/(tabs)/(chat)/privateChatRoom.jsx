@@ -9,6 +9,8 @@ import {getRoomId} from "../../../../utils/common";
 import {addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp} from "firebase/firestore";
 import {FIRESTORE_DB} from "../../../../utils/firebase";
 import MessageList from "../../../../components/MessageList";
+import {Image} from "expo-image";
+import {images} from "../../../../constants";
 
 const PrivateChatRoom = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -89,11 +91,15 @@ const PrivateChatRoom = () => {
     //console.log("Messages: ", privateMessages)
 
     return (
-        <>
+        <View style={styles.container}>
             <CustomHeader title={item?.username}
                           backButtonVisible={true}
                           chatAvatarVisible={true}
                           imageUrl={item.profileImage}
+            />
+            <Image
+                source={images.backgroundSymbol}
+                style={styles.image}
             />
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
                                   style={styles.keyboardContainer}>
@@ -105,7 +111,7 @@ const PrivateChatRoom = () => {
                     />
                 </View>
             </KeyboardAvoidingView>
-        </>
+        </View>
     );
 };
 
@@ -113,9 +119,13 @@ export default PrivateChatRoom;
 
 const createStyles = (textStyles, colors) => {
     return StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: colors.primary,
+        },
         messageContainer: {
             flex: 1,
-            justifyContent: "space-between"
+            justifyContent: "space-between",
         },
         messages: {
             flex: 1,
@@ -123,6 +133,15 @@ const createStyles = (textStyles, colors) => {
         },
         keyboardContainer: {
             flex: 1
+        },
+        image: {
+            position: "absolute",
+            top: 50,
+            width: "100%",
+            height: "100%",
+            contentFit: "contain",
+            tintColor: colors.quaternaryLabel,
+            pointerEvents: "none" // verhindert, dass das Bild Touch-Events empfängt
         },
     })
 }

@@ -14,6 +14,8 @@ import {FIRESTORE_DB} from "../../../../utils/firebase";
 import CustomHeader from "../../../../components/CustomHeader";
 import MessageList from "../../../../components/MessageList";
 import SendMessages from "../../../../components/SendMessages";
+import {Image} from "expo-image";
+import {images} from "../../../../constants";
 
 const PublicChatRoom = () => {
     const {getTextStyles, getColors} = useAppStyle();
@@ -93,8 +95,12 @@ const PublicChatRoom = () => {
     }
 
     return (
-        <>
+        <View style={styles.container}>
             <CustomHeader title={item?.name} backButtonVisible={true}/>
+            <Image
+                source={images.backgroundSymbol}
+                style={styles.image}
+            />
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
                                   style={styles.keyboardContainer}>
                 <View style={styles.messageContainer}>
@@ -105,7 +111,7 @@ const PublicChatRoom = () => {
                     />
                 </View>
             </KeyboardAvoidingView>
-        </>
+        </View>
     );
 };
 
@@ -113,6 +119,10 @@ export default PublicChatRoom;
 
 const createStyles = (textStyles, colors) => {
     return StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: colors.primary,
+        },
         messageContainer: {
             flex: 1,
             justifyContent: "space-between"
@@ -123,6 +133,15 @@ const createStyles = (textStyles, colors) => {
         },
         keyboardContainer: {
             flex: 1
+        },
+        image: {
+            position: "absolute",
+            top: 50,
+            width: "100%",
+            height: "100%",
+            contentFit: "contain",
+            tintColor: colors.quaternaryLabel,
+            pointerEvents: "none" // verhindert, dass das Bild Touch-Events empfängt
         },
     })
 }

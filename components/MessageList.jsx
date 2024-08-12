@@ -27,7 +27,7 @@ const createStyles = (textStyles, colors) => {
     return StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: colors.primary,
+            backgroundColor: "transparent",
         },
         text: {
             color: colors.label
