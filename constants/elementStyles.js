@@ -19,6 +19,7 @@ export const appStyles = {
     cardRadius: 16,
     cardRadiusLarge: 50,
     cardPadding: 10,
+    cardPaddingLarge: 20,
     cardTitleSpacingLeft: 3,
     cardTitleSpacingBottom: 10,
     //12 - 16
@@ -27,6 +28,8 @@ export const appStyles = {
     modalRadius: 16,
     imageRadius: 8,
     //8-12
+    backgroundImagePositionTopWithHeader: 0,
+    backgroundImagePositionTopNoHeader: 60,
     iconRadius: 20,
     roundRadius: 50,
     spacingAroundDefault: 20,
@@ -38,6 +41,7 @@ export const appStyles = {
     spacingVerticalSmall: 10,
     spacingHorizontalExtraSmall: 5,
     spacingVerticalExtraSmall: 5,
+    spacingFromHeader: 15,
     smallIcon: 15,
     tabLabelSpacing: 2,
     extraSpacingLarge: 30,

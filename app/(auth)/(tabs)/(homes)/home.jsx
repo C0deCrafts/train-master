@@ -132,10 +132,11 @@ const createStyles = (textStyles, colors, fontFamily, safeAreaTop, bottomTabSpac
         },
         image: {
             position: "absolute",
-            top: 50,
+            top: appStyles.backgroundImagePositionTopNoHeader,
             width: "100%",
             height: "100%",
-            tintColor: colors.quaternaryLabel
+            tintColor: colors.quaternaryLabel,
+            pointerEvents: "none"
         },
         container: {
             flex: 1,

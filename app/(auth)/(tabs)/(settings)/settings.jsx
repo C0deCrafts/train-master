@@ -196,10 +196,9 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
         },
         image: {
             position: "absolute",
-            top: -50,
+            top: appStyles.backgroundImagePositionTopWithHeader,
             width: "100%",
             height: "100%",
-            contentFit: "contain",
             tintColor: colors.quaternaryLabel,
             pointerEvents: "none"
         },

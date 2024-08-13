@@ -6,6 +6,7 @@ import {Image} from "expo-image";
 import {icons} from "../constants";
 import WeekStats from "./WeekStats";
 import {useEffect, useState} from "react";
+import {appStyles} from "../constants/elementStyles";
 
 const Calendar = () => {
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
@@ -59,17 +60,12 @@ export default Calendar;
 
 const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: colors.primary,
-            padding: 20,
-        },
         calendarHeader: {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: 15,
-            marginBottom: 10,
+            marginTop: appStyles.spacingFromHeader,
+            marginBottom: appStyles.cardTitleSpacingBottom,
         },
         titleText: {
             fontFamily: fontFamily.Poppins_SemiBold,
@@ -83,7 +79,6 @@ const createStyles = (textStyles, colors, fontFamily) => {
         image: {
             width: 30,
             height: 30,
-            contentFit: "contain",
             tintColor: colors.baseColor
         },
     });

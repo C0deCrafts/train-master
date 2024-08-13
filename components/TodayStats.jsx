@@ -84,8 +84,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
         donutChartContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
-            padding: appStyles.spacingAroundSmall
-
+            padding: appStyles.spacingAroundSmall,
+            //backgroundColor: colors.secondary
         },
         boxStyle: {
             flexDirection: "column",

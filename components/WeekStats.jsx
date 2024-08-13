@@ -9,6 +9,7 @@ import Card from "./Card";
 import BigDonutChart from "./BigDonutChart";
 import useWorkoutStats from "../hook/useWorkoutStats";
 import {useEffect, useMemo} from "react";
+import {appStyles} from "../constants/elementStyles";
 
 const WeekStats = ({date}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -79,7 +80,11 @@ const WeekStats = ({date}) => {
                     );
                 })}
             </View>
-            <Card style={{marginTop: 20, paddingTop: 15, paddingHorizontal: 20}}>
+            <Card style={{
+                paddingTop: appStyles.cardPaddingLarge - 5,
+                paddingHorizontal: appStyles.cardPaddingLarge,
+                marginBottom: 0
+            }}>
                 <View style={styles.bigChartContainer}>
                     <View>
                         <Text style={styles.maxText} numberOfLines={2} ellipsizeMode="tail">Abgeschlossene Workouts</Text>
@@ -119,7 +124,8 @@ const createStyles = (textStyles, colors, fontFamily) => {
         },
         donutChartContainer: {
             flexDirection: "row",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            marginBottom: appStyles.cardTitleSpacingBottom
         },
         boxStyle: {
             flexDirection: "column",
@@ -167,7 +173,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         detailsContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
-            marginTop: 20,
+            marginTop: appStyles.extraSpacingDefault,
         },
         bigChartContainer: {
             flexDirection: "row",

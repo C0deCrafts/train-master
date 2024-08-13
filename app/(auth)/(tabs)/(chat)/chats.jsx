@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Dimensions, Pressable, StyleSheet, Text, View} from "react-native";
+import {Alert, Pressable, StyleSheet, Text, View} from "react-native";
 import CustomHeader from "../../../../components/CustomHeader";
 import {Image} from "expo-image";
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {elements, icons, images} from "../../../../constants";
+import {icons, images} from "../../../../constants";
 import Animated, {FadeInRight} from "react-native-reanimated";
 import Card from "../../../../components/Card";
-import elementStyles from "../../../../constants/elementStyles";
+import elementStyles, {appStyles} from "../../../../constants/elementStyles";
 import {useAuth} from "../../../../context/AuthContext";
 import ChatList from "../../../../components/ChatList";
 import {FIRESTORE_DB, usersRef} from "../../../../utils/firebase";
@@ -17,20 +17,14 @@ const Chats = () => {
     const textStyles = getTextStyles();
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily, bottomTabSpacing);
-    const {width, height} = Dimensions.get('window');
     const {user} = useAuth();
 
     const [users, setUsers] = useState([]);
     const [groups, setGroups] = useState([]);
     const [selectedChatId, setSelectedChatId] = useState(0);
 
-    // Dimensionen für das iPhone X und größer
-    const isAtLeastIPhoneX = width >= 375 && height >= 812;
-
-    const buttonStyle = isAtLeastIPhoneX ? styles.largeDeviceButton : styles.smallDeviceButton;
-
     const chats = [
-        {id: 0, name: "Alle"},
+        {id: 0, name: "Alle Chats"},
         {id: 1, name: "Gruppen"},
         {id: 2, name: "Privat"},
         {id: 3, name: "Kontakte"}
@@ -107,46 +101,48 @@ const Chats = () => {
     //console.log("Chatgroups: ", groups)
 
     return (
-        <View style={styles.container}>
+        <>
             <CustomHeader title={"Chats"}/>
-            <Image
-                source={images.backgroundSymbol}
-                style={styles.image}
-            />
-            <View style={styles.content}>
-                <View style={styles.chatsContainer}>
-                    {chats.map((item, index) => (
-                        <Animated.View key={item.id} entering={FadeInRight.delay(100).duration(index * 300)}>
-                            <Card
-                                style={item.id === selectedChatId ? styles.chatContainerSelected : styles.chatContainer}
-                                onPress={() => setSelectedChatId(item.id)}
-                                clickable
-                            >
-                                <Text
-                                    style={item.id === selectedChatId ? styles.chatNameSelected : styles.chatName}>{item.name}</Text>
-                            </Card>
-                        </Animated.View>
-                    ))}
+            <View style={styles.backgroundImage}>
+                <Image
+                    source={images.backgroundSymbol}
+                    style={styles.image}
+                />
+                <View style={styles.container}>
+                    <View style={styles.chatsContainer}>
+                        {chats.map((item, index) => (
+                            <Animated.View key={item.id} entering={FadeInRight.delay(100).duration(index * 300)}>
+                                <Card
+                                    style={item.id === selectedChatId ? styles.chatContainerSelected : styles.chatContainer}
+                                    onPress={() => setSelectedChatId(item.id)}
+                                    clickable
+                                >
+                                    <Text
+                                        style={item.id === selectedChatId ? styles.chatNameSelected : styles.chatName}>{item.name}</Text>
+                                </Card>
+                            </Animated.View>
+                        ))}
+                    </View>
+                    <View style={styles.chatListContainer}>
+                        {selectedChatId === 1 && (
+                            <>
+                                {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
+                                <ChatList currentUser={user} users={users} isChatGroup={true} chatGroups={groups}/>
+                                <Pressable style={styles.fab} onPress={handleAddGroup}>
+                                    <Image source={icons.add} style={styles.icon}/>
+                                </Pressable>
+                            </>
+                        )}
+                        {selectedChatId === 2 && (
+                            <>
+                                {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
+                                <ChatList currentUser={user} users={users}/>
+                            </>
+                        )}
+                    </View>
                 </View>
-                  <View style={styles.chatListContainer}>
-                      {selectedChatId === 1 && (
-                          <>
-                              {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
-                              <ChatList currentUser={user} users={users} isChatGroup={true} chatGroups={groups}/>
-                              <Pressable style={[styles.fab, buttonStyle]} onPress={handleAddGroup}>
-                                  <Image source={icons.add} style={styles.icon}/>
-                              </Pressable>
-                          </>
-                      )}
-                      {selectedChatId === 2 && (
-                          <>
-                              {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
-                              <ChatList currentUser={user} users={users}/>
-                          </>
-                      )}
-                  </View>
             </View>
-        </View>
+        </>
     );
 };
 
@@ -154,10 +150,14 @@ export default Chats;
 
 const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
     return StyleSheet.create({
-        container: {
+        backgroundImage: {
             flex: 1,
             backgroundColor: colors.primary,
-            //backgroundColor: "red",
+            paddingBottom: bottomTabSpacing,
+        },
+        container: {
+            flex: 1,
+            paddingHorizontal: 20,
         },
         content: {
             flex: 1,
@@ -166,39 +166,30 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
         },
         chatListContainer: {
             flex: 1,
-            marginBottom: bottomTabSpacing,
-            paddingBottom: 25 // need to fix scroll view
         },
         image: {
             position: "absolute",
-            top: 50,
+            top: appStyles.backgroundImagePositionTopWithHeader,
             width: "100%",
             height: "100%",
-            contentFit: "contain",
-            tintColor: colors.quaternaryLabel
+            tintColor: colors.quaternaryLabel,
+            pointerEvents: "none"
         },
         chatsContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
-            marginBottom: 20,
+            marginBottom: appStyles.cardTitleSpacingBottom,
         },
         chatContainer: {
-            //width: 110,
-            paddingVertical: 10,
-            paddingHorizontal: 15,
-            backgroundColor: colors.secondary,
-            borderRadius: elements.roundRadius,
+            borderRadius: appStyles.cardRadiusLarge,
             alignItems: "center",
-            marginTop: 20
+            marginTop: appStyles.spacingFromHeader
         },
         chatContainerSelected: {
-           // width: 110,
-            paddingVertical: 10,
-            paddingHorizontal: 15,
             backgroundColor: colors.baseColor,
-            borderRadius: elements.roundRadius,
+            borderRadius: appStyles.cardRadiusLarge,
             alignItems: "center",
-            marginTop: 20
+            marginTop: appStyles.spacingFromHeader
         },
         chatName: {
             fontFamily: fontFamily.Poppins_Regular,
@@ -224,15 +215,9 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             justifyContent: "center",
             backgroundColor: colors.baseColor,
             borderRadius: 30,
-            elevation: 8
-        },
-        largeDeviceButton: {
+            elevation: 8,
             right: 10,
             bottom: 18,
-        },
-        smallDeviceButton: {
-            right: 5,
-            bottom: 40,
         },
         icon: {
             width: 25,
