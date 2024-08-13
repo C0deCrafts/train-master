@@ -112,12 +112,6 @@ export default ChatItem;
 
 const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
-        container: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            //gap: 20,
-        },
         cardContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between',

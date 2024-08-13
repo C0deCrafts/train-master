@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
 import { large_default, medium, small, xLarge, xSmall, xxLarge, fontFamily } from '../constants/textStyles';
 import { dark, light } from '../constants/colors';
+import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 const AppStyleContext = createContext({});
 
@@ -17,12 +18,17 @@ const textStyles = {
 
 export const AppStyleProvider = ({ children }) => {
     const systemColorScheme = useColorScheme();
+    const insets = useSafeAreaInsets();
     const [colorScheme, setColorScheme] = useState(systemColorScheme);
     const [customColors, setCustomColors] = useState({
         baseColor: colorScheme === 'light' ? light.baseColor : dark.baseColor,
         colorButtonLabel: 'rgb(255,255,255)',
     });
     const [textSize, setTextSize] = useState('large_default');
+
+    const bottomTabSpacing = insets.bottom - 25;
+    const safeAreaTop = insets.top;
+
 
     useEffect(() => {
         const loadStyles = async () => {
@@ -90,7 +96,7 @@ export const AppStyleProvider = ({ children }) => {
     return (
         <AppStyleContext.Provider value={{
             textSize, setTextSize, getTextStyles, getColors, getAllBaseColors,
-            colorScheme, setColorScheme, updateBaseColor, fontFamily,
+            colorScheme, setColorScheme, updateBaseColor, fontFamily, bottomTabSpacing, safeAreaTop
         }}>
             {children}
         </AppStyleContext.Provider>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Pressable, StyleSheet, Text, View} from "react-native";
+import {Alert, Dimensions, Pressable, StyleSheet, Text, View} from "react-native";
 import CustomHeader from "../../../../components/CustomHeader";
 import {Image} from "expo-image";
 import {useAppStyle} from "../../../../context/AppStyleContext";
@@ -13,15 +13,21 @@ import {FIRESTORE_DB, usersRef} from "../../../../utils/firebase";
 import {addDoc, collection, getDocs, onSnapshot, orderBy, query, serverTimestamp, where} from "firebase/firestore";
 
 const Chats = () => {
-    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, bottomTabSpacing} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
-    const styles = createStyles(textStyles, colors, fontFamily);
+    const styles = createStyles(textStyles, colors, fontFamily, bottomTabSpacing);
+    const {width, height} = Dimensions.get('window');
     const {user} = useAuth();
 
     const [users, setUsers] = useState([]);
     const [groups, setGroups] = useState([]);
     const [selectedChatId, setSelectedChatId] = useState(0);
+
+    // Dimensionen für das iPhone X und größer
+    const isAtLeastIPhoneX = width >= 375 && height >= 812;
+
+    const buttonStyle = isAtLeastIPhoneX ? styles.largeDeviceButton : styles.smallDeviceButton;
 
     const chats = [
         {id: 0, name: "Alle"},
@@ -122,21 +128,23 @@ const Chats = () => {
                         </Animated.View>
                     ))}
                 </View>
-                    {selectedChatId === 1 && (
-                        <>
-                            {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
-                            <ChatList currentUser={user} users={users} isChatGroup={true} chatGroups={groups}/>
-                            <Pressable style={styles.fab} onPress={handleAddGroup}>
-                                <Image source={icons.add} style={styles.icon}/>
-                            </Pressable>
-                        </>
-                    )}
-                    {selectedChatId === 2 && (
-                        <>
-                            {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
-                            <ChatList currentUser={user} users={users}/>
-                        </>
-                    )}
+                  <View style={styles.chatListContainer}>
+                      {selectedChatId === 1 && (
+                          <>
+                              {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
+                              <ChatList currentUser={user} users={users} isChatGroup={true} chatGroups={groups}/>
+                              <Pressable style={[styles.fab, buttonStyle]} onPress={handleAddGroup}>
+                                  <Image source={icons.add} style={styles.icon}/>
+                              </Pressable>
+                          </>
+                      )}
+                      {selectedChatId === 2 && (
+                          <>
+                              {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
+                              <ChatList currentUser={user} users={users}/>
+                          </>
+                      )}
+                  </View>
             </View>
         </View>
     );
@@ -144,16 +152,22 @@ const Chats = () => {
 
 export default Chats;
 
-const createStyles = (textStyles, colors, fontFamily) => {
+const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
     return StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: colors.primary,
+            //backgroundColor: "red",
         },
         content: {
             flex: 1,
             paddingHorizontal: elementStyles.spacingHorizontalDefault,
             backgroundColor: "transparent",
+        },
+        chatListContainer: {
+            flex: 1,
+            marginBottom: bottomTabSpacing,
+            paddingBottom: 25 // need to fix scroll view
         },
         image: {
             position: "absolute",
@@ -166,7 +180,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         chatsContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
-            marginBottom: 20
+            marginBottom: 20,
         },
         chatContainer: {
             //width: 110,
@@ -208,15 +222,21 @@ const createStyles = (textStyles, colors, fontFamily) => {
             height: 56,
             alignItems: "center",
             justifyContent: "center",
-            right: 20,
-            bottom: 20,
             backgroundColor: colors.baseColor,
             borderRadius: 30,
             elevation: 8
         },
+        largeDeviceButton: {
+            right: 10,
+            bottom: 18,
+        },
+        smallDeviceButton: {
+            right: 5,
+            bottom: 40,
+        },
         icon: {
             width: 25,
-            height: 24,
+            height: 25,
             tintColor: colors.colorButtonLabel
         },
     })

@@ -1,23 +1,22 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native'
-import { Image } from 'expo-image';
+import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Image} from 'expo-image';
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {useContext} from "react";
 import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import CustomHeader from "../../../../components/CustomHeader";
-import {elements, icons} from "../../../../constants";
-import Animated, {
-    FadeInDown,
-} from "react-native-reanimated";
+import {elements, icons, images} from "../../../../constants";
+import Animated, {FadeInDown,} from "react-native-reanimated";
 import Calendar from "../../../../components/Calendar";
+import {appStyles} from "../../../../constants/elementStyles";
 
 const Training = () => {
-    const {getTextStyles, getColors, fontFamily} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, bottomTabSpacing} = useAppStyle();
     const {workouts} = useContext(WorkoutContext);
     const colors = getColors();
     const textStyles = getTextStyles();
 
-    const styles = createStyles(textStyles, colors, fontFamily);
+    const styles = createStyles(textStyles, colors, fontFamily, bottomTabSpacing);
 
     const calculateTotalDuration = (workout) => {
         const totalDurationInSeconds = workout.exercises.reduce((total, exercise) => {
@@ -25,8 +24,7 @@ const Training = () => {
             return total + duration;
         }, 0);
 
-        const minutes = Math.ceil(totalDurationInSeconds / 60);
-        return minutes;
+        return Math.ceil(totalDurationInSeconds / 60);
     };
 
     const RenderWorkout = ({item, index}) => {
@@ -72,9 +70,13 @@ const Training = () => {
                             </View>
                         </View>
                         <View style={styles.cardContainerDetails}>
-                            <Image source={icons.time} style={styles.smallIcon}/>
-                            <Text style={styles.cardDescription}>{totalDuration} Min</Text>
-                            <Text style={styles.cardDescription}> ● {item.exercises.length} Übungen</Text>
+                            <View>
+                                <Image source={icons.time} style={styles.smallIcon}/>
+                            </View>
+                            <View style={styles.cardContentDetails}>
+                                <Text style={styles.cardDescription}>{totalDuration} Min</Text>
+                                <Text style={styles.cardDescription}> ● {item.exercises.length} Übungen</Text>
+                            </View>
                         </View>
                     </View>
                 </Card>
@@ -83,39 +85,57 @@ const Training = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <>
             <CustomHeader title={"Training"}/>
-            <View style={styles.content}>
-
-                <Calendar/>
-
-                <Text style={styles.titleText}>Fitnesspläne</Text>
-                <View style={styles.workoutContainer}>
-                    <FlatList
-                        data={workouts}
-                        renderItem={({ item, index }) => (
-                            <RenderWorkout item={item} index={index} />
-                        )}
-                        keyExtractor={item => item.id}
-                        horizontal={true} // Set horizontal to true for horizontal scrolling
-                        showsHorizontalScrollIndicator={false}
-                    />
+            <View style={styles.backgroundImage}>
+                <Image
+                    source={images.backgroundSymbol}
+                    style={styles.image}
+                />
+                <View style={styles.container}>
+                    <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+                        <Calendar/>
+                        <View style={styles.spacing}>
+                            <Text style={styles.titleText}>Fitnesspläne</Text>
+                        </View>
+                        <View>
+                            <FlatList
+                                data={workouts}
+                                renderItem={({ item, index }) => (
+                                    <RenderWorkout item={item} index={index} />
+                                )}
+                                keyExtractor={item => item.id}
+                                horizontal={true} // Set horizontal to true for horizontal scrolling
+                                showsHorizontalScrollIndicator={false}
+                            />
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
-
-        </View>
+        </>
     );
 };
 
 export default Training;
 
-const createStyles = (textStyles, colors, fontFamily) => {
+const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
     return StyleSheet.create({
-        container: {
+        backgroundImage: {
             flex: 1,
             backgroundColor: colors.primary,
+            paddingBottom: bottomTabSpacing,
         },
-        content: {
+        image: {
+            position: "absolute",
+            top: -50,
+            width: "100%",
+            height: "100%",
+            contentFit: "contain",
+            tintColor: colors.quaternaryLabel,
+            pointerEvents: "none"
+        },
+        container: {
+            flex: 1,
             paddingHorizontal: 20,
         },
         text: {
@@ -125,34 +145,32 @@ const createStyles = (textStyles, colors, fontFamily) => {
         titleText: {
             fontFamily: fontFamily.Poppins_SemiBold,
             fontSize: textStyles.title_3,
-            marginTop: 15,
             color: colors.label
-        },
-        workoutContainer: {
         },
         workout: {
             backgroundColor: colors.secondary,
-            marginRight: 10,
-            marginTop: 10,
+            marginRight: appStyles.spacingVerticalSmall,
             padding: 0,
             borderRadius: elements.cardRadius,
         },
         cardContent: {
-            width: 200,
             height: 120,
             paddingLeft: 10,
             paddingVertical: 10,
-            flexDirection: "column",
             justifyContent: "space-between"
         },
         cardContainerTitleDescription: {
             flexDirection: "row",
             justifyContent: "space-between",
-            alignItems: "center",
+            //alignItems: "center",
         },
         cardContainerDetails: {
             flexDirection: "row",
             marginRight: 10,
+            alignItems: "center",
+        },
+        cardContentDetails: {
+            flexDirection: "row",
         },
         cardTitle: {
             fontFamily: fontFamily.Poppins_SemiBold,
@@ -160,7 +178,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             fontSize: textStyles.subhead,
         },
         maxWith: {
-            width: 150
+            width: 165
         },
         cardDescription: {
             fontFamily: fontFamily.Poppins_Regular,
@@ -173,10 +191,13 @@ const createStyles = (textStyles, colors, fontFamily) => {
             tintColor: colors.baseColor,
         },
         smallIcon: {
-            width: 15,
-            height: 15,
+            width: appStyles.smallIcon,
+            height: appStyles.smallIcon,
             tintColor: colors.baseColor,
             marginRight: 5,
         },
+        spacing: {
+            marginVertical: appStyles.cardTitleSpacingBottom
+        }
     })
 }

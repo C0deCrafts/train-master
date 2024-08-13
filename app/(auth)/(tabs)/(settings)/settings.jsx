@@ -25,10 +25,10 @@ import {useAccountSetting} from "../../../../context/AccountSettingContext";
 
 const Settings = () => {
     const { user } = useAuth();
-    const { textSize, setTextSize, getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme } = useAppStyle();
+    const { textSize, setTextSize, getTextStyles, getColors, fontFamily, updateBaseColor, colorScheme, setColorScheme, bottomTabSpacing } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
-    const styles = createStyles(textStyles, colors, fontFamily);
+    const styles = createStyles(textStyles, colors, fontFamily, bottomTabSpacing);
 
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedId, setSelectedId] = useState(colorScheme === "dark" ? "1" : "2");
@@ -91,7 +91,7 @@ const Settings = () => {
                     style={styles.image}
                 />
                 <View style={styles.container}>
-                    <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
+                    <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                         <Card style={styles.userCard}>
                             <Avatar isPressableDisabled={true}
                                     isCameraVisible={false}
@@ -187,11 +187,12 @@ const Settings = () => {
 
 export default Settings;
 
-const createStyles = (textStyles, colors, fontFamily) => {
+const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
     return StyleSheet.create({
         backgroundImage: {
             flex: 1,
             backgroundColor: colors.primary,
+            paddingBottom: bottomTabSpacing,
         },
         image: {
             position: "absolute",

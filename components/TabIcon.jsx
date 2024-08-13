@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View} from "react-native";
 import { Image } from 'expo-image';
 import {useAppStyle} from "../context/AppStyleContext";
+import {appStyles} from "../constants/elementStyles";
 
 const TabIcon = ({icon, color, name, focused}) => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -33,7 +34,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
         container: {
             alignItems: "center",
             justifyContent: "center",
-            gap: 2,
+            gap: appStyles.tabLabelSpacing,
         },
         text: {
             fontSize: textStyles.caption_1,

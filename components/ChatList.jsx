@@ -14,33 +14,35 @@ const ChatList = ({users, currentUser, isChatGroup = false, chatGroups}) => {
     return (
        <>
            {isChatGroup ? (
-                   <FlatList data={chatGroups}
-                             keyExtractor={(item, index) => index.toString()}
-                             numColumns={1}
-                             showsVerticalScrollIndicator={false}
-                             renderItem={({item, index})=> (
-                                 <ChatItem item={item}
-                                           index={index}
-                                           isGroup={true}
-                                           router={router}
-                                           key={index}
-                                           currentUser={currentUser}
-                                 />
-                             )}
-                   />
+                       <FlatList data={chatGroups}
+                                 keyExtractor={(item, index) => index.toString()}
+                                 numColumns={1}
+                                 showsVerticalScrollIndicator={false}
+                                 bounces={false}
+                                 renderItem={({item, index})=> (
+                                     <ChatItem item={item}
+                                               index={index}
+                                               isGroup={true}
+                                               router={router}
+                                               key={index}
+                                               currentUser={currentUser}
+                                     />
+                                 )}
+                       />
            ) : (
-                   <FlatList
-                       data={users}
-                       renderItem={({item, index}) => <ChatItem
-                           noBorder={index+1 === users.length}
-                           router={router}
-                           item={item}
-                           key={index}
-                           currentUser={currentUser}
-                       />}
-                       keyExtractor={(item, index) => index.toString()}
-                       showsVerticalScrollIndicator={false}
-                   />
+                       <FlatList
+                           data={users}
+                           renderItem={({item, index}) => <ChatItem
+                               noBorder={index+1 === users.length}
+                               router={router}
+                               item={item}
+                               key={index}
+                               currentUser={currentUser}
+                           />}
+                           keyExtractor={(item, index) => index.toString()}
+                           showsVerticalScrollIndicator={false}
+                           bounces={false}
+                       />
            )}
        </>
     );
