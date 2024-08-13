@@ -146,7 +146,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             color: colors.label,
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
-            width: 150
+            width: 160
         },
         text: {
             color: colors.label,
