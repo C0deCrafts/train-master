@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { useAppStyle } from "../context/AppStyleContext";
-import { Link } from "expo-router";
-import {elements} from "../constants";
+import {StyleSheet, TouchableOpacity, View} from "react-native";
+import {useAppStyle} from "../context/AppStyleContext";
+import {Link} from "expo-router";
+import {appStyles} from "../constants/elementStyles";
 
 const Card = ({ clickable, href, onPress, style, children, ...props }) => {
     const { getColors } = useAppStyle();
@@ -33,15 +33,11 @@ const Card = ({ clickable, href, onPress, style, children, ...props }) => {
 const createStyles = (colors) => {
     return StyleSheet.create({
         card: {
-            padding: 10,
-            marginBottom: 5,
+            padding: appStyles.cardPadding,
+            marginBottom: appStyles.spacingVerticalSmall,
             backgroundColor: colors.secondary,
-            borderRadius: elements.cardRadius,
-            elevation: 2,
+            borderRadius: appStyles.cardRadius,
         },
-        touchableOpacity: {
-            flexDirection: "row"
-        }
     });
 }
 

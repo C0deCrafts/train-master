@@ -6,6 +6,7 @@ import {useContext} from "react";
 import {WorkoutContext} from "../context/WorkoutContext";
 import {useAppStyle} from "../context/AppStyleContext";
 import Animated, {FadeInDown} from "react-native-reanimated";
+import {appStyles} from "../constants/elementStyles";
 
 const ExerciseList = ({item, index, handleNavigation }) => {
     const { exerciseImages } = useContext(WorkoutContext);
@@ -21,7 +22,8 @@ const ExerciseList = ({item, index, handleNavigation }) => {
     return (
         <Animated.View
             entering={FadeInDown.delay(200).duration(index * 300)}
-            style={{marginBottom: 10}}>
+            //style={{marginBottom: 10}}
+        >
             <Card
                 //style={{marginBottom: 10}}
                 onPress={handleNavigation}
@@ -34,27 +36,33 @@ const ExerciseList = ({item, index, handleNavigation }) => {
                         </View>
                         <View>
                             {item.sets && (
-                                <View style={{flexDirection: "row"}}>
+                                <View style={styles.exerciseDetailsContainer}>
                                     <View style={styles.smallIconContainer}>
                                         <Image source={icons.repeat} style={styles.smallIcon}/>
                                     </View>
-                                    <Text style={styles.exerciseDetails}>Sätze: {item.sets}</Text>
+                                    <View>
+                                        <Text style={styles.exerciseDetails}>Sätze: {item.sets}</Text>
+                                    </View>
                                 </View>
                             )}
                             {item.repetitions && (
-                                <View style={{flexDirection: "row"}}>
+                                <View style={styles.exerciseDetailsContainer}>
                                     <View style={styles.smallIconContainer}>
                                         <Image source={icons.repeat} style={styles.smallIcon}/>
                                     </View>
-                                    <Text style={styles.exerciseDetails}>Wiederholungen: {item.repetitions}</Text>
+                                    <View>
+                                        <Text style={styles.exerciseDetails}>Wiederholungen: {item.repetitions}</Text>
+                                    </View>
                                 </View>
                             )}
                             {item.heartRateZone && (
-                                <View style={{flexDirection: "row"}}>
+                                <View style={styles.exerciseDetailsContainer}>
                                     <View style={styles.smallIconContainer}>
                                         <Image source={icons.heartbeat} style={styles.smallIcon}/>
                                     </View>
-                                    <Text style={styles.exerciseDetails}>Herzrate: {item.heartRateZone}</Text>
+                                    <View>
+                                        <Text style={styles.exerciseDetails}>Herzrate: {item.heartRateZone}</Text>
+                                    </View>
                                 </View>
                             )}
                         </View>
@@ -74,33 +82,32 @@ export default ExerciseList;
 
 const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
-        exercises: {
-            flexDirection: "column",
-            flex: 1,
-            justifyContent: "space-between",
-        },
         exerciseContainer: {
             flexDirection: "row",
+            height: 100
+        },
+        exercises: {
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "space-between",
         },
         exerciseName: {
             fontFamily: fontFamily.Poppins_SemiBold,
             color: colors.label,
             fontSize: textStyles.callout,
-            paddingLeft: 5,
-            paddingBottom: 15,
             width: "95%",
+            paddingLeft: appStyles.cardTitleSpacingLeft,
         },
         exerciseDetails: {
             fontFamily: fontFamily.Poppins_Regular,
             color: colors.secondaryLabel,
             fontSize: textStyles.footnote,
-            paddingLeft: 5,
-            paddingTop: 2,
-            width: "100%",
-            height: "100%",
-            alignSelf: "center",
+            paddingLeft: appStyles.extraSpacingExtraSmall,
         },
-        exerciseImageContainer: {},
+        exerciseDetailsContainer: {
+            flexDirection: "row",
+            alignItems: "center",
+        },
         exerciseImage: {
             width: 100,
             height: 100,
@@ -109,12 +116,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
         smallIconContainer: {
             backgroundColor: colors.baseColor,
             borderRadius: elements.iconRadius,
-            marginBottom: 5,
-            padding: 5,
+            marginTop: appStyles.extraSpacingExtraSmall,
+            padding: appStyles.spacingAroundExtraSmall,
         },
         smallIcon: {
-            width: 15,
-            height: 15,
+            width: appStyles.smallIcon,
+            height: appStyles.smallIcon,
             tintColor: colors.colorButtonLabel,
         }
     })

@@ -5,6 +5,7 @@ import {format} from "date-fns";
 import useHealthData from "../hook/useHealthData";
 import {useAccountSetting} from "../context/AccountSettingContext";
 import useWorkoutStats from "../hook/useWorkoutStats";
+import {appStyles} from "../constants/elementStyles";
 
 const TodayStats = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -82,21 +83,18 @@ const createStyles = (textStyles, colors, fontFamily) => {
     return StyleSheet.create({
         donutChartContainer: {
             flexDirection: "row",
-            justifyContent: "space-evenly"
-            //gap: 15,
-            //alignItems: "flex-end"
+            justifyContent: "space-between",
+            padding: appStyles.spacingAroundSmall
+
         },
         boxStyle: {
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "flex-end"
-            //backgroundColor: colors.white
         },
         headerCounterLabel: {
             color: colors.label,
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
-            alignSelf: "center"
         },
     })
 }

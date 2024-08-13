@@ -2,8 +2,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Image} from 'expo-image';
 import {useAuth} from "../../../../context/AuthContext";
 import {useContext, useEffect, useState} from "react";
-import {elements, images} from "../../../../constants";
-import {SafeAreaView} from "react-native-safe-area-context";
+import {images} from "../../../../constants";
 import {StatusBar} from "expo-status-bar";
 import {format} from 'date-fns';
 import {de} from 'date-fns/locale';
@@ -16,12 +15,14 @@ import {router} from "expo-router";
 import Animated, {FadeInRight} from "react-native-reanimated";
 import TodayStats from "../../../../components/TodayStats";
 import Avatar from "../../../../components/Avatar";
+import {appStyles} from "../../../../constants/elementStyles";
 
 const Home = () => {
-    const {getTextStyles, getColors, fontFamily, colorScheme} = useAppStyle();
+    const {getTextStyles, getColors, fontFamily, colorScheme, safeAreaTop, bottomTabSpacing} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
-    const styles = createStyles(textStyles, colors, fontFamily);
+    const styles = createStyles(textStyles, colors, fontFamily, safeAreaTop, bottomTabSpacing);
+
 
     const {user} = useAuth();
     const {workouts} = useContext(WorkoutContext);
@@ -64,11 +65,10 @@ const Home = () => {
     const selectedWorkout = workouts?.find(workout => workout.id === selectedWorkoutId);
     const currentDate = getCurrentDate();
 
-
     //fix status bar
     return (
         <>
-            <SafeAreaView style={styles.backgroundImage}>
+            <View style={styles.backgroundImage}>
                 <Image
                     source={images.backgroundSymbol}
                     style={styles.image}
@@ -85,13 +85,13 @@ const Home = () => {
                         <Avatar />
                     </View>
 
-                    <View style={styles.workoutInfoContainer}>
-                        <Text style={styles.firstTitleText}>Aktivität</Text>
+                    <View>
+                        <Text style={styles.titleText}>Aktivität</Text>
                     </View>
 
                     <TodayStats/>
 
-                    <View style={styles.workoutInfoContainer}>
+                    <View style={styles.spacing}>
                         <Text style={styles.titleText}>Fitnesspläne</Text>
                     </View>
                     <View>
@@ -104,7 +104,7 @@ const Home = () => {
                         />
                     </View>
                     {selectedWorkoutId !== null && (
-                        <View style={styles.exerciseListContainer}>
+                        <View style={{flex: 1}}>
                             <FlatList
                                 data={selectedWorkout?.exercises}
                                 renderItem={exercises}
@@ -114,7 +114,7 @@ const Home = () => {
                         </View>
                     )}
                 </View>
-            </SafeAreaView>
+            </View>
             <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
         </>
     );
@@ -122,78 +122,34 @@ const Home = () => {
 
 export default Home;
 
-const createStyles = (textStyles, colors, fontFamily) => {
+const createStyles = (textStyles, colors, fontFamily, safeAreaTop, bottomTabSpacing) => {
     return StyleSheet.create({
         backgroundImage: {
             flex: 1,
             backgroundColor: colors.primary,
+            paddingTop: safeAreaTop,
+            paddingBottom: bottomTabSpacing
         },
         image: {
             position: "absolute",
             top: 50,
             width: "100%",
             height: "100%",
-            contentFit: "contain",
             tintColor: colors.quaternaryLabel
         },
         container: {
             flex: 1,
-            paddingHorizontal: 20,
-            paddingTop: 20,
+            paddingHorizontal: appStyles.spacingHorizontalDefault,
+            paddingTop: appStyles.extraSpacingSmall,
         },
         headerContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
-            alignItems: "flex-start"
-        },
-        donutChartContainer: {
-            flexDirection: "row",
-            justifyContent: "space-evenly"
-        },
-        content: {
-            flex: 1,
-        },
-        boxStyle: {
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "flex-end"
-        },
-        boxStyleLarge: {
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "flex-end",
-            gap: 10
-        },
-        headerCounterLabel: {
-            color: colors.label,
-            fontFamily: fontFamily.Poppins_Regular,
-            fontSize: textStyles.subhead,
-            alignSelf: "center"
-        },
-        workoutInfoContainer: {
-            alignItems: "flex-start",
-            paddingBottom: 5,
-            marginBottom: 5
-        },
-        firstTitleText: {
-            fontFamily: fontFamily.Poppins_SemiBold,
-            fontSize: textStyles.title_3,
-            color: colors.label
         },
         titleText: {
             fontFamily: fontFamily.Poppins_SemiBold,
             fontSize: textStyles.title_3,
-            marginTop: 15,
             color: colors.label
-        },
-        imageContainer: {
-            top: 20,
-            alignItems: "flex-end",
-        },
-        cameraStyle: {
-            flex: 1,
-            justifyContent: "flex-end",
-            top: 5,
         },
         dateText: {
             fontFamily: fontFamily.Poppins_Regular,
@@ -211,92 +167,32 @@ const createStyles = (textStyles, colors, fontFamily) => {
             color: colors.label
         },
         workoutContainer: {
-            padding: 10,
-            backgroundColor: colors.secondary,
-            borderRadius: elements.roundRadius,
-            alignItems: "center",
-            marginRight: 10,
-            marginBottom: 10
+            borderRadius: appStyles.cardRadiusLarge,
+            marginRight: appStyles.spacingHorizontalSmall,
+            marginTop: appStyles.spacingHorizontalExtraSmall,
+            marginBottom: appStyles.extraSpacingDefault,
         },
         workoutContainerSelected: {
-            padding: 10,
             backgroundColor: colors.baseColor,
-            borderRadius: elements.roundRadius,
-            alignItems: "center",
-            marginRight: 10,
-            marginBottom: 10
-        },
-        workoutImage: {
-            width: 70,
-            height: 70,
-            borderRadius: elements.imageRadius,
-            tintColor: colors.label
-        },
-        workoutImageSelected: {
-            width: 70,
-            height: 70,
-            borderRadius: elements.imageRadius,
-            tintColor: colors.colorButtonLabel
+            borderRadius: appStyles.cardRadiusLarge,
+            marginRight: appStyles.spacingHorizontalSmall,
+            marginTop: appStyles.spacingHorizontalExtraSmall,
+            marginBottom: appStyles.extraSpacingDefault,
         },
         workoutName: {
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
-            marginVertical: 5,
+            marginVertical: appStyles.extraSpacingExtraSmall,
             color: colors.label
         },
         workoutNameSelected: {
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
-            marginVertical: 5,
+            marginVertical: appStyles.extraSpacingExtraSmall,
             color: colors.colorButtonLabel
         },
-        exerciseListContainer: {
-            flex: 1,
-            marginTop: 5,
-        },
-        exerciseContainer: {
-            flexDirection: "row",
-        },
-        exercises: {
-            flexDirection: "column",
-            flex: 1,
-            justifyContent: "space-between",
-        },
-        exerciseImageContainer: {
-        },
-        exerciseImage: {
-            width: 100,
-            height: 100,
-            borderRadius: elements.imageRadius,
-        },
-        exerciseName: {
-            fontFamily: fontFamily.Poppins_SemiBold,
-            color: colors.label,
-            fontSize: textStyles.callout,
-            paddingLeft: 5,
-            paddingBottom: 15,
-            width: "100%",
-        },
-        exerciseDetails: {
-            fontFamily: fontFamily.Poppins_Regular,
-            color: colors.secondaryLabel,
-            fontSize: textStyles.footnote,
-            paddingLeft: 5,
-            paddingTop: 2,
-            width: "100%",
-            height: "100%",
-            alignSelf: "center",
-        },
-        smallIconContainer: {
-            backgroundColor: colors.baseColor,
-            borderRadius: elements.iconRadius,
-            marginBottom: 5,
-            padding: 5,
-        },
-        smallIcon: {
-            width: 15,
-            height: 15,
-            tintColor: colors.colorButtonLabel,
+        spacing: {
+            marginVertical: appStyles.extraSpacingExtraSmall
         }
     })
 }

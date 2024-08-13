@@ -3,12 +3,12 @@ import TabIcon from "../../../components/TabIcon";
 import {icons} from "../../../constants";
 import {useAuth} from "../../../context/AuthContext";
 import {useAppStyle} from "../../../context/AppStyleContext";
+import {appStyles} from "../../../constants/elementStyles";
 
 const TabsLayout = () => {
     const { user } = useAuth();
-    const { getColors, getTextStyles } = useAppStyle();
+    const { getColors } = useAppStyle();
     const colors = getColors();
-    const textStyles = getTextStyles();
 
     return (
         //miniborder irgendwo unterm header??
@@ -20,20 +20,8 @@ const TabsLayout = () => {
             tabBarStyle: {
                 backgroundColor: colors.primary,
                 borderTopWidth: 0,
-                height: 84,
-                paddingHorizontal: 10
+                paddingHorizontal: appStyles.spacingHorizontalTabBar,
             },
-            headerStyle: {
-                backgroundColor: colors.baseColor,
-                borderBottomWidth: 0,
-                height: 120,
-            },
-            headerTitleStyle: {
-                paddingTop: 20,
-                color: colors.colorButtonLabel,
-                fontFamily: "Poppins-SemiBold",
-                fontSize: textStyles.title_2,
-            }
         }}>
             <Tabs.Screen name="(chat)" options={{
                 headerShown: false,
@@ -60,7 +48,8 @@ const TabsLayout = () => {
                         name="Home"
                         focused={focused}
                     />
-                )
+                ),
+                headerShadowVisible: false,
             }}
             redirect={!user}
             />
@@ -74,7 +63,8 @@ const TabsLayout = () => {
                         name="Training"
                         focused={focused}
                     />
-                )
+                ),
+                headerShadowVisible: false
             }}
             redirect={!user}
             />
@@ -88,7 +78,8 @@ const TabsLayout = () => {
                         name="Einstellungen"
                         focused={focused}
                     />
-                )
+                ),
+                headerShadowVisible: false
             }}
             redirect={!user}
             />
