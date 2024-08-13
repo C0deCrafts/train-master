@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import AppleHealthKit from 'react-native-health';
 
+const {Permissions} = AppleHealthKit.Constants;
+
 const permissions = {
     permissions: {
         read: [
-            AppleHealthKit.Constants.Permissions.Steps,
-            AppleHealthKit.Constants.Permissions.Weight,
+            Permissions.Steps,
+            Permissions.Weight,
         ],
         write: [],
     },
@@ -16,9 +18,7 @@ const useHealthData = () => {
     const [weight, setWeight] = useState(null)
     const [steps, setSteps] = useState({});
 
-    //fix error if user has no apple healh kit
-
-    const initAppleHealthKit = () => {
+    useEffect(() => {
         AppleHealthKit.initHealthKit(permissions, (err) => {
             if (err) {
                 console.log("Error getting permission", err);
@@ -26,7 +26,33 @@ const useHealthData = () => {
             }
             setHasPermission(true);
         });
-    }
+    }, []);
+
+    useEffect(() => {
+        if (!hasPermission) {
+            return;
+        }
+
+        // Query Health data
+        const optionWeight = {
+            unit: "pound"
+        }
+
+        getSteps(new Date());
+
+        AppleHealthKit.getLatestWeight(optionWeight, (err, results) => {
+            if(err){
+                console.log('Error getting the latest weight: ', err);
+                return;
+            }
+            if (!results || !results.value) {
+                console.log('No weight data available');
+                setWeight(0);
+                return;
+            }
+            setWeight(convertPoundsToKilograms(results.value));
+        })
+    }, [hasPermission]);
 
     const getSteps = (date) => {
         if (!hasPermission) {
@@ -35,7 +61,7 @@ const useHealthData = () => {
 
         const options = {
             date: date.toISOString(),
-            includesManuallyAdded: false,
+            //includesManuallyAdded: false,
         };
 
         AppleHealthKit.getStepCount(options, (err, results) => {
@@ -50,52 +76,14 @@ const useHealthData = () => {
         });
     }
 
-    const getWeight = () => {
-        if (!hasPermission) {
-            return;
-        }
-
-        const options = {
-            unit: "pound"
-        }
-
-        AppleHealthKit.getLatestWeight(options, (err, results) => {
-            if(err){
-                console.log('Error getting the latest weight: ', err);
-                return;
-            }
-            if (!results || !results.value) {
-                console.log('No weight data available');
-                setWeight(null);
-                return;
-            }
-
-            setWeight(convertPoundsToKilograms(results.value));
-        })
-    }
+    //fix error if user has no apple healh kit
 
     const convertPoundsToKilograms = (pounds) => {
         const kilograms = pounds * 0.45359237;
         return parseFloat(kilograms.toFixed(2));
     };
 
-
-    useEffect(() => {
-        initAppleHealthKit();
-    }, []);
-
-    useEffect(() => {
-        if(hasPermission) {
-            getSteps(new Date());
-            getWeight();
-        }
-    }, [hasPermission]);
-
-    useEffect(() => {
-        //console.log("STEPS: ", steps)
-    }, [steps]);
-
-    return { steps, getSteps, weight };
+    return { steps, getSteps, weight, hasPermission };
 };
 
 export default useHealthData;

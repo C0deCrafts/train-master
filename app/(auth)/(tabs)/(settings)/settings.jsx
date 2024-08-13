@@ -95,14 +95,16 @@ const Settings = () => {
                         <Card style={styles.userCard}>
                             <Avatar isPressableDisabled={true}
                                     isCameraVisible={false}
-                                    imageRadius={60}
+                                    imageRadius={80}
                             />
                             <View>
                                 <Text style={styles.userName} numberOfLines={1} ellipsizeMode={"tail"}>{user.username}</Text>
                                 <Text style={styles.email} numberOfLines={1} ellipsizeMode={"tail"}>{user.email.toLowerCase()}</Text>
                             </View>
                         </Card>
-                        <Text style={styles.title}>Account Einstellungen</Text>
+                        <View style={styles.spacing}>
+                            <Text style={styles.title}>Persönliche Einstellungen</Text>
+                        </View>
                         <CustomCard
                             label={"Profilbild ändern"}
                             image={icons.camera}
@@ -115,14 +117,22 @@ const Settings = () => {
                             onPress={handleUserdataChange}
                             clickable
                         />
+                        <View style={styles.spacing}>
+                            <Text style={styles.title}>Trainings-Einstellungen</Text>
+                        </View>
                         <CustomCard
                             label={"Trainingsdaten ändern"}
                             image={icons.heartbeat}
                             onPress={handleTrainDataChange}
                             clickable
                         />
-                        <Text style={styles.title}>App Einstellungen</Text>
-                        <Text style={[styles.titleSmall, styles.spacingTop]}>Erscheinungsbild</Text>
+                        <View style={styles.spacing}>
+                            <Text style={styles.title}>App-Erscheinungsbild</Text>
+                        </View>
+                        <View style={styles.descriptionContainer}>
+                            <Text style={styles.description}><Text style={styles.titleDescription}>Dark Mode / Light Mode: </Text>
+                                Wechsle zwischen dem Dark Mode und Light Mode, um das Erscheinungsbild der App anzupassen.</Text>
+                        </View>
                         <Card>
                             <View style={styles.radioGroupContainer}>
                                 {radioButtons.map((button) => (
@@ -136,7 +146,10 @@ const Settings = () => {
                                 ))}
                             </View>
                         </Card>
-                        <Text style={[styles.titleSmall, styles.spacingTop]}>Basisfarbe</Text>
+                        <View style={styles.descriptionContainer}>
+                            <Text style={styles.description}><Text style={styles.titleDescription}>Appfarbe: </Text>
+                                Wähle eine Basisfarbe für die App. Diese Farbe wird für bestimmte Elemente in der App verwendet.</Text>
+                        </View>
                         <Card>
                             <ScrollView horizontal={true}
                                         showsHorizontalScrollIndicator={false} bounces={true}
@@ -206,6 +219,14 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             flex: 1,
             paddingHorizontal: 20
         },
+        descriptionContainer: {
+            marginBottom: appStyles.cardTitleSpacingBottom
+        },
+        description: {
+            fontSize: textStyles.subhead,
+            fontFamily: fontFamily.Poppins_Regular,
+            color: colors.label,
+        },
         header: {
             fontSize: textStyles.title_1,
             fontFamily: fontFamily.Poppins_SemiBold,
@@ -217,11 +238,16 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             color: colors.label,
             marginVertical: 5,
         },
+        titleDescription: {
+            fontSize: textStyles.subhead,
+            fontFamily: fontFamily.Poppins_SemiBold,
+            color: colors.baseColor,
+        },
         titleSmall: {
             fontSize: textStyles.subhead,
             fontFamily: fontFamily.Poppins_Regular,
             color: colors.label,
-            marginBottom: 5,
+            //marginBottom: 5,
         },
         userName: {
             fontSize: textStyles.body,
@@ -236,12 +262,12 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             width: 300,
         },
         userCard: {
-            //backgroundColor: "transparent",
-            justifyContent: "flex-start",
+            backgroundColor: "transparent",
+            //justifyContent: "flex-start",
             alignItems: "center",
             flexDirection: "row",
             gap: 20,
-            marginTop: 20,
+            marginTop: appStyles.spacingFromHeader,
         },
         card: {
             flexDirection: "row",
@@ -324,7 +350,7 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             borderColor: colors.baseColor,
         },
         spacingTop: {
-            marginTop: 5,
+            //marginTop: 5,
         },
         spacingBottom: {
             marginBottom: 20,
@@ -336,5 +362,9 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             color: colors.label,
             fontSize: textStyles.title_2,
         },
+        spacing: {
+            //backgroundColor: "red",
+            marginBottom: appStyles.cardTitleSpacingBottom - 5
+        }
     })
 }

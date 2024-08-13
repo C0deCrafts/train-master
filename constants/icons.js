@@ -6,6 +6,7 @@ import barbell from "../assets/icons/barbell_fill.png";
 import calendar from "../assets/icons/calendar_2_fill.png";
 import camera from "../assets/icons/camera_2_fill.png";
 import celebration from "../assets/icons/celebrate_line.png"
+import deleteIcon from "../assets/icons/delete_fill.png"
 import diary from "../assets/icons/notebook_2_fill.png";
 import facebook from "../assets/icons/facebook_fill.png";
 import fastForward from "../assets/icons/fast_forward_fill.png";
@@ -26,8 +27,10 @@ import repeat from "../assets/icons/refresh_2_line.png"
 import setting from "../assets/icons/settings_3_fill.png";
 import steps from "../assets/icons/walk_fill.png"
 import sun from "../assets/icons/sun_line.png"
+import text from "../assets/icons/textbox_fill.png"
 import time from "../assets/icons/time_line.png"
 import unlock from "../assets/icons/unlock_line.png";
+import weight from "../assets/icons/balance_fill.png"
 
 export default {
     add,
@@ -38,6 +41,7 @@ export default {
     camera,
     calendar,
     celebration,
+    deleteIcon,
     diary,
     facebook,
     fastForward,
@@ -58,6 +62,8 @@ export default {
     setting,
     steps,
     sun,
+    text,
     time,
     unlock,
+    weight
 }
