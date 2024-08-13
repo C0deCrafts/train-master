@@ -84,7 +84,7 @@ const Settings = () => {
 
     return (
         <>
-            <CustomHeader title={"Einstellungen"} logOutButtonVisible={true}/>
+            <CustomHeader title={"Einstellungen"} logOutButtonVisible/>
             <View style={styles.backgroundImage}>
                 <Image
                     source={images.backgroundSymbol}

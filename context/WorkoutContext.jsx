@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {cacheWorkouts, fetchWorkoutsWithExercises, loadCachedWorkouts} from "../utils/workoutUtils";
 import {
@@ -23,12 +23,13 @@ export const WorkoutProvider = ({ children }) => {
     // Gewicht des Benutzers (dies sollte später aus den Benutzerdaten kommen)
     const userWeight = weight
 
-    useEffect(() => {
-        console.log("Weight: ", weight)
-    }, [weight]);
+    /*useEffect(() => {
+        console.log("Context - Weight: ", weight)
+    }, [weight]);*/
 
     const loadWorkouts = async () => {
         try {
+            console.log("Loading workouts");
             const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
             if (cachedWorkouts && cachedImages && cachedVideos) {
                 setWorkouts(cachedWorkouts);

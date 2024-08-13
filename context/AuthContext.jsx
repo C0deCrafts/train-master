@@ -2,7 +2,6 @@ import {createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPa
 import {createContext, useContext, useEffect, useState} from "react";
 import {DEFAULT_PROFILE_IMAGE_URL, FIREBASE_AUTH, FIRESTORE_DB, uploadProfileImage} from "../utils/firebase";
 import {doc, getDoc, setDoc, updateDoc} from "firebase/firestore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AuthContext = createContext({});
 
@@ -31,10 +30,10 @@ export const AuthContextProvider = ({children}) => {
     const updateUserData = async (userId) => {
         try {
             // Zuerst das Profilbild aus dem AsyncStorage laden
-            const localProfileImage = await AsyncStorage.getItem('profileImage');
+            /*const localProfileImage = await AsyncStorage.getItem('profileImage');
             if (localProfileImage) {
                 setProfileImage(localProfileImage);
-            }
+            }*/
             const docRef = doc(FIRESTORE_DB, "users", userId);
             const docSnap = await getDoc(docRef);
 
@@ -48,8 +47,9 @@ export const AuthContextProvider = ({children}) => {
                     profileImage: data.profileImage || DEFAULT_PROFILE_IMAGE_URL,
                     userId: data.userId,
                 })
+                setProfileImage(data.profileImage || DEFAULT_PROFILE_IMAGE_URL);
                 // Profilbild in AsyncStorage speichern
-                await AsyncStorage.setItem('profileImage', data.profileImage);
+                //await AsyncStorage.setItem('profileImage', data.profileImage);
             }
         } catch (error) {
             console.error("Error loading user information: ", error);
@@ -83,6 +83,7 @@ export const AuthContextProvider = ({children}) => {
     //logout
     const logout = async () => {
         try {
+            console.log("Logging out");
             await signOut(FIREBASE_AUTH);
             return {success: true}
         } catch (err) {
@@ -132,7 +133,7 @@ export const AuthContextProvider = ({children}) => {
                 profileImage: imageUrl
             });
 
-            await AsyncStorage.setItem('profileImage', imageUrl);
+            //await AsyncStorage.setItem('profileImage', imageUrl);
         } catch (err) {
             console.error("Error beim Ändern des Profilbildes: ", err);
         }

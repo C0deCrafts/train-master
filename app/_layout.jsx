@@ -39,23 +39,34 @@ const MainLayout = () => {
 
     useEffect(() => {
         // check if app is ready or not
-        if (!isAppReady) return;
+        const handleLoadingData = async () => {
+            if (!isAppReady) return;
 
-        //console.log("Segments: ", segments[0])
-        const inAuthGroup = segments[0] === "(auth)";
+            console.log("App is ready");
+            console.log("Segments: ", segments);
+            console.log("isAuthenticated: ", isAuthenticated);
 
-        console.log(inAuthGroup)
-        if (isAuthenticated && !inAuthGroup) {
-            //redirect to home
-            loadWorkouts();
-            router.replace("/home");
-            //console.log("CanGoBack? ", router.canGoBack())
+            //console.log("Segments: ", segments[0])
+            const inAuthGroup = segments[0] === "(auth)";
 
-        } else if (isAuthenticated === false) {
-            //redirect to sign in
-            router.replace("/login");
-            //console.log("CanGoBack? ", router.canGoBack())
+            console.log(inAuthGroup)
+            if (isAuthenticated && !inAuthGroup) {
+                //redirect to home
+                console.log("User is authenticated, loading workouts");
+                await loadWorkouts();
+                router.replace("/(tabs)/(homes)/home");
+                console.log("Redirecting to /home");
+                //console.log("CanGoBack? ", router.canGoBack())
+
+            } else if (isAuthenticated === false) {
+                //redirect to sign in
+                console.log("User is not authenticated, redirecting to login");
+                router.replace("(public)/login");
+                console.log("Redirecting to /login");
+                //console.log("CanGoBack? ", router.canGoBack())
+            }
         }
+        handleLoadingData();
     }, [isAuthenticated, isAppReady]);
 
     if (!isAppReady) return;

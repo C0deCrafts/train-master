@@ -88,7 +88,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             fontSize: textStyles.callout,
             paddingLeft: 5,
             paddingBottom: 15,
-            width: "100%",
+            width: "95%",
         },
         exerciseDetails: {
             fontFamily: fontFamily.Poppins_Regular,

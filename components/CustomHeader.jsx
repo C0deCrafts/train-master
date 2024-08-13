@@ -21,7 +21,7 @@ const CustomHeader = ({title, backButtonVisible = false, logOutButtonVisible = f
     };
 
     const handleLogout = async () => {
-        //console.log("Logout")
+        console.log("Logout")
         await logout();
     };
 
