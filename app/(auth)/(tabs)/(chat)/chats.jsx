@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Pressable, StyleSheet, Text, View} from "react-native";
+import {Alert, FlatList, Pressable, StyleSheet, Text, View} from "react-native";
 import CustomHeader from "../../../../components/CustomHeader";
 import {Image} from "expo-image";
 import {useAppStyle} from "../../../../context/AppStyleContext";
@@ -24,10 +24,10 @@ const Chats = () => {
     const [selectedChatId, setSelectedChatId] = useState(0);
 
     const chats = [
-        {id: 0, name: "Alle Chats"},
-        {id: 1, name: "Gruppen"},
-        {id: 2, name: "Privat"},
-        {id: 3, name: "Kontakte"}
+        {id: 0, name: "Alle"},
+        {id: 1, name: "Gruppenchats"},
+        {id: 2, name: "Privatchats"},
+        {id: 3, name: "Kontakte"},
     ]
 
     useEffect(() => {
@@ -100,6 +100,21 @@ const Chats = () => {
     };
     //console.log("Chatgroups: ", groups)
 
+    const renderChatSelector = ({item, index}) => {
+        return (
+            <Animated.View key={item.id} entering={FadeInRight.delay(100).duration(index * 300)}>
+                <Card
+                    style={item.id === selectedChatId ? styles.chatContainerSelected : styles.chatContainer}
+                    onPress={() => setSelectedChatId(item.id)}
+                    clickable
+                >
+                    <Text
+                        style={item.id === selectedChatId ? styles.chatNameSelected : styles.chatName}>{item.name}</Text>
+                </Card>
+            </Animated.View>
+        )
+    }
+
     return (
         <>
             <CustomHeader title={"Chats"}/>
@@ -109,21 +124,32 @@ const Chats = () => {
                     style={styles.image}
                 />
                 <View style={styles.container}>
-                    <View style={styles.chatsContainer}>
-                        {chats.map((item, index) => (
-                            <Animated.View key={item.id} entering={FadeInRight.delay(100).duration(index * 300)}>
-                                <Card
-                                    style={item.id === selectedChatId ? styles.chatContainerSelected : styles.chatContainer}
-                                    onPress={() => setSelectedChatId(item.id)}
-                                    clickable
-                                >
-                                    <Text
-                                        style={item.id === selectedChatId ? styles.chatNameSelected : styles.chatName}>{item.name}</Text>
-                                </Card>
-                            </Animated.View>
-                        ))}
+                    <View style={styles.scrollContainer}>
+                        <FlatList
+                            data={chats}
+                            renderItem={renderChatSelector}
+                            keyExtractor={item => item.id}
+                            horizontal={true} // Set horizontal to true for horizontal scrolling
+                            showsHorizontalScrollIndicator={false}
+                            //contentContainerStyle={{justifyContent: "space-between"}}
+                        />
                     </View>
                     <View style={styles.chatListContainer}>
+                        {selectedChatId === 0 && (
+                            <>
+                                <View style={styles.descriptionContainer}>
+                                    <Text style={styles.description}><Text style={styles.titleDescription}>Hinweis: </Text>
+                                        Aktuell ist das Feature das alle Chats anzeigt noch nicht freigeschaltet.
+                                        Du wirst informiert, sobald diese Funktionen zur Verfügung stehen.
+                                    </Text>
+                                    <View style={{marginTop: 20}}>
+                                        <Text style={styles.description}>Nutze gerne die Funktionen <Text style={styles.titleDescription}>Gruppenchats </Text> und
+                                            <Text style={styles.titleDescription}> Privatchats</Text>
+                                        </Text>
+                                    </View>
+                                </View>
+                            </>
+                        )}
                         {selectedChatId === 1 && (
                             <>
                                 {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
@@ -137,6 +163,21 @@ const Chats = () => {
                             <>
                                 {/*<Loading visible={users.length > 0} color={colors.white}/>*/}
                                 <ChatList currentUser={user} users={users}/>
+                            </>
+                        )}
+                        {selectedChatId === 3 && (
+                            <>
+                                <View style={styles.descriptionContainer}>
+                                    <Text style={styles.description}><Text style={styles.titleDescription}>Hinweis: </Text>
+                                        Aktuell ist das Feature Kontakte noch nicht freigeschaltet.
+                                        Du wirst informiert, sobald diese Funktionen zur Verfügung stehen.
+                                    </Text>
+                                    <View style={{marginTop: 20}}>
+                                        <Text style={styles.description}>Nutze gerne die Funktionen <Text style={styles.titleDescription}>Gruppenchats </Text> und
+                                            <Text style={styles.titleDescription}> Privatchats</Text>
+                                        </Text>
+                                    </View>
+                                </View>
                             </>
                         )}
                     </View>
@@ -159,6 +200,10 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             flex: 1,
             paddingHorizontal: 20,
         },
+        scrollContainer: {
+            //backgroundColor: "red",
+            //alignItems: "center",
+        },
         content: {
             flex: 1,
             paddingHorizontal: elementStyles.spacingHorizontalDefault,
@@ -166,6 +211,7 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
         },
         chatListContainer: {
             flex: 1,
+            marginTop: appStyles.extraSpacingSmall,
         },
         image: {
             position: "absolute",
@@ -175,33 +221,34 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             tintColor: colors.quaternaryLabel,
             pointerEvents: "none"
         },
-        chatsContainer: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: appStyles.cardTitleSpacingBottom,
-        },
         chatContainer: {
+            //width: 150,
             borderRadius: appStyles.cardRadiusLarge,
-            alignItems: "center",
-            marginTop: appStyles.spacingFromHeader
+            marginRight: appStyles.spacingHorizontalSmall,
+            marginTop: appStyles.spacingFromHeader,
+            paddingHorizontal: 15
         },
         chatContainerSelected: {
+            //width: 150,
             backgroundColor: colors.baseColor,
             borderRadius: appStyles.cardRadiusLarge,
-            alignItems: "center",
-            marginTop: appStyles.spacingFromHeader
+            marginRight: appStyles.spacingHorizontalSmall,
+            marginTop: appStyles.spacingFromHeader,
+            paddingHorizontal: 15
         },
         chatName: {
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
             marginVertical: 5,
-            color: colors.label
+            color: colors.label,
+            textAlign: "center"
         },
         chatNameSelected: {
             fontFamily: fontFamily.Poppins_Regular,
             fontSize: textStyles.subhead,
             marginVertical: 5,
-            color: colors.colorButtonLabel
+            color: colors.colorButtonLabel,
+            textAlign: "center"
         },
         exerciseListContainer: {
             flex: 1,
@@ -223,6 +270,19 @@ const createStyles = (textStyles, colors, fontFamily, bottomTabSpacing) => {
             width: 25,
             height: 25,
             tintColor: colors.colorButtonLabel
+        },
+        descriptionContainer: {
+            marginBottom: appStyles.cardTitleSpacingBottom
+        },
+        description: {
+            fontSize: textStyles.subhead,
+            fontFamily: fontFamily.Poppins_Regular,
+            color: colors.label,
+        },
+        titleDescription: {
+            fontSize: textStyles.subhead,
+            fontFamily: fontFamily.Poppins_SemiBold,
+            color: colors.baseColor,
         },
     })
 }

@@ -141,6 +141,6 @@ const createStyles = (textStyles, colors) => {
             contentFit: "contain",
             tintColor: colors.quaternaryLabel,
             pointerEvents: "none" // verhindert, dass das Bild Touch-Events empfängt
-        },
+        }
     })
 }

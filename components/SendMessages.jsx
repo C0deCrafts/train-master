@@ -49,11 +49,12 @@ const createStyles = (textStyles, colors, fontFamily) => {
             padding: 10,
         },
         button: {
+            //flex: 1,
             backgroundColor: colors.baseColor,
             borderRadius: 10,
-            paddingHorizontal: 10,
+            padding: 10,
             justifyContent: "center",
-            height: 42.5
+            //height: 42.5
         },
         buttonLabel: {
             fontFamily: "Poppins-SemiBold",

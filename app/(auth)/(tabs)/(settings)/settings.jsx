@@ -22,6 +22,7 @@ import CustomHeader from "../../../../components/CustomHeader";
 import CustomCard from "../../../../components/CustomCard";
 import Avatar from "../../../../components/Avatar";
 import {useAccountSetting} from "../../../../context/AccountSettingContext";
+import {useWorkout} from "../../../../context/WorkoutContext";
 
 const Settings = () => {
     const { user } = useAuth();
