@@ -5,7 +5,7 @@ import {
     View
 } from 'react-native';
 import { Image } from 'expo-image';
-import {useState, useMemo} from "react";
+import {useState, useMemo, useEffect} from "react";
 import {useAuth} from "../../../../context/AuthContext";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {images, icons} from "../../../../constants";
@@ -22,7 +22,8 @@ import CustomHeader from "../../../../components/CustomHeader";
 import CustomCard from "../../../../components/CustomCard";
 import Avatar from "../../../../components/Avatar";
 import {useAccountSetting} from "../../../../context/AccountSettingContext";
-import {useWorkout} from "../../../../context/WorkoutContext";
+import {useNotifications} from "../../../../context/NotificationContext";
+import CustomButton from "../../../../components/CustomButton";
 
 const Settings = () => {
     const { user } = useAuth();
@@ -37,6 +38,20 @@ const Settings = () => {
     // Fix this - this is used if firebase data base changes - now it don't automatic change values from database - now I need a custom button to clear the cache
     // const { clearStorage } = useContext(WorkoutContext);
     const {handleProfileImageChange} = useAccountSetting();
+
+    const {sendPushNotification, expoPushToken} = useNotifications();
+
+    useEffect(() => {
+        console.log(sendPushNotification)
+    }, []);
+
+    const handleSendNotification = async () => {
+        if (expoPushToken) {
+            await sendPushNotification(expoPushToken);
+        } else {
+            alert('Push token is not available');
+        }
+    };
 
     const radioButtons = useMemo(() => ([
         {
@@ -191,6 +206,7 @@ const Settings = () => {
 
                          <CustomButton title={"Cache löschen"} handlePress={clearStorage} containerStyles={{backgroundColor: colors.baseColor}}/>
                         */}
+                        <CustomButton title={"Push senden"} handlePress={handleSendNotification} containerStyles={{backgroundColor: colors.baseColor}}/>
                     </ScrollView>
                 </View>
             </View>

@@ -1,34 +1,18 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from 'react';
 import {AppState} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
+import {useNotifications} from "./NotificationContext";
 
 const TimerContext = createContext({});
 
-const cancelAllNotifications = async () => {
-    await Notifications.cancelAllScheduledNotificationsAsync();
-    //console.log('All scheduled notifications cancelled');
-};
-
-const scheduleNotification = async (timeLeft) => {
-    //console.log('Scheduling notification with time left:', timeLeft);
-    await Notifications.scheduleNotificationAsync({
-        content: {
-            title: "Pause beendet",
-            body: "Es ist Zeit dein Training fortzusetzen!💪",
-        },
-        trigger: {
-            seconds: timeLeft,
-        },
-    });
-};
+//FIX if I close the app - timer for exercise is not correct
 
 const saveTimer = async (timeLeft, endTime) => {
     try {
         await AsyncStorage.setItem('timeLeft', JSON.stringify({ timeLeft, endTime }));
         //console.log('Saved timer:', { timeLeft, endTime });
-    } catch (e) {
-        console.error('Failed to save timeLeft', e);
+    } catch (err) {
+        console.error('Failed to save timeLeft', err);
     }
 };
 
@@ -39,8 +23,8 @@ const loadTimer = async () => {
             //console.log('Loaded timer:', timerData);
             return JSON.parse(value);
         }
-    } catch (e) {
-        console.error('Failed to load timeLeft', e);
+    } catch (err) {
+        console.error('Failed to load timeLeft', err);
     }
     return null;
 };
@@ -49,6 +33,8 @@ export const TimerProvider = ({ children }) => {
     const [timeLeft, setTimeLeft] = useState(0);
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const timerRef = useRef(null);
+
+    const { scheduleNotification, cancelAllNotifications } = useNotifications();
 
     const [isAppActive, setIsAppActive] = useState("active");
 
@@ -74,7 +60,7 @@ export const TimerProvider = ({ children }) => {
                     const newEndTime = currentTime + timeLeft * 1000;
                     await saveTimer(timeLeft, newEndTime);
                     await cancelAllNotifications();
-                    await scheduleNotification(timeLeft);
+                    await scheduleNotification(timeLeft,"Pause beendet","Es ist Zeit dein Training fortzusetzen!💪");
                     //console.log('App moved to background, time left:', timeLeft, 'end time:', newEndTime);
                 }
             }
@@ -99,6 +85,7 @@ export const TimerProvider = ({ children }) => {
                     if (newTimeLeft === 0) {
                         setIsTimerRunning(false);
                         //console.log("Timer stopped")
+                        //hier auch benachrichtigung scheduleNot??
                     }
                     return newTimeLeft;
                 });

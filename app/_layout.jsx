@@ -10,13 +10,14 @@ import {AccountSettingProvider} from "../context/AccountSettingContext";
 import * as Notifications from "expo-notifications";
 import {TimerProvider} from "../context/TimerContext";
 import {dark} from "../constants/colors";
+import {NotificationProvider} from "../context/NotificationContext";
 
 // Setup notification handler
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
         shouldPlaySound: false,
-        shouldSetBadge: false,
+        shouldSetBadge: true,
     }),
 });
 
@@ -97,19 +98,21 @@ const RootLayout = () => {
     if (!fontsLoaded && !error) return null;
 
     return (
-        <AppStyleProvider>
-            <AuthContextProvider>
-                <WorkoutProvider>
-                    <AccountSettingProvider>
-                        <TimerProvider>
-                            <MainLayout/>
-                            <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
-                            {/*<StatusBar style="light"/>*/}
-                        </TimerProvider>
-                    </AccountSettingProvider>
-                </WorkoutProvider>
-            </AuthContextProvider>
-        </AppStyleProvider>
+        <NotificationProvider>
+            <AppStyleProvider>
+                <AuthContextProvider>
+                    <WorkoutProvider>
+                        <AccountSettingProvider>
+                            <TimerProvider>
+                                <MainLayout/>
+                                <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+                                {/*<StatusBar style="light"/>*/}
+                            </TimerProvider>
+                        </AccountSettingProvider>
+                    </WorkoutProvider>
+                </AuthContextProvider>
+            </AppStyleProvider>
+        </NotificationProvider>
     )
 }
 
