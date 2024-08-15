@@ -1,7 +1,6 @@
 import {AuthContextProvider, useAuth} from "../context/AuthContext";
 import {Slot, useRouter, useSegments} from "expo-router";
 import {useEffect} from "react";
-import {Alert} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFonts} from "expo-font";
 import {AppStyleProvider, useAppStyle} from "../context/AppStyleContext";
@@ -10,8 +9,7 @@ import {AccountSettingProvider} from "../context/AccountSettingContext";
 import * as Notifications from "expo-notifications";
 import {TimerProvider} from "../context/TimerContext";
 import {dark} from "../constants/colors";
-import useHealthData from "../hook/useHealthData";
-//import {NotificationProvider} from "../context/NotificationContext.txt";
+import {NotificationProvider, useNotificationObserver} from "../context/NotificationContext";
 
 // Setup notification handler
 Notifications.setNotificationHandler({
@@ -78,6 +76,7 @@ const MainLayout = () => {
 };
 const RootLayout = () => {
     const {colorScheme} = useAppStyle();
+    useNotificationObserver();
 
     const [fontsLoaded, error] = useFonts({
         "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
@@ -100,19 +99,21 @@ const RootLayout = () => {
 
     //NotProv
     return (
-            <AppStyleProvider>
-                <AuthContextProvider>
-                    <WorkoutProvider>
-                        <AccountSettingProvider>
-                            <TimerProvider>
-                                <MainLayout/>
-                                <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
-                                {/*<StatusBar style="light"/>*/}
-                            </TimerProvider>
-                        </AccountSettingProvider>
-                    </WorkoutProvider>
-                </AuthContextProvider>
-            </AppStyleProvider>
+            <NotificationProvider>
+                <AppStyleProvider>
+                    <AuthContextProvider>
+                        <WorkoutProvider>
+                            <AccountSettingProvider>
+                                <TimerProvider>
+                                    <MainLayout/>
+                                    <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+                                    {/*<StatusBar style="light"/>*/}
+                                </TimerProvider>
+                            </AccountSettingProvider>
+                        </WorkoutProvider>
+                    </AuthContextProvider>
+                </AppStyleProvider>
+            </NotificationProvider>
     )
 }
 

@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from 'react';
 import {AppState} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import {useNotifications} from "./NotificationContext.txt";
+import {useNotifications} from "./NotificationContext";
 
 const TimerContext = createContext({});
 
@@ -34,7 +34,7 @@ export const TimerProvider = ({ children }) => {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const timerRef = useRef(null);
 
-    //const { scheduleNotification, cancelAllNotifications } = useNotifications();
+    const { localNotification, cancelAllLocalNotifications } = useNotifications();
 
     const [isAppActive, setIsAppActive] = useState("active");
 
@@ -52,15 +52,15 @@ export const TimerProvider = ({ children }) => {
                     setTimeLeft(calculatedTimeLeft);
                     setIsTimerRunning(calculatedTimeLeft > 0);
                     //console.log('App resumed, calculated time left:', calculatedTimeLeft);
-                    //await cancelAllNotifications();
+                    await cancelAllLocalNotifications();
                 }
             } else if (nextAppState.match(/inactive|background/)) {
                 if (isTimerRunning) {
                     const currentTime = new Date().getTime();
                     const newEndTime = currentTime + timeLeft * 1000;
                     await saveTimer(timeLeft, newEndTime);
-                    //await cancelAllNotifications();
-                    //await scheduleNotification(timeLeft,"Pause beendet","Es ist Zeit dein Training fortzusetzen!💪");
+                    await cancelAllLocalNotifications();
+                    await localNotification(timeLeft,"Pause beendet","Es ist Zeit dein Training fortzusetzen!💪");
                     //console.log('App moved to background, time left:', timeLeft, 'end time:', newEndTime);
                 }
             }
