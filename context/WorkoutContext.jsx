@@ -29,7 +29,7 @@ export const WorkoutProvider = ({ children }) => {
 
     const loadWorkouts = async () => {
         try {
-            console.log("Loading workouts");
+            //console.log("Loading workouts");
             const { workouts: cachedWorkouts, images: cachedImages, videos: cachedVideos } = await loadCachedWorkouts();
             if (cachedWorkouts && cachedImages && cachedVideos) {
                 setWorkouts(cachedWorkouts);

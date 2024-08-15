@@ -5,7 +5,7 @@ import {
     View
 } from 'react-native';
 import { Image } from 'expo-image';
-import {useState, useMemo, useEffect} from "react";
+import {useState, useMemo} from "react";
 import {useAuth} from "../../../../context/AuthContext";
 import {useAppStyle} from "../../../../context/AppStyleContext";
 import {images, icons} from "../../../../constants";
@@ -22,7 +22,7 @@ import CustomHeader from "../../../../components/CustomHeader";
 import CustomCard from "../../../../components/CustomCard";
 import Avatar from "../../../../components/Avatar";
 import {useAccountSetting} from "../../../../context/AccountSettingContext";
-import {useNotifications} from "../../../../context/NotificationContext";
+//import {useNotifications} from "../../../../context/NotificationContext.txt";
 import CustomButton from "../../../../components/CustomButton";
 
 const Settings = () => {
@@ -39,18 +39,26 @@ const Settings = () => {
     // const { clearStorage } = useContext(WorkoutContext);
     const {handleProfileImageChange} = useAccountSetting();
 
-    const {sendPushNotification, expoPushToken} = useNotifications();
+    //const {sendPushNotification, expoPushToken, updateBadgeCount, clearBadgeCount} = useNotifications();
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log(sendPushNotification)
-    }, []);
+    }, []);*/
 
     const handleSendNotification = async () => {
-        if (expoPushToken) {
+        /*if (expoPushToken) {
             await sendPushNotification(expoPushToken);
         } else {
             alert('Push token is not available');
-        }
+        }*/
+    };
+
+    const handleClearBadgeCount = async () => {
+        /*if (expoPushToken) {
+            await clearBadgeCount();
+        } else {
+            alert('Push token is not available');
+        }*/
     };
 
     const radioButtons = useMemo(() => ([
@@ -207,6 +215,7 @@ const Settings = () => {
                          <CustomButton title={"Cache löschen"} handlePress={clearStorage} containerStyles={{backgroundColor: colors.baseColor}}/>
                         */}
                         <CustomButton title={"Push senden"} handlePress={handleSendNotification} containerStyles={{backgroundColor: colors.baseColor}}/>
+                        <CustomButton title={"Badge auf 0"} handlePress={handleClearBadgeCount} containerStyles={{backgroundColor: colors.baseColor}}/>
                     </ScrollView>
                 </View>
             </View>

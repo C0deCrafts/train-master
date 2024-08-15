@@ -6,6 +6,7 @@ import {useAccountSetting} from "../../../../context/AccountSettingContext";
 import CustomCard from "../../../../components/CustomCard";
 import {appStyles} from "../../../../constants/elementStyles";
 import {Image} from "expo-image";
+import useHealthData from "../../../../hook/useHealthData";
 
 const TrainingData = () => {
     const { getTextStyles, getColors, fontFamily, bottomTabSpacing } = useAppStyle();
@@ -13,13 +14,21 @@ const TrainingData = () => {
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily, bottomTabSpacing);
     const {showStepsCount, setShowStepsCount} = useAccountSetting();
+    const {requestPermission, getSteps} = useHealthData();
 
-    const toggleSwitch = () => {
-        /*if(!hasPermission){
-            Alert.alert("Zugriff verweigert!","Du hast den Zugriff auf deine Gesundheitsdaten abgelehnt, siehe Hinweis in der App!")
-            return;
-        }*/
-        setShowStepsCount(previousState => !previousState);
+    const toggleSwitch = async () => {
+        try {
+            const permissionGranted = await requestPermission();
+            if (permissionGranted) {
+                console.log("Permission gesetzt: Steps werden angezeigt");
+                await getSteps(new Date());
+                setShowStepsCount(previousState => !previousState);
+            } else {
+                console.log("Keine Erlaubnis");
+            }
+        } catch (error) {
+            console.log("Error requesting permission: ", error);
+        }
     }
 
     return (
@@ -33,7 +42,10 @@ const TrainingData = () => {
                 <View style={styles.container}>
                     <View style={styles.descriptionContainer}>
                         <Text style={styles.description}><Text style={styles.titleDescription}>Hinweis: </Text>
-                            Der Schrittzähler verwendet Daten von Apple Health. Um diese Funktion zu nutzen, stelle sicher, dass Apple Health auf deinem iPhone aktiviert und richtig eingestellt ist.</Text>
+                            Der Schrittzähler verwendet Daten von Apple Health.
+                            Um diese Funktion zu nutzen, stelle sicher, dass Apple Health auf deinem iPhone aktiviert und
+                            richtig eingestellt ist.
+                        </Text>
                     </View>
 
                     {/*hasPermission === false && (

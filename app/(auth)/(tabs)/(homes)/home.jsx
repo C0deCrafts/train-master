@@ -1,7 +1,7 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Image} from 'expo-image';
 import {useAuth} from "../../../../context/AuthContext";
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {images} from "../../../../constants";
 import {StatusBar} from "expo-status-bar";
 import {format} from 'date-fns';
@@ -11,11 +11,14 @@ import {dark} from "../../../../constants/colors";
 import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import ExerciseList from "../../../../components/ExerciseList";
-import {router} from "expo-router";
+import {router, useFocusEffect} from "expo-router";
 import Animated, {FadeInRight} from "react-native-reanimated";
 import TodayStats from "../../../../components/TodayStats";
 import Avatar from "../../../../components/Avatar";
 import {appStyles} from "../../../../constants/elementStyles";
+import * as Notifications from "expo-notifications";
+import {useAccountSetting} from "../../../../context/AccountSettingContext";
+import useHealthData from "../../../../hook/useHealthData";
 
 const Home = () => {
     const {getTextStyles, getColors, fontFamily, colorScheme, safeAreaTop, bottomTabSpacing} = useAppStyle();
@@ -23,10 +26,21 @@ const Home = () => {
     const colors = getColors();
     const styles = createStyles(textStyles, colors, fontFamily, safeAreaTop, bottomTabSpacing);
 
-
     const {user} = useAuth();
     const {workouts} = useContext(WorkoutContext);
     const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
+
+    useEffect(() => {
+        Notifications.requestPermissionsAsync({
+            ios: {
+                allowAlert: true,
+                allowBadge: true,
+                allowSound: false,
+            }
+        }).then((status)=> {
+            console.log("Permission (in Home): ", status);
+        })
+    }, []);
 
     useEffect(() => {
         setSelectedWorkoutId(workouts[0]?.id);

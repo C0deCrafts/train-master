@@ -2,30 +2,32 @@ import {createContext, useContext, useEffect, useRef, useState} from "react";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from 'expo-constants';
+import {getBadgeCountAsync} from "expo-notifications";
 
 const NotificationContext = createContext({});
 
-// HINWEIS:
-// Lokale Benachrichtigungen: Können auf Simulatoren und Emulatoren getestet werden.
+/**
+ * HINWEIS:
+ * Lokale Benachrichtigungen: Können auf Simulatoren und Emulatoren getestet werden.
+ *
+ * Push-Benachrichtigungen: Erfordern ein physisches Gerät für die vollständige Funktionalität
+ * und das Testen, insbesondere wenn sie von einem Server gesendet werden. (Firebase)
+ *
+ * Lokale Benachrichtigungen: Diese werden direkt auf dem Gerät geplant und ausgelöst.
+ * Sie erfordern keine Internetverbindung und sind nützlich für zeitgesteuerte Erinnerungen und ähnliche Anwendungsfälle.
+ *
+ * Push-Benachrichtigungen: Diese werden von einem externen Server über den Expo Push Notification Service
+ * gesendet und erfordern eine Internetverbindung. Sie sind nützlich für Benachrichtigungen, die von externen
+ * Ereignissen abhängen, wie z.B. neue Nachrichten in einer Chat-App.
+ */
 
-// Push-Benachrichtigungen: Erfordern ein physisches Gerät für die vollständige Funktionalität
-// und das Testen, insbesondere wenn sie von einem Server gesendet werden. (Firebase)
-
-// Lokale Benachrichtigungen: Diese werden direkt auf dem Gerät geplant und ausgelöst.
-// Sie erfordern keine Internetverbindung und sind nützlich für zeitgesteuerte Erinnerungen und ähnliche Anwendungsfälle.
-
-// Push-Benachrichtigungen: Diese werden von einem externen Server über den Expo Push Notification Service
-// gesendet und erfordern eine Internetverbindung. Sie sind nützlich für Benachrichtigungen, die von externen
-// Ereignissen abhängen, wie z.B. neue Nachrichten in einer Chat-App.
-
-export const NotificationProvider = ({ children }) => {
+export const NotificationProvider = ({children}) => {
     /*
     * Das Expo Push Token wird benötigt, um Push-Benachrichtigungen an das spezifische Gerät zu senden.
     * Wenn man eine Push-Benachrichtigung von einem Server senden möchte, benötigt man dieses Token, um das Gerät zu identifizieren.
     */
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(null);
-    const [unreadCount, setUnreadCount] = useState(0);
 
     /*
     * Dies ist eine Referenz für den Listener, der auf eingehende Benachrichtigungen hört.
@@ -40,24 +42,23 @@ export const NotificationProvider = ({ children }) => {
     const responseListener = useRef();
 
     //for testing
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("TOKEN: ", expoPushToken)
-    }, [expoPushToken]);
+        //console.log("BadgeCount: ", getBadgeCountAsync())
+    }, [expoPushToken]);*/
 
     useEffect(() => {
         // Registriere das Gerät für Push-Benachrichtigungen und speichere das Token
         registerForPushNotificationsAsync()
             .then(token => setExpoPushToken(token ?? ""))
-            .catch(err => console.log("Error register push nots:" ,err));
+            .catch(err => console.log("Error register push nots:", err));
 
         // Listener für eingehende Benachrichtigungen
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
             setNotification(notification);
             //zusätzlich
-            setUnreadCount(prevCount => prevCount + 1); // Anzahl der ungelesenen Nachrichten erhöhen
-            setBadgeCount(unreadCount + 1);
+            incrementBadgeCount();
         });
-
         /* //Not in use because App runs only on ios actually
          *
          * if (Platform.OS === 'android') {
@@ -72,29 +73,65 @@ export const NotificationProvider = ({ children }) => {
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
             console.log(response);
             //zusätzlich
-            setUnreadCount(prevCount => Math.max(prevCount - 1, 0)); // Anzahl der ungelesenen Nachrichten verringern
-            setBadgeCount(Math.max(unreadCount - 1, 0));
+            decrementBadgeCount();
         });
 
         // Bereinigen der Listener, wenn die Komponente unmontiert wird
         return () => {
-            notificationListener.current &&
-            Notifications.removeNotificationSubscription(notificationListener.current);
-            responseListener.current &&
-            Notifications.removeNotificationSubscription(responseListener.current);
+            notificationListener.current && Notifications.removeNotificationSubscription(notificationListener.current);
+            responseListener.current && Notifications.removeNotificationSubscription(responseListener.current);
         };
         //evtl [] und setBadgeCount weg ??
-    }, [unreadCount]);
+    }, []);
 
     // Funktion zum Zurücksetzen der Anzahl ungelesener Nachrichten
-    const clearUnreadCount = () => {
-        setUnreadCount(0);
+    const clearBadgeCount = async () => {
+        console.log("Clear Bage Count")
+        await updateBadgeCount(0);
+    };
 
-        setBadgeCount(0);
+    const incrementBadgeCount = async () => {
+        try {
+            const currentCount = await Notifications.getBadgeCountAsync();
+            await updateBadgeCount(currentCount + 1);
+        } catch (error) {
+            console.error("Failed to increment badge count:", error);
+        }
+    };
+
+    const decrementBadgeCount = async () => {
+        try {
+            const currentCount = await Notifications.getBadgeCountAsync();
+            await updateBadgeCount(Math.max(currentCount - 1, 0));
+        } catch (error) {
+            console.error("Failed to decrement badge count:", error);
+        }
+    };
+
+    const updateBadgeCount = async (count) => {
+        try {
+            const success = await Notifications.setBadgeCountAsync(count);
+            console.log("Badge count set:", success);
+            // return success;
+        } catch (error) {
+            console.error("Failed to set badge count:", error);
+            //       return false
+        }
+    };
+
+    const getBadgeCount = async () => {
+        try {
+            const count = await Notifications.getBadgeCountAsync();
+            console.log("Current Badge Count:", count);
+            return count;
+        } catch (error) {
+            console.error("Failed to get badge count:", error);
+            return 0;
+        }
     };
 
     // for server notifications
-    async function sendPushNotification(expoPushToken, title, body, data = {}) {
+    const sendPushNotification = async (expoPushToken, title, body, data = {}) => {
         const message = {
             to: expoPushToken,
             sound: 'default',
@@ -103,16 +140,23 @@ export const NotificationProvider = ({ children }) => {
             data: data // { someData: 'goes here' },
         };
 
-        await fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Accept-encoding': 'gzip, deflate',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(message),
-        });
-    }
+        try {
+            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Accept-encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(message),
+            });
+
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error('Error sending push notification:', error);
+        }
+    };
 
     const registerForPushNotificationsAsync = async () => {
         /* //Not in use because App runs only on ios actually
@@ -125,12 +169,11 @@ export const NotificationProvider = ({ children }) => {
         *   });
         * }
         */
-
         if (Device.isDevice) {
-            const { status: existingStatus } = await Notifications.getPermissionsAsync();
+            const {status: existingStatus} = await Notifications.getPermissionsAsync();
             let finalStatus = existingStatus;
             if (existingStatus !== 'granted') {
-                const { status } = await Notifications.requestPermissionsAsync();
+                const {status} = await Notifications.requestPermissionsAsync();
                 finalStatus = status;
             }
             if (finalStatus !== 'granted') {
@@ -183,11 +226,16 @@ export const NotificationProvider = ({ children }) => {
         //console.log('All scheduled notifications cancelled');
     };
 
-    const setBadgeCount = async (count) => {
-        await Notifications.setBadgeCountAsync(count);
-    };
-
-    return <NotificationContext.Provider value={{sendPushNotification, expoPushToken, notification, unreadCount, clearUnreadCount, scheduleNotification, cancelAllNotifications, setBadgeCount}}>
+    return <NotificationContext.Provider value={{
+        sendPushNotification,
+        expoPushToken,
+        notification,
+        clearBadgeCount,
+        scheduleNotification,
+        cancelAllNotifications,
+        updateBadgeCount,
+        getBadgeCount
+    }}>
         {children}
     </NotificationContext.Provider>
 }

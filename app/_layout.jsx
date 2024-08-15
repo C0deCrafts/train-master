@@ -10,7 +10,8 @@ import {AccountSettingProvider} from "../context/AccountSettingContext";
 import * as Notifications from "expo-notifications";
 import {TimerProvider} from "../context/TimerContext";
 import {dark} from "../constants/colors";
-import {NotificationProvider} from "../context/NotificationContext";
+import useHealthData from "../hook/useHealthData";
+//import {NotificationProvider} from "../context/NotificationContext.txt";
 
 // Setup notification handler
 Notifications.setNotificationHandler({
@@ -21,12 +22,12 @@ Notifications.setNotificationHandler({
     }),
 });
 
-const requestNotificationPermissions = async () => {
+/*const requestNotificationPermissions = async () => {
     const {status} = await Notifications.requestPermissionsAsync();
     if (status !== 'granted') {
         Alert.alert('Erlaubnis für Benachrichtigungen wurde nicht gewährt.');
     }
-};
+};*/
 
 const MainLayout = () => {
     const {isAuthenticated, isAppReady} = useAuth();
@@ -43,27 +44,27 @@ const MainLayout = () => {
         const handleLoadingData = async () => {
             if (!isAppReady) return;
 
-            console.log("App is ready");
-            console.log("Segments: ", segments);
-            console.log("isAuthenticated: ", isAuthenticated);
+            //console.log("App is ready");
+            //console.log("Segments: ", segments);
+            //console.log("isAuthenticated: ", isAuthenticated);
 
             //console.log("Segments: ", segments[0])
             const inAuthGroup = segments[0] === "(auth)";
 
-            console.log(inAuthGroup)
+            //console.log("Is in (auth): ",inAuthGroup)
             if (isAuthenticated && !inAuthGroup) {
                 //redirect to home
-                console.log("User is authenticated, loading workouts");
+                //console.log("User is authenticated, loading workouts");
                 await loadWorkouts();
                 router.replace("/(tabs)/(homes)/home");
-                console.log("Redirecting to /home");
+                //console.log("Redirecting to /home");
                 //console.log("CanGoBack? ", router.canGoBack())
 
             } else if (isAuthenticated === false) {
                 //redirect to sign in
-                console.log("User is not authenticated, redirecting to login");
+                //console.log("User is not authenticated, redirecting to login");
                 router.replace("(public)/login");
-                console.log("Redirecting to /login");
+                //console.log("Redirecting to /login");
                 //console.log("CanGoBack? ", router.canGoBack())
             }
         }
@@ -91,14 +92,14 @@ const RootLayout = () => {
         "Jura-Regular": require("../assets/fonts/Jura-Regular.ttf"),
     });
 
-    useEffect(() => {
+    /*useEffect(() => {
         requestNotificationPermissions();
-    }, []);
+    }, []);*/
 
     if (!fontsLoaded && !error) return null;
 
+    //NotProv
     return (
-        <NotificationProvider>
             <AppStyleProvider>
                 <AuthContextProvider>
                     <WorkoutProvider>
@@ -112,7 +113,6 @@ const RootLayout = () => {
                     </WorkoutProvider>
                 </AuthContextProvider>
             </AppStyleProvider>
-        </NotificationProvider>
     )
 }
 

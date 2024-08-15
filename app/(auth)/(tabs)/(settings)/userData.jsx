@@ -8,17 +8,25 @@ import Card from "../../../../components/Card";
 import {useAuth} from "../../../../context/AuthContext";
 import {appStyles} from "../../../../constants/elementStyles";
 import {Image} from "expo-image";
+import {useEffect} from "react";
 
 const UserData = () => {
     const {getColors, getTextStyles,fontFamily, bottomTabSpacing} = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
     const styles = createStyles(textStyles, colors, fontFamily, bottomTabSpacing);
-    const {weight} = useHealthData();
+    const {weight, getWeight} = useHealthData();
     const {user} = useAuth();
 
-    //fix problem, if no weight
+    useEffect(() => {
+        getWeight();
+    }, []);
 
+    useEffect(() => {
+        console.log("Weight in userDATA: ", weight)
+    }, [weight]);
+
+    //fix problem, if no weight
     const handleUserNameChange = () => {
         Alert.alert("Hinweis!","Diese Funktion ist noch nicht verfügbar")
     }

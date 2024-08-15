@@ -1,13 +1,14 @@
 import {View, StyleSheet, FlatList} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
 import {elements} from "../../../constants";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {useAppStyle} from "../../../context/AppStyleContext";
 import ExerciseList from "../../../components/ExerciseList";
 import CustomHeader from "../../../components/CustomHeader";
 import CustomButton from "../../../components/CustomButton";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {WorkoutContext} from "../../../context/WorkoutContext";
+import useHealthData from "../../../hook/useHealthData";
 
 const WorkoutId = () => {
     const { workout, item } = useLocalSearchParams();
@@ -18,12 +19,21 @@ const WorkoutId = () => {
     const workoutItem = item ? JSON.parse(item) : {};
 
     const { startSession } = useContext(WorkoutContext);
+    const { getWeight,weight } = useHealthData();
 
     const handleStartWorkout = async () => {
         await startSession(workout);
         router.dismissAll();
         router.replace({ pathname: '(noTabs)/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
     }
+
+    useEffect(() => {
+        getWeight();
+    }, []);
+
+    useEffect(() => {
+        console.log("Weight in [workoutID]: ", weight)
+    }, [weight]);
 
     /*useEffect(() => {
         console.log("WorkoutID: ", workout)

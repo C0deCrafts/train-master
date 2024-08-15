@@ -1,7 +1,7 @@
 import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {Image} from 'expo-image';
 import {useAppStyle} from "../../../../context/AppStyleContext";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import Card from "../../../../components/Card";
 import {WorkoutContext} from "../../../../context/WorkoutContext";
 import CustomHeader from "../../../../components/CustomHeader";
@@ -9,14 +9,21 @@ import {elements, icons, images} from "../../../../constants";
 import Animated, {FadeInDown,} from "react-native-reanimated";
 import Calendar from "../../../../components/Calendar";
 import {appStyles} from "../../../../constants/elementStyles";
+import useHealthData from "../../../../hook/useHealthData";
 
 const Training = () => {
     const {getTextStyles, getColors, fontFamily, bottomTabSpacing} = useAppStyle();
     const {workouts} = useContext(WorkoutContext);
     const colors = getColors();
     const textStyles = getTextStyles();
+    const {getWeight, getSteps} = useHealthData();
 
     const styles = createStyles(textStyles, colors, fontFamily, bottomTabSpacing);
+
+    useEffect(() => {
+        //getWeight();
+        //getSteps(new Date());
+    }, []);
 
     const calculateTotalDuration = (workout) => {
         const totalDurationInSeconds = workout.exercises.reduce((total, exercise) => {

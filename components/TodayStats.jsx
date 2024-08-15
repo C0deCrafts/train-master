@@ -6,6 +6,8 @@ import useHealthData from "../hook/useHealthData";
 import {useAccountSetting} from "../context/AccountSettingContext";
 import useWorkoutStats from "../hook/useWorkoutStats";
 import {appStyles} from "../constants/elementStyles";
+import {useCallback, useState} from "react";
+import {useFocusEffect} from "expo-router";
 
 const TodayStats = () => {
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
@@ -14,9 +16,21 @@ const TodayStats = () => {
     const styles = createStyles(textStyles, colors, fontFamily);
 
     const {showStepsCount} = useAccountSetting();
-    const {steps} = useHealthData();
+    const {steps, getSteps} = useHealthData();
     const { dailyStats } = useWorkoutStats();
     const today = format(new Date(), 'yyyy-MM-dd');
+
+    const [loading, setLoading] = useState(true)
+
+    useFocusEffect(
+        useCallback(() => {
+            const date = new Date();
+            //setLoading(true);
+            getSteps(date).then(loading => {
+                //setLoading(false)
+            });
+        }, [])
+    );
 
     return (
             <View style={styles.donutChartContainer}>

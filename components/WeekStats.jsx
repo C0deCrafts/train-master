@@ -8,10 +8,12 @@ import {de} from "date-fns/locale";
 import Card from "./Card";
 import BigDonutChart from "./BigDonutChart";
 import useWorkoutStats from "../hook/useWorkoutStats";
-import {useEffect, useMemo} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {appStyles} from "../constants/elementStyles";
+import {useFocusEffect} from "expo-router";
 
 const WeekStats = ({date}) => {
+    //const [loading, setLoading] = useState(true)
     const {getTextStyles, getColors, fontFamily} = useAppStyle();
     const textStyles = getTextStyles();
     const colors = getColors();
@@ -27,6 +29,16 @@ const WeekStats = ({date}) => {
         //um die Steps für jeden Tag neu zu laden
         getSteps(date)
     }, [date]);
+
+    useFocusEffect(
+        useCallback(() => {
+            const date = new Date();
+            //setLoading(true);
+            getSteps(date).then(loading => {
+                //setLoading(false)
+            });
+        }, [])
+    );
 
     const startDate = useMemo(() => startOfWeek(date, { weekStartsOn: 1 }), [date]);
     const endDate = useMemo(() => endOfWeek(date, { weekStartsOn: 1 }), [date]);
