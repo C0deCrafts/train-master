@@ -10,6 +10,7 @@ import * as Notifications from "expo-notifications";
 import {TimerProvider} from "../context/TimerContext";
 import {dark} from "../constants/colors";
 import {NotificationProvider, useNotificationObserver} from "../context/NotificationContext";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 // Setup notification handler
 Notifications.setNotificationHandler({
@@ -105,9 +106,11 @@ const RootLayout = () => {
                         <WorkoutProvider>
                             <AccountSettingProvider>
                                 <TimerProvider>
-                                    <MainLayout/>
-                                    <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
-                                    {/*<StatusBar style="light"/>*/}
+                                    <GestureHandlerRootView style={{ flex: 1 }}>
+                                        <MainLayout/>
+                                        <StatusBar style={colorScheme === dark || "dark" ? "dark" : "light"}/>
+                                        {/*<StatusBar style="light"/>*/}
+                                    </GestureHandlerRootView>
                                 </TimerProvider>
                             </AccountSettingProvider>
                         </WorkoutProvider>

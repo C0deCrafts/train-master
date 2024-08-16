@@ -24,6 +24,7 @@ import night from "../assets/icons/moon_line.png";
 import profile from "../assets/icons/user_2_fill.png";
 import rest from "../assets/icons/sleep_line.png"
 import repeat from "../assets/icons/refresh_2_line.png"
+import search from "../assets/icons/search_3_fill.png"
 import setting from "../assets/icons/settings_3_fill.png";
 import steps from "../assets/icons/walk_fill.png"
 import sun from "../assets/icons/sun_line.png"
@@ -59,6 +60,7 @@ export default {
     profile,
     rest,
     repeat,
+    search,
     setting,
     steps,
     sun,
