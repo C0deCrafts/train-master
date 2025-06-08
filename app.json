@@ -16,8 +16,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.fitness.trainmaster",
       "infoPlist": {
-        "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.",
-        "NSHealthShareUpdateDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.",
+        "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Schritte und Gewicht.",
+        "NSHealthUpdateUsageDescription": "Gewichtsdaten können aktualisiert werden.",
         "UIBackgroundModes": [
           "fetch",
           "fetch"

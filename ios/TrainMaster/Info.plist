@@ -58,9 +58,9 @@
     <key>NSHealthShareUpdateDescription</key>
     <string>Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.</string>
     <key>NSHealthShareUsageDescription</key>
-    <string>Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.</string>
+    <string>Diese App benötigt Zugriff auf Schritte und Gewicht.</string>
     <key>NSHealthUpdateUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to update health info</string>
+    <string>Gewichtsdaten können aktualisiert werden.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>
