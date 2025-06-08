@@ -39,7 +39,11 @@
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>5</string>
+    <string>6</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
@@ -68,6 +72,7 @@ Die App greift auf Ihre Fotos zu, um Ihnen das Teilen mit Ihren Freunden zu erm√
     </array>
     <key>UIBackgroundModes</key>
     <array>
+      <string>fetch</string>
       <string>fetch</string>
     </array>
     <key>UILaunchStoryboardName</key>

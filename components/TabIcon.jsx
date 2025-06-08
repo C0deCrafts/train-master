@@ -35,6 +35,7 @@ const createStyles = (textStyles, colors, fontFamily) => {
             alignItems: "center",
             justifyContent: "center",
             gap: appStyles.tabLabelSpacing,
+            minWidth: 90
         },
         text: {
             fontSize: textStyles.caption_1,
