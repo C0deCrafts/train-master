@@ -3,7 +3,7 @@
     "name": "TrainMaster",
     "slug": "train-master",
     "scheme": "train-master",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,10 +19,12 @@
         "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.",
         "NSHealthShareUpdateDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Schritte zu verfolgen.",
         "UIBackgroundModes": [
+          "fetch",
           "fetch"
-        ]
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "4"
+      "buildNumber": "6"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +33,8 @@
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.fitness.trainmaster"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -53,6 +56,7 @@
       "eas": {
         "projectId": "b360674d-e02c-4d04-93d8-a5150a0d09f5"
       }
-    }
+    },
+    "owner": "sa-bri-na"
   }
 }

@@ -19,7 +19,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.2</string>
+    <string>1.0.4</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -39,7 +39,7 @@
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>4</string>
+    <string>5</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
@@ -64,7 +64,6 @@
 Die App greift auf Ihre Fotos zu, um Ihnen das Teilen mit Ihren Freunden zu ermöglichen. Außerdem können Sie ein Benutzerprofil einrichten.</string>
     <key>NSUserActivityTypes</key>
     <array>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
     <key>UIBackgroundModes</key>

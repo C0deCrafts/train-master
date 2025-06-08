@@ -36,3 +36,4 @@ yarn-error.*
 
 # Ignore iOS directories
 ios/
+android/
