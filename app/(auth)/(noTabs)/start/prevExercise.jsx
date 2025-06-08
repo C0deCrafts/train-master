@@ -36,7 +36,7 @@ const PrevExercise = () => {
 
     const goBack = () => {
         stopTimer();
-        router.back();
+        // router.back();
     }
 
     return (

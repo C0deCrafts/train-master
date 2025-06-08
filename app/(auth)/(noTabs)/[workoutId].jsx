@@ -11,7 +11,7 @@ import {WorkoutContext} from "../../../context/WorkoutContext";
 import useHealthData from "../../../hook/useHealthData";
 
 const WorkoutId = () => {
-    const { workout, item } = useLocalSearchParams();
+    const { workoutId, item } = useLocalSearchParams();
     const { getTextStyles, getColors, fontFamily } = useAppStyle();
     const colors = getColors();
     const textStyles = getTextStyles();
@@ -22,9 +22,15 @@ const WorkoutId = () => {
     const { getWeight,weight } = useHealthData();
 
     const handleStartWorkout = async () => {
-        await startSession(workout);
-        router.dismissAll();
+        console.log("WorkoutId:", workoutId);
+        console.log("WorkoutItem:", workoutItem);
+        console.log(workoutItem.id)
+
+        await startSession(workoutItem.id);
+        // router.dismissAll();
         router.replace({ pathname: '(noTabs)/start/exercises', params: { exercise: JSON.stringify(workoutItem) } });
+
+        console.log("Session started?");
     }
 
     useEffect(() => {

@@ -43,7 +43,7 @@ const Training = () => {
                 entering={FadeInDown.delay(100).duration(index * 500)}>
                 <Card
                     style={styles.workout}
-                    href={{pathname: `(noTabs)/[workoutId]`, params: {id: item.id, item: JSON.stringify(item), workout: item.id}}}
+                    href={{pathname: `(noTabs)/[workoutId]`, params: {workoutId: item.id, item: JSON.stringify(item), workout: item.id}}}
                     clickable
                 >
                     {imageUrl && (

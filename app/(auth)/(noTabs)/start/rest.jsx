@@ -62,7 +62,7 @@ const Rest = () => {
                 <TouchableOpacity style={styles.button} onPress={
                     () => {
                         stopTimer()
-                        router.back()
+                        // router.back()
                     }
                 }
                 >
